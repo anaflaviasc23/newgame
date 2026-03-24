@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Drag Game - Negativa e Interrogativa</title>
+<style>
+body {
+  font-family: Arial;
+  background: linear-gradient(135deg,#1d2b64,#f8cdda);
+  color: white;
+  text-align: center;
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.container {
+  width:90%;
+  max-width:1000px;
+}
+
+h2 { margin-bottom:20px; }
+
+.words, .dropzone {
+  border:2px dashed white;
+  padding:20px;
+  min-height:70px;
+  border-radius:10px;
+  margin:15px 0;
+}
+
+.word {
+  display:inline-block;
+  padding:10px 15px;
+  margin:5px;
+  background:#fff;
+  color:black;
+  border-radius:8px;
+  cursor:grab;
+}
+
+button {
+  padding:12px 25px;
+  font-size:16px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.popup {
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  visibility:hidden;
+}
+
+.popup-content {
+  background:white;
+  color:black;
+  padding:30px 50px;
+  border-radius:15px;
+  font-size:24px;
+}
+
+.show { visibility:visible; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2 id="mode"></h2>
+
+  <div class="words" id="words"></div>
+  <div class="dropzone" id="dropzone"></div>
+
+  <button onclick="check()">Verificar</button>
+</div>
+
+<div class="popup" id="popup">
+  <div class="popup-content" id="popup-text"></div>
+</div>
+
+<script>
+function normalize(str) {
+  return str
+    .toLowerCase()
+    .replace(/[?.!]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const data = [
+  { base: "We are from France", neg: "We are not from France", int: "Are we from France" },
+  { base: "It is correct", neg: "It is not correct", int: "Is it correct" },
+  { base: "I am OK thanks", neg: "I am not OK thanks", int: "Am I OK thanks" },
+  { base: "They are sisters", neg: "They are not sisters", int: "Are they sisters" },
+  { base: "She is an English teacher", neg: "She is not an English teacher", int: "Is she an English teacher" },
+  { base: "They are Brazilians", neg: "They are not Brazilians", int: "Are they Brazilians" },
+  { base: "We are in Brazil", neg: "We are not in Brazil", int: "Are we in Brazil" },
+  { base: "She is your daughter", neg: "She is not your daughter", int: "Is she your daughter" },
+  { base: "I am a student", neg: "I am not a student", int: "Am I a student" },
+  { base: "It is a Chinese city", neg: "It is not a Chinese city", int: "Is it a Chinese city" },
+  { base: "It is in Rio de Janeiro", neg: "It is not in Rio de Janeiro", int: "Is it in Rio de Janeiro" },
+  { base: "It is big", neg: "It is not big", int: "Is it big" },
+  { base: "He is a teacher", neg: "He is not a teacher", int: "Is he a teacher" },
+  { base: "She is Brazilian", neg: "She is not Brazilian", int: "Is she Brazilian" },
+  { base: "He is Argentinian", neg: "He is not Argentinian", int: "Is he Argentinian" },
+  { base: "You are right", neg: "You are not right", int: "Are you right" },
+  { base: "He is Marcelo", neg: "He is not Marcelo", int: "Is he Marcelo" },
+  { base: "They are at the hotel", neg: "They are not at the hotel", int: "Are they at the hotel" },
+  { base: "It is a pillow", neg: "It is not a pillow", int: "Is it a pillow" },
+  { base: "She is my mother", neg: "She is not my mother", int: "Is she my mother" }
+];
+
+let current = 0;
+let mode = "neg";
+let dragged = null;
+
+const wordsDiv = document.getElementById("words");
+const dropzone = document.getElementById("dropzone");
+const modeTitle = document.getElementById("mode");
+const popup = document.getElementById("popup");
+const popupText = document.getElementById("popup-text");
+
+function shuffle(array) {
+  return [...array].sort(() => Math.random() - 0.5);
+}
+
+function createWord(word) {
+  const el = document.createElement("div");
+  el.className = "word";
+  el.innerText = word;
+  el.draggable = true;
+  el.addEventListener("dragstart", () => dragged = el);
+  return el;
+}
+
+function load() {
+  dropzone.innerHTML = "";
+  wordsDiv.innerHTML = "";
+
+  const item = data[current];
+  const target = mode === "neg" ? item.neg : item.int;
+
+  modeTitle.innerText = mode === "neg"
+    ? "Monte a frase NEGATIVA"
+    : "Monte a frase INTERROGATIVA";
+
+  let words;
+  do {
+    words = shuffle(target.split(" "));
+  } while (words.join(" ") === target);
+
+  words.forEach(word => {
+    wordsDiv.appendChild(createWord(word));
+  });
+}
+
+[wordsDiv, dropzone].forEach(zone => {
+  zone.addEventListener("dragover", e => e.preventDefault());
+  zone.addEventListener("drop", () => {
+    if (dragged) zone.appendChild(dragged);
+  });
+});
+
+function check() {
+  const userWords = Array.from(dropzone.children).map(el => el.innerText.trim());
+  const user = normalize(userWords.join(" "));
+
+  const item = data[current];
+  const correct = normalize(mode === "neg" ? item.neg : item.int);
+
+  if (user === correct) {
+    popupText.innerText = "🎉 Você acertou!";
+
+    if (mode === "neg") {
+      mode = "int";
+    } else {
+      mode = "neg";
+      current++;
+    }
+
+    popup.classList.add("show");
+
+    setTimeout(() => {
+      popup.classList.remove("show");
+
+      if (current < data.length) {
+        load();
+      } else {
+        document.body.innerHTML = "<h1>🎯 Fim do jogo!</h1>";
+      }
+    }, 1000);
+
+  } else {
+    popupText.innerText = "❌ Tente novamente!";
+    popup.classList.add("show");
+
+    setTimeout(() => {
+      popup.classList.remove("show");
+      load();
+    }, 1000);
+  }
+}
+
+load();
+</script>
+
+</body>
+</html>
