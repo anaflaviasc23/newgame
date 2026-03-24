@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo AM / IS / ARE</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f8cdda, #1d2b64);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: rgba(0,0,0,0.5);
+      padding: 40px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 1000px;
+      text-align: center;
+    }
+
+    h1 { font-size: 36px; }
+
+    .question {
+      font-size: 32px;
+      margin: 40px 0;
+    }
+
+    .buttons button {
+      margin: 15px;
+      padding: 20px 50px;
+      border: none;
+      border-radius: 12px;
+      font-size: 22px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover { transform: scale(1.1); }
+
+    .score {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+
+    .progress {
+      height: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #4CAF50;
+      transition: 0.3s;
+    }
+
+    /* POPUP */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+      cursor: pointer;
+    }
+
+    .popup-content {
+      background: white;
+      color: black;
+      padding: 40px 60px;
+      border-radius: 15px;
+      font-size: 28px;
+      text-align: center;
+      animation: pop 0.3s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .show { visibility: visible; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>AM / IS / ARE</h1>
+    <div class="question" id="question"></div>
+
+    <div class="buttons">
+      <button onclick="checkAnswer('am')">AM</button>
+      <button onclick="checkAnswer('is')">IS</button>
+      <button onclick="checkAnswer('are')">ARE</button>
+    </div>
+
+    <div class="popup" id="popup" onclick="nextStep()">
+      <div class="popup-content" id="popup-text"></div>
+    </div>
+
+    <div class="score" id="score"></div>
+    <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+  </div>
+
+<script>
+const questions = [
+  { q: "We _______ from France.", a: "are" },
+  { q: "It ______ correct.", a: "is" },
+  { q: "I _______ OK, thanks.", a: "am" },
+  { q: "They _______ sisters.", a: "are" },
+  { q: "She _______ an English teacher.", a: "is" },
+  { q: "They _______ Brazilians.", a: "are" },
+  { q: "We _______ in Brazil.", a: "are" },
+  { q: "She ______ your daughter.", a: "is" },
+  { q: "I _______ a student.", a: "am" },
+  { q: "It _______ a Chinese city.", a: "is" },
+  { q: "It _______ in Rio de Janeiro.", a: "is" },
+  { q: "It ______ big.", a: "is" },
+  { q: "He ______ a teacher.", a: "is" },
+  { q: "She ______ Brazilian.", a: "is" },
+  { q: "He ______ Argentinian.", a: "is" },
+  { q: "You _______ right.", a: "are" },
+  { q: "He ______ Marcelo.", a: "is" },
+  { q: "They ______ at the hotel.", a: "are" },
+  { q: "It _______ a pillow.", a: "is" },
+  { q: "She ______ my mother.", a: "is" }
+];
+
+let current = 0;
+let score = 0;
+let waiting = false;
+
+function loadQuestion() {
+  document.getElementById("question").innerText = questions[current].q;
+  updateProgress();
+}
+
+function checkAnswer(answer) {
+  if (waiting) return;
+
+  const correct = questions[current].a;
+  const popup = document.getElementById("popup");
+  const popupText = document.getElementById("popup-text");
+
+  if (answer === correct) {
+    score++;
+    popupText.innerText = "🎉 CORRECT!";
+  } else {
+    popupText.innerText = `❌ WRONG!\nCorrect: ${correct.toUpperCase()}`;
+  }
+
+  popup.classList.add("show");
+  waiting = true;
+}
+
+function nextStep() {
+  const popup = document.getElementById("popup");
+  popup.classList.remove("show");
+
+  current++;
+  waiting = false;
+
+  if (current < questions.length) {
+    loadQuestion();
+    updateScore();
+  } else {
+    endGame();
+  }
+}
+
+function updateScore() {
+  document.getElementById("score").innerText = `Score: ${score} / ${questions.length}`;
+}
+
+function updateProgress() {
+  const percent = (current / questions.length) * 100;
+  document.getElementById("progress-bar").style.width = percent + "%";
+}
+
+function endGame() {
+  document.querySelector(".container").innerHTML = `
+    <h1>Fim do jogo 🎯</h1>
+    <p>Você acertou ${score} de ${questions.length}!</p>
+    <button onclick="location.reload()">Jogar novamente</button>
+  `;
+}
+
+loadQuestion();
+updateScore();
+</script>
+
+</body>
+</html>
