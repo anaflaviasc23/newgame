@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Number Game</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .game {
+    background: #ddd;
+    padding: 20px;
+    width: 600px;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+  }
+
+  .word {
+    text-align: center;
+    font-size: 40px;
+    margin: 40px 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+
+  .btn {
+    padding: 15px;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  .correct {
+    background: #2ecc71 !important;
+  }
+
+  .wrong {
+    background: #e74c3c !important;
+  }
+
+  /* cores base */
+  .c1 { background: #8e44ad; }
+  .c2 { background: #e67e22; }
+  .c3 { background: #3498db; }
+  .c4 { background: #9b59b6; }
+  .c5 { background: #f39c12; }
+  .c6 { background: #1abc9c; }
+  .c7 { background: #34495e; }
+  .c8 { background: #27ae60; }
+  .c9 { background: #16a085; }
+  .c10 { background: #2980b9; }
+
+  /* Tela final */
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+  }
+
+  .overlay button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background: #2ecc71;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="game">
+  
+  <div class="top-bar">
+    <div id="timer">3:00</div>
+    <div id="hud">❤️❤️❤️ ✔ 0</div>
+  </div>
+
+  <div class="word" id="word">...</div>
+
+  <div class="grid" id="grid"></div>
+
+  <!-- Tela final -->
+  <div class="overlay" id="gameOver">
+    <h1>You lose 😢</h1>
+    <p>Try again?</p>
+    <button onclick="restartGame()">Restart</button>
+  </div>
+
+</div>
+
+<!-- Sons -->
+<audio id="correctSound" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>
+<audio id="wrongSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+<audio id="gameOverSound" src="https://www.soundjay.com/misc/sounds/fail-buzzer-01.mp3"></audio>
+
+<script>
+const grid = document.getElementById("grid");
+const wordEl = document.getElementById("word");
+const timerEl = document.getElementById("timer");
+const hud = document.getElementById("hud");
+const overlay = document.getElementById("gameOver");
+
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+const gameOverSound = document.getElementById("gameOverSound");
+
+let correctNumber;
+let score = 0;
+let lives = 3;
+let time = 180;
+let timer;
+
+// números
+const numbersText = {
+  1:"One",2:"Two",3:"Three",4:"Four",5:"Five",
+  6:"Six",7:"Seven",8:"Eight",9:"Nine",10:"Ten",
+  11:"Eleven",12:"Twelve",13:"Thirteen",14:"Fourteen",15:"Fifteen",
+  16:"Sixteen",17:"Seventeen",18:"Eighteen",19:"Nineteen",20:"Twenty",
+  21:"Twenty-one",22:"Twenty-two",23:"Twenty-three",24:"Twenty-four",25:"Twenty-five",
+  26:"Twenty-six",27:"Twenty-seven",28:"Twenty-eight",29:"Twenty-nine",30:"Thirty"
+};
+
+// HUD
+function updateHUD() {
+  hud.innerHTML = "❤️".repeat(lives) + ` ✔ ${score}`;
+}
+
+// TIMER
+function startTimer() {
+  clearInterval(timer);
+  time = 180;
+
+  timer = setInterval(() => {
+    time--;
+    let min = Math.floor(time / 60);
+    let sec = time % 60;
+
+    timerEl.textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+
+    if (time <= 0) loseLife();
+  }, 1000);
+}
+
+// NOVA RODADA
+function newRound() {
+  correctNumber = Math.floor(Math.random() * 30) + 1;
+  wordEl.textContent = numbersText[correctNumber];
+
+  let options = new Set();
+  options.add(correctNumber);
+
+  while (options.size < 10) {
+    options.add(Math.floor(Math.random() * 30) + 1);
+  }
+
+  let shuffled = Array.from(options).sort(() => Math.random() - 0.5);
+
+  grid.innerHTML = "";
+
+  shuffled.forEach((num, i) => {
+    const btn = document.createElement("div");
+    btn.className = "btn c" + ((i % 10) + 1);
+    btn.textContent = num;
+
+    btn.onclick = () => handleClick(btn, num);
+
+    grid.appendChild(btn);
+  });
+
+  startTimer();
+}
+
+// CLIQUE
+function handleClick(btn, num) {
+  if (num === correctNumber) {
+    btn.classList.add("correct");
+    correctSound.play();
+
+    setTimeout(() => {
+      score++;
+      updateHUD();
+      newRound();
+    }, 500);
+
+  } else {
+    btn.classList.add("wrong");
+    wrongSound.play();
+
+    setTimeout(() => {
+      loseLife();
+    }, 500);
+  }
+}
+
+// VIDA
+function loseLife() {
+  lives--;
+  updateHUD();
+
+  if (lives <= 0) {
+    clearInterval(timer);
+    gameOverSound.play();
+    overlay.style.display = "flex";
+  } else {
+    newRound();
+  }
+}
+
+// RESTART
+function restartGame() {
+  score = 0;
+  lives = 3;
+  overlay.style.display = "none";
+  updateHUD();
+  newRound();
+}
+
+// START
+updateHUD();
+newRound();
+</script>
+
+</body>
+</html>
