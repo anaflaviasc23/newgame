@@ -18,10 +18,17 @@ body {
 .game {
   background: white;
   padding: 30px;
-  width: 800px;
+  width: 850px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   text-align: center;
+  position: relative;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 20px;
 }
 
 .word {
@@ -42,6 +49,11 @@ body {
   color: white;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
 }
 
 .correct { background: #2ecc71 !important; }
@@ -50,12 +62,6 @@ body {
 .c1{background:#8e44ad}.c2{background:#e67e22}.c3{background:#3498db}
 .c4{background:#9b59b6}.c5{background:#f39c12}.c6{background:#1abc9c}
 .c7{background:#34495e}.c8{background:#27ae60}.c9{background:#16a085}.c10{background:#2980b9}
-
-.top-bar {
-  display: flex;
-  justify-content: flex-end;
-  font-size: 20px;
-}
 
 .overlay {
   position:absolute;
@@ -67,6 +73,17 @@ body {
   align-items:center;
   flex-direction:column;
   border-radius:15px;
+}
+
+.overlay button {
+  margin-top:20px;
+  padding:10px 20px;
+  border:none;
+  background:#2ecc71;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  border-radius:8px;
 }
 </style>
 </head>
@@ -84,11 +101,13 @@ body {
 
   <div class="overlay" id="gameOver">
     <h1>You lose 😢</h1>
+    <p>Try again?</p>
     <button onclick="restartGame()">Restart</button>
   </div>
 
 </div>
 
+<!-- sons -->
 <audio id="correctSound" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>
 <audio id="wrongSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
 
@@ -104,36 +123,52 @@ let score = 0;
 let lives = 3;
 let correctAnswer;
 
-// lista
+// ===== PALAVRAS =====
 const words = {
-Apple:"Apples", Book:"Books", Bird:"Birds", Cup:"Cups", Dog:"Dogs",
-House:"Houses", Bus:"Buses", Box:"Boxes", Brush:"Brushes",
-Church:"Churches", Glass:"Glasses", Baby:"Babies", City:"Cities",
-Family:"Families", Boy:"Boys", Toy:"Toys", Knife:"Knives",
-Leaf:"Leaves", Life:"Lives", Wife:"Wives", Child:"Children",
-Foot:"Feet", Man:"Men", Woman:"Women", Tooth:"Teeth",
-Mouse:"Mice", Person:"People", Tomato:"Tomatoes",
-Potato:"Potatoes", Fish:"Fish"
+Apple:"Apples", Baby:"Babies", Battery:"Batteries", Bird:"Birds",
+Book:"Books", Box:"Boxes", Boy:"Boys", Brush:"Brushes", Bus:"Buses",
+Butterfly:"Butterflies", Candy:"Candies", Cherry:"Cherries",
+Child:"Children", Church:"Churches", City:"Cities",
+Country:"Countries", Cup:"Cups", Dog:"Dogs", Dress:"Dresses",
+Egg:"Eggs", Family:"Families", Fish:"Fish", Fly:"Flies",
+Foot:"Feet", Fox:"Foxes", Garage:"Garages", Girl:"Girls",
+Glass:"Glasses", Goose:"Geese", Hallway:"Hallways",
+Hero:"Heroes", House:"Houses", Knife:"Knives",
+Lady:"Ladies", Leaf:"Leaves", Life:"Lives", Man:"Men",
+Mango:"Mangoes", Match:"Matches", Mattress:"Mattresses",
+Mouse:"Mice", Person:"People", Potato:"Potatoes",
+Quiz:"Quizzes", Roof:"Roofs", Sandwich:"Sandwiches",
+Secretary:"Secretaries", Shoe:"Shoes", Sister:"Sisters",
+Snake:"Snakes", Tomato:"Tomatoes", Tooth:"Teeth",
+Toy:"Toys", Watch:"Watches", Way:"Ways",
+Wife:"Wives", Window:"Windows", Witch:"Witches",
+Wizard:"Wizards", Woman:"Women"
 };
 
-// gerar erros
+// ===== HUD =====
+function updateHUD(){
+  hud.innerHTML = "❤️".repeat(lives) + ` ✔ ${score}`;
+}
+
+// ===== GERAR ERROS =====
 function generateWrong(word){
   let errors = [];
 
   errors.push(word + "s");
   errors.push(word + "es");
-  errors.push(word.replace("y","ys"));
-  errors.push(word.replace("f","fs"));
 
-  return errors;
+  if(word.endsWith("y")){
+    errors.push(word.replace("y","ys"));
+  }
+
+  if(word.endsWith("f") || word.endsWith("fe")){
+    errors.push(word.replace("f","fs").replace("fe","fes"));
+  }
+
+  return [...new Set(errors)];
 }
 
-// HUD
-function updateHUD(){
-  hud.innerHTML = "❤️".repeat(lives) + ` ✔ ${score}`;
-}
-
-// rodada
+// ===== NOVA RODADA =====
 function newRound(){
   const keys = Object.keys(words);
   const word = keys[Math.floor(Math.random()*keys.length)];
@@ -171,7 +206,7 @@ function newRound(){
   });
 }
 
-// clique
+// ===== CLIQUE =====
 function check(btn,opt){
   if(opt === correctAnswer){
     btn.classList.add("correct");
@@ -200,16 +235,16 @@ function check(btn,opt){
   }
 }
 
-// restart
+// ===== RESTART =====
 function restartGame(){
-  score=0;
-  lives=3;
+  score = 0;
+  lives = 3;
   updateHUD();
   document.getElementById("gameOver").style.display="none";
   newRound();
 }
 
-// start
+// START
 updateHUD();
 newRound();
 </script>
