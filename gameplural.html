@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Plural Game</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.game {
+  background: white;
+  padding: 30px;
+  width: 800px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.word {
+  font-size: 48px;
+  margin: 40px 0;
+  font-weight: bold;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+}
+
+.btn {
+  padding: 18px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.correct { background: #2ecc71 !important; }
+.wrong { background: #e74c3c !important; }
+
+.c1{background:#8e44ad}.c2{background:#e67e22}.c3{background:#3498db}
+.c4{background:#9b59b6}.c5{background:#f39c12}.c6{background:#1abc9c}
+.c7{background:#34495e}.c8{background:#27ae60}.c9{background:#16a085}.c10{background:#2980b9}
+
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 20px;
+}
+
+.overlay {
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  color:white;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  border-radius:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+  <div class="top-bar">
+    <div id="hud">❤️❤️❤️ ✔ 0</div>
+  </div>
+
+  <div class="word" id="word"></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="overlay" id="gameOver">
+    <h1>You lose 😢</h1>
+    <button onclick="restartGame()">Restart</button>
+  </div>
+
+</div>
+
+<audio id="correctSound" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>
+<audio id="wrongSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+<script>
+const grid = document.getElementById("grid");
+const wordEl = document.getElementById("word");
+const hud = document.getElementById("hud");
+
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+
+let score = 0;
+let lives = 3;
+let correctAnswer;
+
+// lista
+const words = {
+Apple:"Apples", Book:"Books", Bird:"Birds", Cup:"Cups", Dog:"Dogs",
+House:"Houses", Bus:"Buses", Box:"Boxes", Brush:"Brushes",
+Church:"Churches", Glass:"Glasses", Baby:"Babies", City:"Cities",
+Family:"Families", Boy:"Boys", Toy:"Toys", Knife:"Knives",
+Leaf:"Leaves", Life:"Lives", Wife:"Wives", Child:"Children",
+Foot:"Feet", Man:"Men", Woman:"Women", Tooth:"Teeth",
+Mouse:"Mice", Person:"People", Tomato:"Tomatoes",
+Potato:"Potatoes", Fish:"Fish"
+};
+
+// gerar erros
+function generateWrong(word){
+  let errors = [];
+
+  errors.push(word + "s");
+  errors.push(word + "es");
+  errors.push(word.replace("y","ys"));
+  errors.push(word.replace("f","fs"));
+
+  return errors;
+}
+
+// HUD
+function updateHUD(){
+  hud.innerHTML = "❤️".repeat(lives) + ` ✔ ${score}`;
+}
+
+// rodada
+function newRound(){
+  const keys = Object.keys(words);
+  const word = keys[Math.floor(Math.random()*keys.length)];
+
+  correctAnswer = words[word];
+  wordEl.textContent = word;
+
+  let options = [correctAnswer];
+
+  let wrongs = generateWrong(word);
+
+  wrongs.forEach(w=>{
+    if(!options.includes(w) && options.length < 10){
+      options.push(w);
+    }
+  });
+
+  while(options.length < 10){
+    let rand = words[keys[Math.floor(Math.random()*keys.length)]];
+    if(!options.includes(rand)) options.push(rand);
+  }
+
+  options.sort(()=>Math.random()-0.5);
+
+  grid.innerHTML = "";
+
+  options.forEach((opt,i)=>{
+    const btn = document.createElement("div");
+    btn.className = "btn c"+((i%10)+1);
+    btn.textContent = opt;
+
+    btn.onclick = ()=>check(btn,opt);
+
+    grid.appendChild(btn);
+  });
+}
+
+// clique
+function check(btn,opt){
+  if(opt === correctAnswer){
+    btn.classList.add("correct");
+    correctSound.play();
+
+    setTimeout(()=>{
+      score++;
+      updateHUD();
+      newRound();
+    },400);
+
+  } else {
+    btn.classList.add("wrong");
+    wrongSound.play();
+
+    setTimeout(()=>{
+      lives--;
+      updateHUD();
+
+      if(lives<=0){
+        document.getElementById("gameOver").style.display="flex";
+      } else {
+        newRound();
+      }
+    },400);
+  }
+}
+
+// restart
+function restartGame(){
+  score=0;
+  lives=3;
+  updateHUD();
+  document.getElementById("gameOver").style.display="none";
+  newRound();
+}
+
+// start
+updateHUD();
+newRound();
+</script>
+
+</body>
+</html>
