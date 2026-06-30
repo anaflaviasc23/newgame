@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tapple Web</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+
+    background:#efefef;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    height:100vh;
+
+    overflow:hidden;
+
+}
+
+.game{
+
+    position:relative;
+
+    width:750px;
+    height:750px;
+
+}
+
+.board{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    border-radius:50%;
+
+    background:#1f73d8;
+
+    box-shadow:
+    inset 0 0 40px rgba(0,0,0,.25),
+    0 20px 40px rgba(0,0,0,.30);
+
+}
+
+#letters{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+}
+
+.letter{
+
+    position:absolute;
+
+    width:62px;
+    height:62px;
+
+    border-radius:14px;
+
+    background:#181818;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:28px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    transition:.25s;
+
+    transform:translate(-50%,-50%);
+
+    box-shadow:0 5px 12px rgba(0,0,0,.35);
+
+}
+
+.letter:hover{
+
+    transform:translate(-50%,-50%) scale(1.08);
+
+}
+
+.selected{
+
+    background:#FFD54F;
+    color:#222;
+
+    box-shadow:
+    0 0 20px #FFD54F,
+    0 0 40px rgba(255,213,79,.5);
+
+}
+
+.used{
+
+    background:#E53935;
+
+    box-shadow:
+    0 0 20px #E53935,
+    0 0 40px rgba(229,57,53,.5);
+
+}
+
+.center{
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    width:210px;
+    height:210px;
+
+    border-radius:50%;
+
+    background:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-direction:column;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.35);
+
+    cursor:pointer;
+
+}
+
+svg{
+
+    position:absolute;
+
+    width:240px;
+    height:240px;
+
+    transform:rotate(-90deg);
+
+}
+
+circle{
+
+    fill:none;
+
+    stroke-width:10;
+
+}
+
+.bg{
+
+    stroke:#ddd;
+
+}
+
+.progress{
+
+    stroke:#00BCD4;
+
+    stroke-linecap:round;
+
+    transition:.15s linear;
+
+}
+
+.timer{
+
+    font-size:58px;
+
+    font-weight:bold;
+
+    color:#1565C0;
+
+}
+
+.text{
+
+    margin-top:5px;
+
+    color:#666;
+
+    font-size:18px;
+
+}
+
+.category{
+
+    position:absolute;
+
+    width:100%;
+
+    text-align:center;
+
+    top:-70px;
+
+    font-size:40px;
+
+    font-weight:bold;
+
+    color:#333;
+
+}
+
+@media(max-width:850px){
+
+.game{
+
+width:95vw;
+height:95vw;
+
+}
+
+.category{
+
+font-size:28px;
+
+top:-50px;
+
+}
+
+.center{
+
+width:150px;
+height:150px;
+
+}
+
+.timer{
+
+font-size:40px;
+
+}
+
+.letter{
+
+width:42px;
+height:42px;
+
+font-size:20px;
+
+}
+
+svg{
+
+width:170px;
+height:170px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game">
+
+<div class="category">
+ANIMAIS
+</div>
+
+<div class="board">
+
+<div id="letters"></div>
+
+<div class="center" id="startButton">
+
+<svg viewBox="0 0 100 100">
+
+<circle class="bg"
+cx="50"
+cy="50"
+r="45"/>
+
+<circle
+id="progress"
+class="progress"
+cx="50"
+cy="50"
+r="45"/>
+
+</svg>
+
+<div class="timer" id="timer">
+10
+</div>
+
+<div class="text" id="status">
+START
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+  // ===============================
+// CONFIGURAÇÕES
+// ===============================
+
+const lettersContainer = document.getElementById("letters");
+const timerElement = document.getElementById("timer");
+const statusElement = document.getElementById("status");
+const startButton = document.getElementById("startButton");
+const progress = document.getElementById("progress");
+
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+let radius = 315;
+
+let totalTime = 10;
+let time = totalTime;
+let running = false;
+let interval;
+
+const circumference = 2 * Math.PI * 45;
+
+progress.style.strokeDasharray = circumference;
+progress.style.strokeDashoffset = 0;
+
+
+// ===============================
+// DESENHAR LETRAS
+// ===============================
+
+function createLetters(){
+
+    lettersContainer.innerHTML="";
+
+    const boardSize=document.querySelector(".board").offsetWidth;
+
+    const center=boardSize/2;
+
+    radius=boardSize*0.42;
+
+    letters.forEach((letter,index)=>{
+
+        const angle=((360/letters.length)*index)-90;
+
+        const rad=angle*Math.PI/180;
+
+        const x=center+(radius*Math.cos(rad));
+        const y=center+(radius*Math.sin(rad));
+
+        const div=document.createElement("div");
+
+        div.className="letter";
+
+        div.innerHTML=letter;
+
+        div.style.left=x+"px";
+        div.style.top=y+"px";
+
+        div.dataset.state=0;
+
+        div.addEventListener("click",changeState);
+
+        lettersContainer.appendChild(div);
+
+    });
+
+}
+
+
+// ===============================
+// ESTADOS DAS LETRAS
+// ===============================
+
+function changeState(){
+
+    let state=parseInt(this.dataset.state);
+
+    state++;
+
+    if(state>2){
+        state=0;
+    }
+
+    this.dataset.state=state;
+
+    this.classList.remove("selected");
+    this.classList.remove("used");
+
+    if(state===1){
+
+        this.classList.add("selected");
+
+    }
+
+    if(state===2){
+
+        this.classList.add("used");
+
+    }
+
+}
+  // ===============================
+// CRONÔMETRO
+// ===============================
+
+function updateProgress() {
+
+    const percent = time / totalTime;
+
+    progress.style.strokeDashoffset =
+        circumference * (1 - percent);
+
+}
+
+function updateTimer() {
+
+    timerElement.textContent = time;
+
+    updateProgress();
+
+}
+
+function resetTimer() {
+
+    clearInterval(interval);
+
+    running = false;
+
+    time = totalTime;
+
+    updateTimer();
+
+    statusElement.textContent = "START";
+
+}
+
+function startTimer() {
+
+    if (running) return;
+
+    running = true;
+
+    statusElement.textContent = "STOP";
+
+    interval = setInterval(() => {
+
+        time--;
+
+        updateTimer();
+
+        if (time <= 0) {
+
+            clearInterval(interval);
+
+            running = false;
+
+            statusElement.textContent = "TIME!";
+
+            setTimeout(() => {
+
+                resetTimer();
+
+            },1000);
+
+        }
+
+    },1000);
+
+}
+
+function stopTimer(){
+
+    clearInterval(interval);
+
+    running = false;
+
+    statusElement.textContent = "START";
+
+    time = totalTime;
+
+    updateTimer();
+
+}
+
+startButton.addEventListener("click",()=>{
+
+    if(running){
+
+        stopTimer();
+
+    }else{
+
+        startTimer();
+
+    }
+
+});
+  // ===============================
+// CATEGORIAS
+// ===============================
+
+const categories = [
+
+"Animais",
+"Frutas",
+"Países",
+"Cores",
+"Objetos",
+"Filmes",
+"Séries",
+"Profissões",
+"Esportes",
+"Comidas",
+"Instrumentos",
+"Marcas",
+"Personagens",
+"Super-heróis",
+"Cidades",
+"Capitais",
+"Flores",
+"Árvores",
+"Partes do Corpo",
+"Verbos"
+
+];
+
+const categoryElement = document.querySelector(".category");
+
+function randomCategory(){
+
+    const random =
+        Math.floor(Math.random()*categories.length);
+
+    categoryElement.innerHTML =
+        categories[random];
+
+}
+
+categoryElement.addEventListener("click",randomCategory);
+
+
+// ===============================
+// INICIALIZAÇÃO
+// ===============================
+
+function init(){
+
+    createLetters();
+
+    randomCategory();
+
+    updateTimer();
+
+}
+
+window.addEventListener("resize",()=>{
+
+    createLetters();
+
+});
+
+init();
+
+</script>
+
+</body>
+
+</html>
