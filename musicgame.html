@@ -1,1 +1,754 @@
-https://github.com/anaflaviasc23/newgame/blob/main/jogo_am_is_are_ingles.html
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music game</title>
+    
+    <style>
+    /* ==========================
+   RESET
+========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    overflow:hidden;
+    background:linear-gradient(135deg,#0f172a,#1d4ed8,#7c3aed);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+}
+
+/* ==========================
+   HOME
+========================== */
+
+.home{
+    position:relative;
+}
+
+.container{
+
+    width:90%;
+    max-width:700px;
+    text-align:center;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(15px);
+    border-radius:25px;
+    padding:40px;
+    box-shadow:0 20px 50px rgba(0,0,0,.4);
+
+}
+
+.container h1{
+
+    font-size:55px;
+    margin-bottom:10px;
+
+}
+
+.container h2{
+
+    font-weight:400;
+    color:#facc15;
+    margin-bottom:25px;
+
+}
+
+.container p{
+
+    font-size:20px;
+    margin-bottom:30px;
+
+}
+
+.rules{
+
+    text-align:left;
+    margin:30px auto;
+    width:80%;
+
+}
+
+.rules h3{
+
+    margin-bottom:15px;
+    color:#38bdf8;
+
+}
+
+.rules li{
+
+    margin:12px 0;
+    font-size:18px;
+
+}
+
+.playButton{
+
+    display:inline-block;
+    margin-top:25px;
+    background:#22c55e;
+    color:white;
+    text-decoration:none;
+    padding:18px 45px;
+    border-radius:15px;
+    font-size:24px;
+    transition:.3s;
+
+}
+
+.playButton:hover{
+
+    transform:scale(1.08);
+    background:#16a34a;
+
+}
+
+footer{
+
+    position:absolute;
+    bottom:15px;
+    color:#ddd;
+    font-size:15px;
+
+}
+
+/* ==========================
+   GAME
+========================== */
+
+.game{
+
+    flex-direction:column;
+
+}
+
+.top{
+
+    width:900px;
+    max-width:95%;
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:25px;
+
+}
+
+#timer{
+
+    font-size:40px;
+    font-weight:bold;
+    color:#38bdf8;
+
+}
+
+#score{
+
+    font-size:35px;
+    color:#facc15;
+
+}
+
+/* Barra de tempo */
+
+.progress{
+
+    width:900px;
+    max-width:95%;
+    height:15px;
+    background:#334155;
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:25px;
+
+}
+
+.progressBar{
+
+    width:100%;
+    height:100%;
+    background:#22c55e;
+    transition:1s linear;
+
+}
+
+/* ==========================
+   FLASHCARD
+========================== */
+
+.card{
+
+    width:370px;
+    height:230px;
+    perspective:1000px;
+    cursor:pointer;
+
+}
+
+.inner{
+
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:.7s;
+
+}
+
+.card.flip .inner{
+
+    transform:rotateY(180deg);
+
+}
+
+.front,
+.back{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    padding:25px;
+    text-align:center;
+    backface-visibility:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+
+}
+
+.front{
+
+    background:#2563eb;
+    font-size:45px;
+    font-weight:bold;
+
+}
+
+.back{
+
+    background:#16a34a;
+    transform:rotateY(180deg);
+
+}
+
+.back h2{
+
+    font-size:36px;
+    margin-bottom:15px;
+
+}
+
+.back p{
+
+    font-size:22px;
+
+}
+
+/* ==========================
+   BUTTON
+========================== */
+
+button{
+
+    margin-top:30px;
+    background:#f59e0b;
+    border:none;
+    color:white;
+    padding:15px 45px;
+    border-radius:15px;
+    font-size:22px;
+    cursor:pointer;
+    transition:.3s;
+
+}
+
+button:hover{
+
+    transform:scale(1.08);
+
+}
+
+/* ==========================
+   RESULT
+========================== */
+
+#result{
+
+    margin-top:25px;
+    font-size:30px;
+    color:#fde047;
+    text-align:center;
+
+}
+
+/* ==========================
+   BACKGROUND
+========================== */
+
+.background{
+
+    position:absolute;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    z-index:-1;
+
+}
+
+.music{
+
+    position:absolute;
+    font-size:45px;
+    opacity:.15;
+    animation:float 18s linear infinite;
+
+}
+
+.music1{
+
+    left:5%;
+    animation-duration:18s;
+
+}
+
+.music2{
+
+    left:25%;
+    animation-duration:22s;
+
+}
+
+.music3{
+
+    left:50%;
+    animation-duration:20s;
+
+}
+
+.music4{
+
+    left:75%;
+    animation-duration:24s;
+
+}
+
+.music5{
+
+    left:90%;
+    animation-duration:19s;
+
+}
+
+@keyframes float{
+
+    from{
+
+        transform:translateY(110vh) rotate(0deg);
+
+    }
+
+    to{
+
+        transform:translateY(-120vh) rotate(360deg);
+
+    }
+
+}
+
+/* ==========================
+   RESPONSIVO
+========================== */
+
+@media(max-width:700px){
+
+.container{
+
+    padding:25px;
+
+}
+
+.container h1{
+
+    font-size:38px;
+
+}
+
+.rules{
+
+    width:100%;
+
+}
+
+.card{
+
+    width:300px;
+    height:190px;
+
+}
+
+.front{
+
+    font-size:35px;
+
+}
+
+.back h2{
+
+    font-size:28px;
+
+}
+
+.back p{
+
+    font-size:18px;
+
+}
+
+.top{
+
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+
+}
+
+}
+    
+    </style>
+    
+    
+    
+</head>
+<body>
+ <body class="home">
+
+    <div class="background">
+
+        <div class="music music1">🎵</div>
+        <div class="music music2">🎶</div>
+        <div class="music music3">🎼</div>
+        <div class="music music4">🎤</div>
+        <div class="music music5">🎧</div>
+
+    </div>
+
+    <div class="container">
+
+        <h1>🎵 Guess the Song</h1>
+
+        <h2>Music Flashcards Challenge</h2>
+
+        <p>
+            Flip the flashcards and discover songs while listening!
+        </p>
+
+        <div class="rules">
+
+            <h3>📖 Rules</h3>
+
+            <ul>
+                <li>⏱️ You have 30 seconds.</li>
+                <li>🃏 Click the card to flip it.</li>
+                <li>➡️ Press <strong>Next</strong> to continue.</li>
+                <li>⭐ Earn one point for every flashcard.</li>
+                <li>🔀 A new round starts automatically.</li>
+
+            </ul>
+
+        </div>
+
+        <a href="game.html" class="playButton">
+            ▶ Start Game
+        </a>
+
+    </div>
+
+    <footer>
+
+        English Music Challenge
+
+    </footer>
+
+    
+</body>
+
+<script>
+        
+        
+
+    // ==========================
+// WORDS
+// ==========================
+
+let words = [
+
+["LOVE ❤️","🎵 Love Story<br><small>Taylor Swift</small>"],
+["DANCE 💃","🎵 Dance Monkey<br><small>Tones and I</small>"],
+["SING 🎤","🎵 Sing<br><small>Ed Sheeran</small>"],
+["RUN 🏃","🎵 Run<br><small>OneRepublic</small>"],
+["FLY ✈️","🎵 Fly Away<br><small>Lenny Kravitz</small>"],
+["SMILE 😊","🎵 Smile<br><small>Lily Allen</small>"],
+["CRY 😢","🎵 Cry Me a River<br><small>Justin Timberlake</small>"],
+["BELIEVE ✨","🎵 Believer<br><small>Imagine Dragons</small>"],
+["DREAM 💭","🎵 A Million Dreams<br><small>The Greatest Showman</small>"],
+["SHAKE 🕺","🎵 Shake It Off<br><small>Taylor Swift</small>"],
+["HAPPY 😄","🎵 Happy<br><small>Pharrell Williams</small>"],
+["COUNT 🔢","🎵 Count on Me<br><small>Bruno Mars</small>"],
+["CALL 📞","🎵 Call Me Maybe<br><small>Carly Rae Jepsen</small>"],
+["WAKE ⏰","🎵 Wake Me Up<br><small>Avicii</small>"],
+["THUNDER ⚡","🎵 Thunder<br><small>Imagine Dragons</small>"],
+["LIGHT 💡","🎵 Blinding Lights<br><small>The Weeknd</small>"],
+["FIRE 🔥","🎵 Firework<br><small>Katy Perry</small>"],
+["RAIN 🌧️","🎵 Set Fire to the Rain<br><small>Adele</small>"],
+["STAY ⏳","🎵 Stay<br><small>Justin Bieber</small>"],
+["SEE 👀","🎵 See You Again<br><small>Wiz Khalifa</small>"],
+["REMEMBER 📸","🎵 Photograph<br><small>Ed Sheeran</small>"],
+["FRIEND 🤝","🎵 Count on Me<br><small>Bruno Mars</small>"],
+["HEAVEN ☁️","🎵 Locked Out of Heaven<br><small>Bruno Mars</small>"],
+["SUN ☀️","🎵 Here Comes the Sun<br><small>The Beatles</small>"],
+["STRONG 💪","🎵 Stronger<br><small>Kelly Clarkson</small>"],
+["ROAR 🦁","🎵 Roar<br><small>Katy Perry</small>"],
+["LET GO ❄️","🎵 Let It Go<br><small>Frozen</small>"],
+["BEAUTIFUL 🌸","🎵 Beautiful<br><small>Christina Aguilera</small>"],
+["COUNTING ⭐","🎵 Counting Stars<br><small>OneRepublic</small>"],
+["HELLO 👋","🎵 Hello<br><small>Adele</small>"]
+
+];
+
+// ==========================
+// VARIABLES
+// ==========================
+
+let current = 0;
+let score = 0;
+let time = 30;
+let interval;
+
+const timer = document.getElementById("timer");
+const scoreText = document.getElementById("score");
+const progressBar = document.getElementById("progressBar");
+
+const card = document.getElementById("card");
+const front = document.getElementById("front");
+const back = document.getElementById("back");
+
+const result = document.getElementById("result");
+
+
+// ==========================
+// SHUFFLE
+// ==========================
+
+function shuffle(array){
+
+    for(let i=array.length-1;i>0;i--){
+
+        const j=Math.floor(Math.random()*(i+1));
+
+        [array[i],array[j]]=[array[j],array[i]];
+
+    }
+
+}
+
+shuffle(words);
+
+
+// ==========================
+// LOAD CARD
+// ==========================
+
+function loadCard(){
+
+    if(current>=words.length){
+
+        shuffle(words);
+
+        current=0;
+
+    }
+
+    front.innerHTML=words[current][0];
+
+    back.innerHTML=`
+        <h2>${words[current][0]}</h2>
+        <p>${words[current][1]}</p>
+    `;
+
+    card.classList.remove("flip");
+
+}
+
+
+// ==========================
+// FLIP
+// ==========================
+
+card.addEventListener("click",()=>{
+
+    card.classList.toggle("flip");
+
+});
+
+
+// ==========================
+// NEXT CARD
+// ==========================
+
+document.getElementById("next").addEventListener("click",()=>{
+
+    score++;
+
+    scoreText.innerHTML="⭐ Score: "+score;
+
+    current++;
+
+    loadCard();
+
+});
+
+
+// ==========================
+// RESTART BUTTON
+// ==========================
+
+document.getElementById("restart").addEventListener("click",()=>{
+
+    restartRound();
+
+});
+
+
+// PRIMEIRO CARD
+
+loadCard();
+
+// ==========================
+// TIMER
+// ==========================
+
+function startTimer(){
+
+    clearInterval(interval);
+
+    time = 30;
+
+    timer.innerHTML = "⏱️ " + time;
+
+    progressBar.style.width = "100%";
+
+    progressBar.style.background = "#22c55e";
+
+    interval = setInterval(() => {
+
+        time--;
+
+        timer.innerHTML = "⏱️ " + time;
+
+        // Atualiza barra
+        let percent = (time / 30) * 100;
+        progressBar.style.width = percent + "%";
+
+        if(percent <= 60){
+            progressBar.style.background = "#f59e0b";
+        }
+
+        if(percent <= 30){
+            progressBar.style.background = "#ef4444";
+        }
+
+        if(time <= 0){
+
+            clearInterval(interval);
+
+            endRound();
+
+        }
+
+    },1000);
+
+}
+
+
+
+// ==========================
+// END ROUND
+// ==========================
+
+function endRound(){
+
+    result.innerHTML = `
+        <h2>⏰ TIME'S UP!</h2>
+        <p>You completed <b>${score}</b> flashcards!</p>
+        <br>
+        <p>🔀 New round starting...</p>
+    `;
+
+    document.getElementById("next").disabled = true;
+    document.getElementById("restart").disabled = true;
+
+    setTimeout(()=>{
+
+        restartRound();
+
+    },3000);
+
+}
+
+
+
+// ==========================
+// RESTART ROUND
+// ==========================
+
+function restartRound(){
+
+    clearInterval(interval);
+
+    shuffle(words);
+
+    current = 0;
+
+    score = 0;
+
+    time = 30;
+
+    scoreText.innerHTML = "⭐ Score: 0";
+
+    result.innerHTML = "";
+
+    document.getElementById("next").disabled = false;
+    document.getElementById("restart").disabled = false;
+
+    loadCard();
+
+    startTimer();
+
+}
+
+
+
+// ==========================
+// START GAME
+// ==========================
+
+startTimer();
+
+
+
+
+</script>
+</html>
