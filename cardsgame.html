@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Don't Say! — English Speaking Game</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f4f2;
+    color: #111;
+    display: flex;
+    justify-content: center;
+    padding: 22px;
+  }
+
+  .game {
+    width: min(1120px, 100%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: clamp(28px, 5vw, 48px);
+    letter-spacing: -1px;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: #555;
+    font-size: 15px;
+  }
+
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 18px 0;
+  }
+
+  button {
+    border: 2px solid #111;
+    background: #fff;
+    color: #111;
+    border-radius: 10px;
+    padding: 11px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 #111;
+  }
+
+  button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+
+  .primary {
+    background: #111;
+    color: #fff;
+  }
+
+  .scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 22px;
+    margin: 8px 0 20px;
+    font-weight: 700;
+  }
+
+  .scoreboard span {
+    background: #fff;
+    border: 2px solid #111;
+    border-radius: 999px;
+    padding: 7px 15px;
+  }
+
+  .deck-area {
+    perspective: 1200px;
+    display: flex;
+    justify-content: center;
+    min-height: 520px;
+  }
+
+  .card {
+    width: min(650px, 94vw);
+    min-height: 490px;
+    background: #fff;
+    border: 3px solid #111;
+    border-radius: 18px;
+    box-shadow: 7px 7px 0 #111;
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    animation: appear .25s ease;
+  }
+
+  @keyframes appear {
+    from { opacity: 0; transform: scale(.96) rotateY(-8deg); }
+    to { opacity: 1; transform: scale(1) rotateY(0); }
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+    font-size: 18px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #111;
+  }
+
+  .points {
+    letter-spacing: 2px;
+  }
+
+  .card-number {
+    font-size: 13px;
+    color: #666;
+  }
+
+  .word {
+    text-align: center;
+    font-size: clamp(38px, 8vw, 70px);
+    font-weight: 900;
+    letter-spacing: -2px;
+    margin: auto 0 12px;
+  }
+
+  .dont-say {
+    background: #e8e8e8;
+    border-radius: 13px;
+    padding: 16px 12px;
+    text-align: center;
+    margin-bottom: auto;
+  }
+
+  .dont-say strong {
+    display: block;
+    font-size: 17px;
+    margin-bottom: 9px;
+  }
+
+  .forbidden {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 7px;
+  }
+
+  .forbidden span {
+    background: #fff;
+    border: 1px solid #aaa;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .hint {
+    text-align: center;
+    color: #666;
+    font-size: 13px;
+    margin-top: 14px;
+  }
+
+  .empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: min(650px, 94vw);
+    min-height: 490px;
+    background: #fff;
+    border: 3px dashed #111;
+    border-radius: 18px;
+    padding: 30px;
+  }
+
+  .empty h2 { margin-top: 0; }
+
+  .instructions {
+    margin: 24px auto 0;
+    max-width: 650px;
+    background: #fff;
+    border: 2px solid #111;
+    border-radius: 12px;
+    padding: 15px 18px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .instructions strong { font-size: 15px; }
+
+  @media (max-width: 600px) {
+    body { padding: 12px; }
+    .card {
+      min-height: 440px;
+      padding: 15px;
+      box-shadow: 5px 5px 0 #111;
+    }
+    .deck-area { min-height: 445px; }
+    .word { font-size: 44px; }
+    .topbar button { flex: 1 1 130px; }
+  }
+</style>
+</head>
+
+<body>
+<main class="game">
+  <header>
+    <h1>DON'T SAY!</h1>
+    <p class="subtitle">English Speaking Challenge • Explain the word without saying the forbidden words.</p>
+  </header>
+
+  <div class="topbar">
+    <button class="primary" id="drawBtn">🎴 DRAW CARD</button>
+    <button id="skipBtn">⏭ SKIP CARD</button>
+    <button id="shuffleBtn">🔀 SHUFFLE DECK</button>
+    <button id="resetBtn">↺ RESET GAME</button>
+  </div>
+
+  <div class="scoreboard">
+    <span>Cards left: <b id="remaining">80</b></span>
+    <span>Points: <b id="score">0</b></span>
+  </div>
+
+  <section class="deck-area" id="deckArea">
+    <div class="empty">
+      <div>
+        <h2>Ready?</h2>
+        <p>Click <b>DRAW CARD</b> to start.</p>
+        <p>Each card is drawn only once until the deck is reset.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="instructions">
+    <strong>How to play:</strong> One student draws a card and explains the target word in English.
+    The student <b>cannot say the target word or any of the “DON’T SAY” words</b>.
+    The team guesses the word before the teacher ends the turn. 
+    <b>1 point = easy • 2 points = medium • 3 points = difficult.</b>
+  </div>
+</main>
+
+<script>
+const originalCards = [
+  {word:"SANDWICH", points:1, dont:["bread", "meat", "lunch"]},
+  {word:"SALAD", points:1, dont:["vegetables", "healthy", "green"]},
+  {word:"CAKE", points:1, dont:["birthday", "sweet", "dessert"]},
+  {word:"CHOCOLATE", points:1, dont:["sweet", "candy", "brown"]},
+  {word:"DOG", points:1, dont:["animal", "pet", "bark"]},
+  {word:"CAT", points:1, dont:["animal", "pet", "meow"]},
+  {word:"PHONE", points:1, dont:["call", "message", "internet"]},
+  {word:"LAPTOP", points:1, dont:["computer", "work", "screen"]},
+  {word:"HEADPHONES", points:1, dont:["music", "ears", "listen"]},
+  {word:"WATCH", points:1, dont:["time", "wrist", "clock"]},
+  {word:"GLASSES", points:1, dont:["see", "eyes", "lens"]},
+  {word:"PILLOW", points:1, dont:["bed", "sleep", "head"]},
+  {word:"EAT", points:1, dont:["food", "hungry", "meal"]},
+  {word:"DRINK", points:1, dont:["water", "thirsty", "juice"]},
+  {word:"SLEEP", points:1, dont:["bed", "night", "tired"]},
+  {word:"RUN", points:1, dont:["fast", "walk", "legs"]},
+  {word:"SING", points:1, dont:["music", "voice", "song"]},
+  {word:"DANCE", points:1, dont:["music", "move", "party"]},
+  {word:"BOOK", points:1, dont:["read", "pages", "story"]},
+  {word:"PEN", points:1, dont:["write", "paper", "school"]},
+  {word:"BALL", points:1, dont:["game", "round", "play"]},
+  {word:"SHOES", points:1, dont:["feet", "wear", "walk"]},
+  {word:"ICE CREAM", points:1, dont:["cold", "dessert", "sweet"]},
+  {word:"COFFEE", points:1, dont:["hot", "drink", "morning"]},
+  {word:"APPLE", points:1, dont:["fruit", "red", "eat"]},
+  {word:"BIRTHDAY", points:1, dont:["cake", "party", "age"]},
+  {word:"FRIEND", points:1, dont:["person", "school", "together"]},
+  {word:"FAMILY", points:1, dont:["mother", "father", "home"]},
+  {word:"SCHOOL", points:2, dont:["student", "teacher", "class"]},
+  {word:"SUPERMARKET", points:2, dont:["food", "buy", "store"]},
+  {word:"RESTAURANT", points:2, dont:["food", "eat", "waiter"]},
+  {word:"PARK", points:2, dont:["trees", "outside", "play"]},
+  {word:"BEACH", points:2, dont:["sea", "sand", "water"]},
+  {word:"CITY", points:2, dont:["town", "buildings", "people"]},
+  {word:"HOUSE", points:2, dont:["home", "family", "live"]},
+  {word:"LIBRARY", points:2, dont:["books", "read", "quiet"]},
+  {word:"TEACHER", points:2, dont:["school", "student", "class"]},
+  {word:"DOCTOR", points:2, dont:["hospital", "sick", "patient"]},
+  {word:"STUDENT", points:2, dont:["school", "teacher", "study"]},
+  {word:"PILOT", points:2, dont:["airplane", "fly", "airport"]},
+  {word:"COOK", points:2, dont:["food", "kitchen", "chef"]},
+  {word:"DRIVE", points:2, dont:["car", "road", "steer"]},
+  {word:"SWIM", points:2, dont:["water", "pool", "sport"]},
+  {word:"READ", points:2, dont:["book", "words", "library"]},
+  {word:"WRITE", points:2, dont:["paper", "pen", "words"]},
+  {word:"CLEAN", points:2, dont:["dirty", "wash", "house"]},
+  {word:"OPEN", points:2, dont:["close", "door", "window"]},
+  {word:"CLOSE", points:2, dont:["open", "door", "shut"]},
+  {word:"BUY", points:2, dont:["money", "shop", "pay"]},
+  {word:"SELL", points:2, dont:["money", "customer", "buy"]},
+  {word:"WATCH", points:2, dont:["TV", "see", "screen"]},
+  {word:"LISTEN", points:2, dont:["hear", "music", "sound"]},
+  {word:"TALK", points:2, dont:["speak", "conversation", "say"]},
+  {word:"HELP", points:2, dont:["assist", "problem", "support"]},
+  {word:"FIREFIGHTER", points:3, dont:["fire", "truck", "rescue"]},
+  {word:"POLICE OFFICER", points:3, dont:["police", "crime", "uniform"]},
+  {word:"ARTIST", points:3, dont:["paint", "draw", "picture"]},
+  {word:"MECHANIC", points:3, dont:["car", "repair", "garage"]},
+  {word:"WALLET", points:3, dont:["money", "cards", "pocket"]},
+  {word:"CHARGER", points:3, dont:["phone", "battery", "electricity"]},
+  {word:"TRAVEL", points:3, dont:["trip", "airplane", "country"]},
+  {word:"WINTER", points:3, dont:["cold", "snow", "season"]},
+  {word:"SUMMER", points:3, dont:["hot", "vacation", "season"]},
+  {word:"MUSIC", points:3, dont:["song", "listen", "singer"]},
+  {word:"MOVIE", points:3, dont:["cinema", "watch", "film"]},
+  {word:"WEEKEND", points:3, dont:["Saturday", "Sunday", "days"]},
+  {word:"EXERCISE", points:3, dont:["sport", "gym", "body"]},
+  {word:"EXPLAIN", points:3, dont:["describe", "talk", "understand"]},
+  {word:"CHOOSE", points:3, dont:["pick", "decide", "option"]},
+  {word:"FORGET", points:3, dont:["remember", "mind", "lose"]},
+  {word:"REMEMBER", points:3, dont:["forget", "memory", "mind"]},
+  {word:"INVITE", points:3, dont:["party", "ask", "guest"]},
+  {word:"ARRIVE", points:3, dont:["come", "place", "reach"]},
+  {word:"LEAVE", points:3, dont:["go", "place", "depart"]},
+  {word:"BORROW", points:3, dont:["take", "lend", "return"]},
+  {word:"LEND", points:3, dont:["give", "borrow", "money"]},
+  {word:"PROMISE", points:3, dont:["say", "future", "keep"]},
+  {word:"DECIDE", points:3, dont:["choose", "option", "think"]},
+  {word:"IMAGINE", points:3, dont:["think", "picture", "dream"]},
+  {word:"DISCOVER", points:3, dont:["find", "learn", "new"]},
+];
+
+let deck = [];
+let score = 0;
+
+const deckArea = document.getElementById("deckArea");
+const remainingEl = document.getElementById("remaining");
+const scoreEl = document.getElementById("score");
+
+function shuffle(array) {
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function initGame() {
+  deck = shuffle(originalCards);
+  score = 0;
+  updateScore();
+  showReady();
+}
+
+function updateScore() {
+  remainingEl.textContent = deck.length;
+  scoreEl.textContent = score;
+}
+
+function showReady() {
+  deckArea.innerHTML = `
+    <div class="empty">
+      <div>
+        <h2>Ready?</h2>
+        <p>Click <b>DRAW CARD</b> to start.</p>
+        <p>The deck has <b>${deck.length}</b> cards.</p>
+      </div>
+    </div>`;
+}
+
+function drawCard() {
+  if (deck.length === 0) {
+    deckArea.innerHTML = `
+      <div class="empty">
+        <div>
+          <h2>🎉 Deck complete!</h2>
+          <p>Final score: <b>${score} points</b></p>
+          <p>Click <b>RESET GAME</b> to play again.</p>
+        </div>
+      </div>`;
+    updateScore();
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * deck.length);
+  const card = deck.splice(randomIndex,1)[0];
+  score += card.points;
+
+  const stars = "★".repeat(card.points);
+  const forbidden = card.dont.map(word => `<span>${word}</span>`).join("");
+
+  deckArea.innerHTML = `
+    <article class="card">
+      <div class="card-top">
+        <span class="points">${stars} ${card.points} POINT${card.points > 1 ? "S" : ""}</span>
+        <span class="card-number">${originalCards.length - deck.length}/${originalCards.length}</span>
+      </div>
+
+      <div class="word">${card.word}</div>
+
+      <div class="dont-say">
+        <strong>DON’T SAY:</strong>
+        <div class="forbidden">${forbidden}</div>
+      </div>
+
+      <div class="hint">Explain it in English — don’t use the target word or the forbidden words!</div>
+    </article>`;
+
+  updateScore();
+}
+
+document.getElementById("drawBtn").addEventListener("click", drawCard);
+
+document.getElementById("shuffleBtn").addEventListener("click", () => {
+  deck = shuffle(deck.length ? deck : originalCards);
+  showReady();
+  updateScore();
+});
+
+
+function skipCard() {
+  if(deck.length === 0) return;
+  const randomIndex = Math.floor(Math.random() * deck.length);
+  const card = deck.splice(randomIndex,1)[0];
+
+  const stars = "★".repeat(card.points);
+  const forbidden = card.dont.map(word => `<span>${word}</span>`).join("");
+
+  deckArea.innerHTML = `
+    <article class="card">
+      <div class="card-top">
+        <span class="points">${stars} ${card.points} POINT${card.points > 1 ? "S" : ""}</span>
+        <span class="card-number">${originalCards.length - deck.length}/${originalCards.length}</span>
+      </div>
+      <div class="word">${card.word}</div>
+      <div class="dont-say">
+        <strong>DON’T SAY:</strong>
+        <div class="forbidden">${forbidden}</div>
+      </div>
+      <div class="hint">Skipped card (0 points)</div>
+    </article>`;
+  updateScore();
+}
+
+document.getElementById("skipBtn").addEventListener("click", skipCard);
+
+
+document.getElementById("resetBtn").addEventListener("click", initGame);
+
+initGame();
+</script>
+</body>
+</html>
