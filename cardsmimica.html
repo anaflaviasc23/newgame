@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pictionary - English Game</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:22px;font-family:Arial,sans-serif;background:#f4f4f2;color:#111;display:flex;justify-content:center}
+.game{width:min(1000px,100%)}header{text-align:center;margin-bottom:18px}h1{margin:0 0 6px;font-size:clamp(30px,6vw,52px)}.subtitle{margin:0;color:#555}
+.topbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0}
+button{border:2px solid #111;background:#fff;color:#111;border-radius:10px;padding:12px 20px;font-size:15px;font-weight:800;cursor:pointer;transition:.15s}
+button:hover{transform:translateY(-2px);box-shadow:0 4px 0 #111}button:active{transform:translateY(1px);box-shadow:none}.primary{background:#111;color:#fff}
+.counter{text-align:center;font-weight:800;margin:10px 0 20px}.counter span{background:#fff;border:2px solid #111;border-radius:999px;padding:7px 16px}
+.deck-area{display:flex;justify-content:center;min-height:520px}
+.card{width:min(650px,94vw);min-height:490px;background:#fff;border:3px solid #111;border-radius:18px;box-shadow:7px 7px 0 #111;padding:20px;display:flex;flex-direction:column;animation:appear .25s ease}
+@keyframes appear{from{opacity:0;transform:scale(.96) rotateY(-8deg)}to{opacity:1;transform:scale(1) rotateY(0)}}
+.card-top{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:18px;padding-bottom:12px;border-bottom:3px solid #111}
+.card-number{font-size:13px;color:#666}.word{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(42px,9vw,78px);font-weight:900;letter-spacing:-2px}
+.draw-note{background:#e8e8e8;border-radius:13px;padding:16px;text-align:center;font-size:15px;font-weight:700}
+.draw-note small{display:block;margin-top:6px;color:#555;font-weight:400}
+.empty{display:flex;align-items:center;justify-content:center;text-align:center;width:min(650px,94vw);min-height:490px;background:#fff;border:3px dashed #111;border-radius:18px;padding:30px}
+@media(max-width:600px){body{padding:12px}.card{min-height:440px;padding:15px;box-shadow:5px 5px 0 #111}.deck-area{min-height:445px}.word{font-size:46px}.topbar button{flex:1 1 120px}}
+</style>
+</head>
+<body>
+<main class="game">
+<header><h1>PICTIONARY</h1><p class="subtitle">Draw the word on the board — your group has to guess!</p></header>
+<div class="topbar">
+<button class="primary" id="drawBtn">🎴 DRAW CARD</button>
+<button id="skipBtn">⏭ SKIP CARD</button>
+<button id="shuffleBtn">🔀 SHUFFLE DECK</button>
+<button id="resetBtn">↺ RESET</button>
+</div>
+<div class="counter"><span>Cards left: <b id="remaining">80</b></span></div>
+<section class="deck-area" id="deckArea"><div class="empty"><div><h2>🎨 Ready to draw?</h2><p>Click <b>DRAW CARD</b> to reveal the word.</p><p>Only the person drawing should look at the screen!</p></div></div></section>
+</main>
+<script>
+const originalCards=[
+  "SANDWICH",
+  "SALAD",
+  "CAKE",
+  "CHOCOLATE",
+  "DOG",
+  "CAT",
+  "PHONE",
+  "LAPTOP",
+  "HEADPHONES",
+  "WATCH",
+  "GLASSES",
+  "PILLOW",
+  "EAT",
+  "DRINK",
+  "SLEEP",
+  "RUN",
+  "SING",
+  "DANCE",
+  "BOOK",
+  "PEN",
+  "BALL",
+  "SHOES",
+  "ICE CREAM",
+  "COFFEE",
+  "APPLE",
+  "BIRTHDAY",
+  "FRIEND",
+  "FAMILY",
+  "SCHOOL",
+  "SUPERMARKET",
+  "RESTAURANT",
+  "PARK",
+  "BEACH",
+  "CITY",
+  "HOUSE",
+  "LIBRARY",
+  "TEACHER",
+  "DOCTOR",
+  "STUDENT",
+  "PILOT",
+  "COOK",
+  "DRIVE",
+  "SWIM",
+  "READ",
+  "WRITE",
+  "CLEAN",
+  "OPEN",
+  "CLOSE",
+  "BUY",
+  "SELL",
+  "WATCH TV",
+  "LISTEN",
+  "TALK",
+  "HELP",
+  "FIREFIGHTER",
+  "POLICE OFFICER",
+  "ARTIST",
+  "MECHANIC",
+  "WALLET",
+  "CHARGER",
+  "TRAVEL",
+  "WINTER",
+  "SUMMER",
+  "MUSIC",
+  "MOVIE",
+  "WEEKEND",
+  "EXERCISE",
+  "EXPLAIN",
+  "CHOOSE",
+  "FORGET",
+  "REMEMBER",
+  "INVITE",
+  "ARRIVE",
+  "LEAVE",
+  "BORROW",
+  "LEND",
+  "PROMISE",
+  "DECIDE",
+  "IMAGINE",
+  "DISCOVER"
+];
+let deck=[];
+const area=document.getElementById("deckArea"), remaining=document.getElementById("remaining");
+function shuffle(a){let x=[...a];for(let i=x.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function update(){remaining.textContent=deck.length}
+function ready(){area.innerHTML=`<div class="empty"><div><h2>🎨 Ready to draw?</h2><p>Click <b>DRAW CARD</b> to reveal the word.</p><p>There are <b>${deck.length}</b> cards in the deck.</p></div></div>`}
+function show(word,skipped=false){area.innerHTML=`<article class="card"><div class="card-top"><span>✏️ DRAW THIS!</span><span class="card-number">${originalCards.length-deck.length}/${originalCards.length}</span></div><div class="word">${word}</div><div class="draw-note">${skipped?"⏭ CARD SKIPPED":"🎨 DRAW IT ON THE BOARD!"}<small>The group must guess the word. Don't show the screen to the group.</small></div></article>`}
+function draw(){if(!deck.length){area.innerHTML=`<div class="empty"><div><h2>🎉 Deck complete!</h2><p>Click <b>RESET</b> to play again.</p></div></div>`;return}let i=Math.floor(Math.random()*deck.length);show(deck.splice(i,1)[0]);update()}
+function skip(){if(!deck.length)return;let i=Math.floor(Math.random()*deck.length);show(deck.splice(i,1)[0],true);update()}
+document.getElementById("drawBtn").onclick=draw;
+document.getElementById("skipBtn").onclick=skip;
+document.getElementById("shuffleBtn").onclick=()=>{deck=shuffle(deck.length?deck:originalCards);ready();update()};
+document.getElementById("resetBtn").onclick=()=>{deck=shuffle(originalCards);ready();update()};
+deck=shuffle(originalCards);update();
+</script>
+</body>
+</html>
