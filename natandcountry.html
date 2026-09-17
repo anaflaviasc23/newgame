@@ -1,284 +1,1875 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<title>Flag Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Flag Game - English</title>
 
 <style>
-body {
-    font-family: Arial;
-    background: #eef2f7;
-    margin: 0;
+
+/* ==========================================
+   RESET
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
-/* CONTAINER PRINCIPAL */
-.game {
-    max-width: 1000px;
-    margin: 30px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    text-align: center;
+
+/* ==========================================
+   BODY
+========================================== */
+
+body{
+
+    background:#f4f4f2;
+
+    color:#111;
+
+    min-height:100vh;
+
+    padding:20px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
 }
 
-/* TITULO */
-h2 {
-    margin-bottom: 10px;
+
+/* ==========================================
+   GAME
+========================================== */
+
+.game{
+
+    width:min(850px, 100%);
+
 }
 
-/* BANDEIRA */
-.flag img {
-    width: 260px;
-    height: 170px;
-    object-fit: cover;
-    border-radius: 12px;
-    margin: 20px 0;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+
+/* ==========================================
+   HEADER
+========================================== */
+
+header{
+
+    text-align:center;
+
+    margin-bottom:18px;
+
 }
 
-/* CARDS */
-.container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin: 20px auto;
-    max-width: 600px;
+h1{
+
+    margin:0 0 6px;
+
+    font-size:clamp(32px, 6vw, 52px);
+
+    font-weight:900;
+
+    letter-spacing:-2px;
+
 }
 
-.card {
-    padding: 12px;
-    border-radius: 10px;
-    background: #34495e;
-    color: white;
-    cursor: grab;
-    font-weight: bold;
-    transition: 0.2s;
+.subtitle{
+
+    color:#666;
+
+    font-size:15px;
+
 }
 
-.card:hover {
-    transform: scale(1.05);
+
+/* ==========================================
+   TOP BAR
+========================================== */
+
+.topbar{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin:18px 0;
+
 }
 
-/* DROP ZONES */
-.drop-area {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 20px;
+.topbar button{
+
+    border:2px solid #111;
+
+    background:white;
+
+    color:#111;
+
+    border-radius:10px;
+
+    padding:11px 18px;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.15s ease;
+
 }
 
-.box {
-    width: 220px;
+.topbar button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 0 #111;
+
 }
 
-.drop-zone {
-    height: 100px;
-    border: 2px dashed #bbb;
-    border-radius: 10px;
-    background: #fafafa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+.topbar button:active{
+
+    transform:translateY(1px);
+
+    box-shadow:none;
+
 }
 
-/* BOTÃO */
-button {
-    margin-top: 25px;
-    padding: 12px 30px;
-    border: none;
-    border-radius: 10px;
-    background: #27ae60;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
+.topbar .primary{
+
+    background:#111;
+
+    color:white;
+
 }
 
-button:hover {
-    background: #219150;
+
+/* ==========================================
+   CARD
+========================================== */
+
+.card{
+
+    width:min(800px, 94vw);
+
+    margin:auto;
+
+    padding:20px;
+
+    background:white;
+
+    border:3px solid #111;
+
+    border-radius:18px;
+
+    box-shadow:7px 7px 0 #111;
+
 }
 
-/* SCORE */
-.score {
-    margin-top: 15px;
-    font-size: 18px;
+
+/* ==========================================
+   CARD HEADER
+========================================== */
+
+.card-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding-bottom:12px;
+
+    border-bottom:3px solid #111;
+
+    font-size:17px;
+
+    font-weight:900;
+
 }
 
-/* POPUP */
-.popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: white;
-    padding: 25px 50px;
-    border-radius: 12px;
-    font-size: 22px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.2);
-    transition: 0.3s;
+.card-number{
+
+    font-size:12px;
+
+    color:#777;
+
 }
 
-.popup.show {
-    transform: translate(-50%, -50%) scale(1);
+
+/* ==========================================
+   FLAG
+========================================== */
+
+.flag-area{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:25px 10px 15px;
+
 }
+
+.flag{
+
+    width:min(360px, 75vw);
+
+    aspect-ratio:3 / 2;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    background:#eee;
+
+    border:3px solid #111;
+
+    box-shadow:6px 6px 0 #111;
+
+}
+
+.flag img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+
+/* ==========================================
+   QUESTION
+========================================== */
+
+.question{
+
+    text-align:center;
+
+    margin:15px 0 20px;
+
+}
+
+.question h2{
+
+    font-size:clamp(20px, 4vw, 28px);
+
+    font-weight:900;
+
+}
+
+.question p{
+
+    color:#666;
+
+    margin-top:5px;
+
+    font-size:14px;
+
+}
+
+
+/* ==========================================
+   SELECTION AREA
+========================================== */
+
+.selection-area{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+
+    margin-top:10px;
+
+}
+
+
+/* ==========================================
+   OPTION GROUP
+========================================== */
+
+.option-group{
+
+    border:2px solid #111;
+
+    border-radius:14px;
+
+    padding:15px;
+
+    background:#fafafa;
+
+}
+
+.option-title{
+
+    text-align:center;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    margin-bottom:12px;
+
+}
+
+
+/* ==========================================
+   OPTIONS
+========================================== */
+
+.options{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+}
+
+.option{
+
+    width:100%;
+
+    padding:12px 10px;
+
+    border:2px solid #222;
+
+    border-radius:9px;
+
+    background:white;
+
+    color:#111;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.15s ease;
+
+}
+
+.option:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:3px 3px 0 #111;
+
+}
+
+
+/* ==========================================
+   SELECTED
+========================================== */
+
+.option.selected{
+
+    background:#111;
+
+    color:white;
+
+    transform:translateY(-2px);
+
+    box-shadow:4px 4px 0 #111;
+
+}
+
+
+/* ==========================================
+   WRONG
+========================================== */
+
+.option.wrong{
+
+    background:#e74c3c;
+
+    color:white;
+
+    border-color:#111;
+
+}
+
+
+/* ==========================================
+   CHECK BUTTON
+========================================== */
+
+.check-area{
+
+    text-align:center;
+
+    margin-top:22px;
+
+}
+
+.check-button{
+
+    border:3px solid #111;
+
+    background:#111;
+
+    color:white;
+
+    border-radius:11px;
+
+    padding:13px 35px;
+
+    font-size:16px;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+    transition:.15s ease;
+
+}
+
+.check-button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:5px 5px 0 #111;
+
+}
+
+.check-button:active{
+
+    transform:translateY(1px);
+
+    box-shadow:none;
+
+}
+
+
+/* ==========================================
+   SCORE
+========================================== */
+
+.score-area{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-top:20px;
+
+}
+
+.score{
+
+    display:inline-block;
+
+    padding:9px 18px;
+
+    border:2px solid #111;
+
+    border-radius:10px;
+
+    background:#f4f4f2;
+
+    font-weight:900;
+
+}
+
+
+/* ==========================================
+   PROGRESS
+========================================== */
+
+.progress{
+
+    text-align:center;
+
+    margin-top:10px;
+
+    color:#777;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+
+/* ==========================================
+   POPUP
+========================================== */
+
+.popup{
+
+    position:fixed;
+
+    left:50%;
+
+    top:50%;
+
+    transform:
+        translate(-50%,-50%)
+        scale(0);
+
+    background:white;
+
+    color:#111;
+
+    border:3px solid #111;
+
+    border-radius:15px;
+
+    padding:25px 40px;
+
+    font-size:22px;
+
+    font-weight:900;
+
+    box-shadow:7px 7px 0 #111;
+
+    z-index:1000;
+
+    transition:.25s ease;
+
+    text-align:center;
+
+}
+
+.popup.show{
+
+    transform:
+        translate(-50%,-50%)
+        scale(1);
+
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:650px){
+
+    body{
+
+        padding:12px;
+
+        align-items:flex-start;
+
+    }
+
+    .card{
+
+        padding:15px;
+
+        box-shadow:5px 5px 0 #111;
+
+    }
+
+    .card-top{
+
+        font-size:14px;
+
+    }
+
+    .selection-area{
+
+        grid-template-columns:1fr;
+
+        gap:12px;
+
+    }
+
+    .flag{
+
+        width:min(320px, 85vw);
+
+    }
+
+    .option{
+
+        padding:11px;
+
+    }
+
+    .check-button{
+
+        width:100%;
+
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="game">
 
-<h2>Drag the correct Country and Nationality</h2>
 
-<div class="flag" id="flag"></div>
+    <!-- ==================================
+         HEADER
+    ================================== -->
 
-<div class="container" id="cards"></div>
+    <header>
 
-<div class="drop-area">
-    <div class="box">
-        <h3>Country</h3>
-        <div class="drop-zone" id="countryZone"></div>
+        <h1>FLAG GAME</h1>
+
+        <p class="subtitle">
+
+            Choose the correct country and nationality.
+
+        </p>
+
+    </header>
+
+
+    <!-- ==================================
+         TOP BUTTONS
+    ================================== -->
+
+    <div class="topbar">
+
+        <button
+            type="button"
+            class="primary"
+            id="newRound">
+
+            🎮 NEW ROUND
+
+        </button>
+
+
+        <button
+            type="button"
+            id="resetGame">
+
+            ↺ RESET
+
+        </button>
+
     </div>
 
-    <div class="box">
-        <h3>Nationality</h3>
-        <div class="drop-zone" id="nationalityZone"></div>
-    </div>
+
+    <!-- ==================================
+         MAIN CARD
+    ================================== -->
+
+    <section class="card">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="card-top">
+
+            <span>
+
+                🌎 FLAG CHALLENGE
+
+            </span>
+
+            <span
+                class="card-number"
+                id="roundNumber">
+
+                ROUND 1
+
+            </span>
+
+        </div>
+
+
+        <!-- ==================================
+             FLAG
+        ================================== -->
+
+        <div class="flag-area">
+
+            <div class="flag">
+
+                <img
+                    id="flagImage"
+                    src=""
+                    alt="Flag">
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================
+             QUESTION
+        ================================== -->
+
+        <div class="question">
+
+            <h2>
+
+                Which country is this?
+
+            </h2>
+
+            <p>
+
+                Select the country and nationality.
+
+            </p>
+
+        </div>
+
+
+        <!-- ==================================
+             OPTIONS
+        ================================== -->
+
+        <div class="selection-area">
+
+
+            <!-- COUNTRY -->
+
+            <div class="option-group">
+
+                <div class="option-title">
+
+                    🌎 COUNTRY
+
+                </div>
+
+                <div
+                    class="options"
+                    id="countryOptions">
+
+                </div>
+
+            </div>
+
+
+            <!-- NATIONALITY -->
+
+            <div class="option-group">
+
+                <div class="option-title">
+
+                    👤 NATIONALITY
+
+                </div>
+
+                <div
+                    class="options"
+                    id="nationalityOptions">
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ==================================
+             CHECK BUTTON
+        ================================== -->
+
+        <div class="check-area">
+
+            <button
+                type="button"
+                class="check-button"
+                id="checkButton">
+
+                CHECK ANSWER
+
+            </button>
+
+        </div>
+
+
+        <!-- ==================================
+             SCORE
+        ================================== -->
+
+        <div class="score-area">
+
+            <div
+                class="score"
+                id="score">
+
+                SCORE: 0
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================
+             PROGRESS
+        ================================== -->
+
+        <div
+            class="progress"
+            id="progress">
+
+            1 / 30
+
+        </div>
+
+
+    </section>
+
+
 </div>
 
-<button onclick="checkAnswer()">Check</button>
 
-<div class="score" id="score">Score: 0</div>
+<!-- ==================================
+     POPUP
+================================== -->
+
+<div
+    class="popup"
+    id="popup">
 
 </div>
 
-<div class="popup" id="popup"></div>
+
 
 <script>
-let dragged = null;
-let score = 0;
-let index = 0;
+
+
+/* ==========================================
+   DADOS
+========================================== */
 
 const data = [
-{code:"br", country:"Brazil", nationality:"Brazilian"},
-{code:"jp", country:"Japan", nationality:"Japanese"},
-{code:"fr", country:"France", nationality:"French"},
-{code:"it", country:"Italy", nationality:"Italian"},
-{code:"de", country:"Germany", nationality:"German"},
-{code:"es", country:"Spain", nationality:"Spanish"},
-{code:"ca", country:"Canada", nationality:"Canadian"},
-{code:"cn", country:"China", nationality:"Chinese"},
-{code:"in", country:"India", nationality:"Indian"},
-{code:"mx", country:"Mexico", nationality:"Mexican"},
-{code:"ar", country:"Argentina", nationality:"Argentinian"},
-{code:"pt", country:"Portugal", nationality:"Portuguese"},
-{code:"ru", country:"Russia", nationality:"Russian"},
-{code:"au", country:"Australia", nationality:"Australian"},
-{code:"eg", country:"Egypt", nationality:"Egyptian"},
-{code:"tr", country:"Turkey", nationality:"Turkish"},
-{code:"se", country:"Sweden", nationality:"Swedish"},
-{code:"no", country:"Norway", nationality:"Norwegian"},
-{code:"gr", country:"Greece", nationality:"Greek"},
-{code:"nl", country:"Netherlands", nationality:"Dutch"},
-{code:"us", country:"USA", nationality:"American"},
-{code:"gb", country:"UK", nationality:"British"},
-{code:"cl", country:"Chile", nationality:"Chilean"},
-{code:"co", country:"Colombia", nationality:"Colombian"},
-{code:"pe", country:"Peru", nationality:"Peruvian"},
-{code:"za", country:"South Africa", nationality:"South African"},
-{code:"kr", country:"South Korea", nationality:"Korean"},
-{code:"sa", country:"Saudi Arabia", nationality:"Saudi"},
-{code:"ie", country:"Ireland", nationality:"Irish"},
-{code:"ch", country:"Switzerland", nationality:"Swiss"}
+
+    {
+        code:"br",
+        country:"Brazil",
+        nationality:"Brazilian"
+    },
+
+    {
+        code:"jp",
+        country:"Japan",
+        nationality:"Japanese"
+    },
+
+    {
+        code:"fr",
+        country:"France",
+        nationality:"French"
+    },
+
+    {
+        code:"it",
+        country:"Italy",
+        nationality:"Italian"
+    },
+
+    {
+        code:"de",
+        country:"Germany",
+        nationality:"German"
+    },
+
+    {
+        code:"es",
+        country:"Spain",
+        nationality:"Spanish"
+    },
+
+    {
+        code:"ca",
+        country:"Canada",
+        nationality:"Canadian"
+    },
+
+    {
+        code:"cn",
+        country:"China",
+        nationality:"Chinese"
+    },
+
+    {
+        code:"in",
+        country:"India",
+        nationality:"Indian"
+    },
+
+    {
+        code:"mx",
+        country:"Mexico",
+        nationality:"Mexican"
+    },
+
+    {
+        code:"ar",
+        country:"Argentina",
+        nationality:"Argentinian"
+    },
+
+    {
+        code:"pt",
+        country:"Portugal",
+        nationality:"Portuguese"
+    },
+
+    {
+        code:"ru",
+        country:"Russia",
+        nationality:"Russian"
+    },
+
+    {
+        code:"au",
+        country:"Australia",
+        nationality:"Australian"
+    },
+
+    {
+        code:"eg",
+        country:"Egypt",
+        nationality:"Egyptian"
+    },
+
+    {
+        code:"tr",
+        country:"Turkey",
+        nationality:"Turkish"
+    },
+
+    {
+        code:"se",
+        country:"Sweden",
+        nationality:"Swedish"
+    },
+
+    {
+        code:"no",
+        country:"Norway",
+        nationality:"Norwegian"
+    },
+
+    {
+        code:"gr",
+        country:"Greece",
+        nationality:"Greek"
+    },
+
+    {
+        code:"nl",
+        country:"Netherlands",
+        nationality:"Dutch"
+    },
+
+    {
+        code:"us",
+        country:"USA",
+        nationality:"American"
+    },
+
+    {
+        code:"gb",
+        country:"UK",
+        nationality:"British"
+    },
+
+    {
+        code:"cl",
+        country:"Chile",
+        nationality:"Chilean"
+    },
+
+    {
+        code:"co",
+        country:"Colombia",
+        nationality:"Colombian"
+    },
+
+    {
+        code:"pe",
+        country:"Peru",
+        nationality:"Peruvian"
+    },
+
+    {
+        code:"za",
+        country:"South Africa",
+        nationality:"South African"
+    },
+
+    {
+        code:"kr",
+        country:"South Korea",
+        nationality:"Korean"
+    },
+
+    {
+        code:"sa",
+        country:"Saudi Arabia",
+        nationality:"Saudi"
+    },
+
+    {
+        code:"ie",
+        country:"Ireland",
+        nationality:"Irish"
+    },
+
+    {
+        code:"ch",
+        country:"Switzerland",
+        nationality:"Swiss"
+    }
+
 ];
 
-data.sort(() => Math.random() - 0.5);
 
-function loadRound() {
-    if (index >= data.length) {
-        showPopup("Game finished! Score: " + score);
-        return;
+/* ==========================================
+   GAME VARIABLES
+========================================== */
+
+let gameData = [];
+
+let index = 0;
+
+let score = 0;
+
+let selectedCountry = "";
+
+let selectedNationality = "";
+
+let checking = false;
+
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const flagImage =
+    document.getElementById("flagImage");
+
+const countryOptions =
+    document.getElementById("countryOptions");
+
+const nationalityOptions =
+    document.getElementById("nationalityOptions");
+
+const scoreElement =
+    document.getElementById("score");
+
+const progressElement =
+    document.getElementById("progress");
+
+const roundNumber =
+    document.getElementById("roundNumber");
+
+const popup =
+    document.getElementById("popup");
+
+const checkButton =
+    document.getElementById("checkButton");
+
+const newRoundButton =
+    document.getElementById("newRound");
+
+const resetButton =
+    document.getElementById("resetGame");
+
+
+/* ==========================================
+   SHUFFLE
+========================================== */
+
+function shuffle(array){
+
+    for(
+        let i = array.length - 1;
+        i > 0;
+        i--
+    ){
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+
+        const temp =
+            array[i];
+
+        array[i] =
+            array[j];
+
+        array[j] =
+            temp;
+
     }
 
-    const current = data[index];
+    return array;
 
-    document.getElementById("flag").innerHTML =
-        `<img src="https://flagcdn.com/w320/${current.code}.png">`;
-
-    document.getElementById("countryZone").innerHTML = "";
-    document.getElementById("nationalityZone").innerHTML = "";
-
-    const cardsDiv = document.getElementById("cards");
-    cardsDiv.innerHTML = "";
-
-    let options = [current.country, current.nationality];
-
-    while (options.length < 6) {
-        let random = data[Math.floor(Math.random() * data.length)];
-        let option = Math.random() > 0.5 ? random.country : random.nationality;
-
-        if (!options.includes(option)) {
-            options.push(option);
-        }
-    }
-
-    options.sort(() => Math.random() - 0.5);
-
-    options.forEach(text => {
-        let div = document.createElement("div");
-        div.className = "card";
-        div.innerText = text;
-        div.draggable = true;
-
-        div.addEventListener("dragstart", () => dragged = div);
-
-        cardsDiv.appendChild(div);
-    });
 }
 
-document.querySelectorAll(".drop-zone").forEach(zone => {
-    zone.addEventListener("dragover", e => e.preventDefault());
 
-    zone.addEventListener("drop", () => {
-        if (dragged) {
-            zone.innerHTML = "";
-            zone.appendChild(dragged);
+/* ==========================================
+   CREATE COUNTRY OPTIONS
+========================================== */
+
+function createCountryOptions(){
+
+    const current =
+        gameData[index];
+
+
+    let countries = [
+
+        current.country
+
+    ];
+
+
+    /*
+    Adiciona países aleatórios
+    até chegar a 4 opções.
+    */
+
+    while(
+        countries.length < 4
+    ){
+
+        const random =
+            data[
+                Math.floor(
+                    Math.random() *
+                    data.length
+                )
+            ];
+
+
+        if(
+            !countries.includes(
+                random.country
+            )
+        ){
+
+            countries.push(
+                random.country
+            );
+
         }
-    });
-});
 
-function checkAnswer() {
-    const current = data[index];
+    }
 
-    let country = document.getElementById("countryZone").innerText;
-    let nationality = document.getElementById("nationalityZone").innerText;
 
-    if (country === current.country && nationality === current.nationality) {
+    shuffle(countries);
+
+
+    /*
+    Cria os botões.
+    */
+
+    countries.forEach(
+        country => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type =
+                "button";
+
+
+            button.className =
+                "option";
+
+
+            button.textContent =
+                country;
+
+
+            /*
+            Guarda o valor
+            no próprio botão.
+            */
+
+            button.dataset.value =
+                country;
+
+
+            button.addEventListener(
+                "click",
+                function(){
+
+                    selectCountry(
+                        this
+                    );
+
+                }
+            );
+
+
+            countryOptions.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* ==========================================
+   CREATE NATIONALITY OPTIONS
+========================================== */
+
+function createNationalityOptions(){
+
+    const current =
+        gameData[index];
+
+
+    let nationalities = [
+
+        current.nationality
+
+    ];
+
+
+    /*
+    Adiciona nacionalidades aleatórias
+    até chegar a 4 opções.
+    */
+
+    while(
+        nationalities.length < 4
+    ){
+
+        const random =
+            data[
+                Math.floor(
+                    Math.random() *
+                    data.length
+                )
+            ];
+
+
+        if(
+            !nationalities.includes(
+                random.nationality
+            )
+        ){
+
+            nationalities.push(
+                random.nationality
+            );
+
+        }
+
+    }
+
+
+    shuffle(nationalities);
+
+
+    /*
+    Cria os botões.
+    */
+
+    nationalities.forEach(
+        nationality => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type =
+                "button";
+
+
+            button.className =
+                "option";
+
+
+            button.textContent =
+                nationality;
+
+
+            button.dataset.value =
+                nationality;
+
+
+            button.addEventListener(
+                "click",
+                function(){
+
+                    selectNationality(
+                        this
+                    );
+
+                }
+            );
+
+
+            nationalityOptions.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* ==========================================
+   SELECT COUNTRY
+========================================== */
+
+function selectCountry(button){
+
+    /*
+    Remove seleção anterior.
+    */
+
+    const buttons =
+        document.querySelectorAll(
+            "#countryOptions .option"
+        );
+
+
+    buttons.forEach(
+        option => {
+
+            option.classList.remove(
+                "selected"
+            );
+
+            option.classList.remove(
+                "wrong"
+            );
+
+        }
+    );
+
+
+    /*
+    Seleciona o botão.
+    */
+
+    button.classList.add(
+        "selected"
+    );
+
+
+    /*
+    Guarda o valor.
+    */
+
+    selectedCountry =
+        button.dataset.value;
+
+}
+
+
+/* ==========================================
+   SELECT NATIONALITY
+========================================== */
+
+function selectNationality(button){
+
+    /*
+    Remove seleção anterior.
+    */
+
+    const buttons =
+        document.querySelectorAll(
+            "#nationalityOptions .option"
+        );
+
+
+    buttons.forEach(
+        option => {
+
+            option.classList.remove(
+                "selected"
+            );
+
+            option.classList.remove(
+                "wrong"
+            );
+
+        }
+    );
+
+
+    /*
+    Seleciona o botão.
+    */
+
+    button.classList.add(
+        "selected"
+    );
+
+
+    /*
+    Guarda o valor.
+    */
+
+    selectedNationality =
+        button.dataset.value;
+
+}
+
+
+/* ==========================================
+   LOAD ROUND
+========================================== */
+
+function loadRound(){
+
+    /*
+    Verifica se o jogo terminou.
+    */
+
+    if(
+        index >= gameData.length
+    ){
+
+        showPopup(
+            "🎉 GAME FINISHED!<br><br>" +
+            "Score: " +
+            score +
+            " / " +
+            gameData.length
+        );
+
+        return;
+
+    }
+
+
+    /*
+    Reseta as seleções.
+    */
+
+    selectedCountry = "";
+
+    selectedNationality = "";
+
+    checking = false;
+
+
+    /*
+    Obtém questão atual.
+    */
+
+    const current =
+        gameData[index];
+
+
+    /*
+    Mostra bandeira.
+    */
+
+    flagImage.src =
+        "https://flagcdn.com/w640/" +
+        current.code +
+        ".png";
+
+
+    flagImage.alt =
+        "Flag of " +
+        current.country;
+
+
+    /*
+    Limpa opções antigas.
+    */
+
+    countryOptions.innerHTML = "";
+
+    nationalityOptions.innerHTML = "";
+
+
+    /*
+    Cria novas opções.
+    */
+
+    createCountryOptions();
+
+    createNationalityOptions();
+
+
+    /*
+    Atualiza rodada.
+    */
+
+    roundNumber.textContent =
+        "ROUND " +
+        (index + 1);
+
+
+    /*
+    Atualiza progresso.
+    */
+
+    progressElement.textContent =
+        (index + 1) +
+        " / " +
+        gameData.length;
+
+}
+
+
+/* ==========================================
+   CHECK ANSWER
+========================================== */
+
+function checkAnswer(){
+
+    /*
+    Impede verificar novamente
+    enquanto muda de questão.
+    */
+
+    if(checking){
+
+        return;
+
+    }
+
+
+    /*
+    Precisa selecionar os dois.
+    */
+
+    if(
+        selectedCountry === "" ||
+        selectedNationality === ""
+    ){
+
+        showPopup(
+            "⚠️ SELECT BOTH ANSWERS!"
+        );
+
+        return;
+
+    }
+
+
+    /*
+    Questão atual.
+    */
+
+    const current =
+        gameData[index];
+
+
+    /*
+    Verifica cada resposta.
+    */
+
+    const countryCorrect =
+        selectedCountry ===
+        current.country;
+
+
+    const nationalityCorrect =
+        selectedNationality ===
+        current.nationality;
+
+
+    /* ======================================
+       CORRETO
+    ====================================== */
+
+    if(
+        countryCorrect &&
+        nationalityCorrect
+    ){
+
+        checking = true;
+
+
         score++;
-        document.getElementById("score").innerText = "Score: " + score;
 
-        showPopup("It's correct 🎉");
+
+        scoreElement.textContent =
+            "SCORE: " +
+            score;
+
+
+        showPopup(
+            "🎉 CORRECT!"
+        );
+
+
+        /*
+        Próxima rodada.
+        */
 
         index++;
-        setTimeout(loadRound, 1200);
-    } else {
-        showPopup("It's wrong ❌");
+
+
+        setTimeout(
+            () => {
+
+                loadRound();
+
+            },
+            1000
+        );
+
+
+        return;
+
     }
+
+
+    /* ======================================
+       ERRADO
+    ====================================== */
+
+    showPopup(
+        "❌ WRONG! TRY AGAIN!"
+    );
+
+
+    /*
+    Marca o país errado.
+    */
+
+    if(
+        !countryCorrect
+    ){
+
+        document
+            .querySelectorAll(
+                "#countryOptions .option"
+            )
+            .forEach(
+                option => {
+
+                    if(
+                        option.dataset.value ===
+                        selectedCountry
+                    ){
+
+                        option.classList.add(
+                            "wrong"
+                        );
+
+                    }
+
+                }
+            );
+
+    }
+
+
+    /*
+    Marca a nacionalidade errada.
+    */
+
+    if(
+        !nationalityCorrect
+    ){
+
+        document
+            .querySelectorAll(
+                "#nationalityOptions .option"
+            )
+            .forEach(
+                option => {
+
+                    if(
+                        option.dataset.value ===
+                        selectedNationality
+                    ){
+
+                        option.classList.add(
+                            "wrong"
+                        );
+
+                    }
+
+                }
+            );
+
+    }
+
+
+    /*
+    Remove o vermelho depois
+    de um pequeno tempo.
+    */
+
+    setTimeout(
+        () => {
+
+            document
+                .querySelectorAll(
+                    ".option"
+                )
+                .forEach(
+                    option => {
+
+                        option.classList.remove(
+                            "wrong"
+                        );
+
+                    }
+                );
+
+        },
+        800
+    );
+
 }
 
-function showPopup(message) {
-    const popup = document.getElementById("popup");
-    popup.innerText = message;
-    popup.classList.add("show");
 
-    setTimeout(() => {
-        popup.classList.remove("show");
-    }, 1500);
+/* ==========================================
+   POPUP
+========================================== */
+
+function showPopup(message){
+
+    popup.innerHTML =
+        message;
+
+
+    popup.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        () => {
+
+            popup.classList.remove(
+                "show"
+            );
+
+        },
+        1200
+    );
+
 }
+
+
+/* ==========================================
+   CHECK BUTTON
+========================================== */
+
+checkButton.addEventListener(
+    "click",
+    function(){
+
+        checkAnswer();
+
+    }
+);
+
+
+/* ==========================================
+   NEW ROUND
+========================================== */
+
+newRoundButton.addEventListener(
+    "click",
+    function(){
+
+        gameData =
+            shuffle(
+                [...data]
+            );
+
+
+        index = 0;
+
+
+        score = 0;
+
+
+        scoreElement.textContent =
+            "SCORE: 0";
+
+
+        loadRound();
+
+    }
+);
+
+
+/* ==========================================
+   RESET
+========================================== */
+
+resetButton.addEventListener(
+    "click",
+    function(){
+
+        gameData =
+            shuffle(
+                [...data]
+            );
+
+
+        index = 0;
+
+
+        score = 0;
+
+
+        scoreElement.textContent =
+            "SCORE: 0";
+
+
+        loadRound();
+
+    }
+);
+
+
+/* ==========================================
+   START GAME
+========================================== */
+
+gameData =
+    shuffle(
+        [...data]
+    );
+
 
 loadRound();
+
 </script>
 
 </body>
+
 </html>
