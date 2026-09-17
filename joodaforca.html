@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hangman - English Game</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 20px;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #f4f4f2;
+            color: #111;
+
+            display: flex;
+            justify-content: center;
+        }
+
+        .game {
+            width: min(1000px, 100%);
+        }
+
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            margin: 0 0 6px;
+
+            font-size: clamp(32px, 6vw, 52px);
+
+            font-weight: 900;
+
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            margin: 0;
+
+            color: #666;
+
+            font-size: 15px;
+        }
+
+
+        /* ================================
+           TOP BUTTONS
+        ================================= */
+
+        .topbar {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin: 18px 0;
+        }
+
+        button {
+            border: 2px solid #111;
+
+            background: #fff;
+
+            color: #111;
+
+            border-radius: 10px;
+
+            padding: 11px 18px;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+
+            box-shadow: 0 4px 0 #111;
+        }
+
+        button:active {
+            transform: translateY(1px);
+
+            box-shadow: none;
+        }
+
+        button.primary {
+            background: #111;
+
+            color: #fff;
+        }
+
+
+        /* ================================
+           SETUP
+        ================================= */
+
+        .setup {
+            width: min(650px, 94vw);
+
+            margin: 0 auto;
+
+            padding: 25px;
+
+            background: #fff;
+
+            border: 3px solid #111;
+
+            border-radius: 18px;
+
+            box-shadow: 7px 7px 0 #111;
+
+            text-align: center;
+        }
+
+        .setup h2 {
+            margin-top: 0;
+
+            font-size: 28px;
+        }
+
+        .setup p {
+            color: #555;
+        }
+
+
+        /* ================================
+           INPUT
+        ================================= */
+
+        .input-wrap {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            max-width: 550px;
+
+            margin: 22px auto;
+        }
+
+        .password-container {
+            position: relative;
+
+            flex: 1;
+
+            min-width: 0;
+        }
+
+        .password-container input {
+            width: 100%;
+
+            padding: 13px 50px 13px 15px;
+
+            border: 2px solid #111;
+
+            border-radius: 10px;
+
+            font-size: 17px;
+
+            outline: none;
+        }
+
+        .password-container input:focus {
+            box-shadow: 0 0 0 3px #ddd;
+        }
+
+
+        /* ================================
+           BOTÃO OLHO
+        ================================= */
+
+        .eye-btn {
+            position: absolute;
+
+            right: 4px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            box-shadow: none;
+
+            padding: 8px;
+
+            font-size: 20px;
+
+            cursor: pointer;
+        }
+
+        .eye-btn:hover {
+            transform: translateY(-50%);
+
+            box-shadow: none;
+
+            background: transparent;
+        }
+
+
+        /* ================================
+           DICA
+        ================================= */
+
+        .tip {
+            font-size: 13px !important;
+
+            color: #777 !important;
+
+            margin-top: 12px;
+        }
+
+
+        /* ================================
+           GAME AREA
+        ================================= */
+
+        #gameArea {
+            width: 100%;
+        }
+
+
+        /* ================================
+           COUNTER
+        ================================= */
+
+        .counter {
+            text-align: center;
+
+            margin: 12px 0 18px;
+
+            font-weight: 800;
+        }
+
+        .counter span {
+            display: inline-block;
+
+            background: #fff;
+
+            border: 2px solid #111;
+
+            border-radius: 999px;
+
+            padding: 7px 16px;
+        }
+
+
+        /* ================================
+           CARD
+        ================================= */
+
+        .card {
+            width: min(650px, 94vw);
+
+            min-height: 500px;
+
+            margin: 0 auto;
+
+            padding: 20px;
+
+            background: #fff;
+
+            border: 3px solid #111;
+
+            border-radius: 18px;
+
+            box-shadow: 7px 7px 0 #111;
+
+            display: flex;
+
+            flex-direction: column;
+
+            animation: appear 0.25s ease;
+        }
+
+        @keyframes appear {
+
+            from {
+                opacity: 0;
+
+                transform: scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+
+                transform: scale(1);
+            }
+
+        }
+
+
+        /* ================================
+           CARD TOP
+        ================================= */
+
+        .card-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding-bottom: 12px;
+
+            border-bottom: 3px solid #111;
+
+            font-size: 17px;
+
+            font-weight: 900;
+        }
+
+        .card-number {
+            font-size: 12px;
+
+            color: #777;
+        }
+
+
+        /* ================================
+           CANVAS
+        ================================= */
+
+        .canvas-wrap {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            margin: 15px 0;
+
+            padding: 8px;
+
+            background: #fafafa;
+
+            border: 2px solid #ddd;
+
+            border-radius: 12px;
+        }
+
+        canvas {
+            display: block;
+
+            width: min(360px, 100%);
+
+            height: auto;
+        }
+
+
+        /* ================================
+           WORD
+        ================================= */
+
+        .word {
+            min-height: 60px;
+
+            margin: 10px 0 18px;
+
+            text-align: center;
+
+            font-size: clamp(30px, 7vw, 52px);
+
+            font-weight: 900;
+
+            letter-spacing: 8px;
+
+            word-break: break-word;
+        }
+
+
+        /* ================================
+           MESSAGE
+        ================================= */
+
+        .message {
+            min-height: 25px;
+
+            margin-bottom: 12px;
+
+            text-align: center;
+
+            font-size: 16px;
+
+            font-weight: 800;
+        }
+
+
+        /* ================================
+           KEYBOARD
+        ================================= */
+
+        .keyboard {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 7px;
+        }
+
+        .keyboard button {
+            width: 42px;
+
+            min-height: 42px;
+
+            padding: 8px 0;
+
+            font-size: 14px;
+        }
+
+        .keyboard button:disabled {
+            background: #ddd;
+
+            color: #777;
+
+            border-color: #aaa;
+
+            cursor: not-allowed;
+
+            transform: none;
+
+            box-shadow: none;
+        }
+
+
+        /* ================================
+           ACTION
+        ================================= */
+
+        .actions {
+            text-align: center;
+
+            margin-top: 16px;
+        }
+
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .setup,
+            .card {
+                padding: 16px;
+
+                box-shadow: 5px 5px 0 #111;
+            }
+
+            .input-wrap {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .input-wrap > .primary {
+                width: 100%;
+            }
+
+            .keyboard {
+                gap: 6px;
+            }
+
+            .keyboard button {
+                width: 36px;
+
+                min-height: 40px;
+
+                padding: 7px 0;
+
+                font-size: 13px;
+            }
+
+            .word {
+                letter-spacing: 5px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<main class="game">
+
+
+    <!-- ==================================
+         HEADER
+    =================================== -->
+
+    <header>
+
+        <h1>HANGMAN</h1>
+
+        <p class="subtitle">
+            Guess the hidden English word!
+        </p>
+
+    </header>
+
+
+    <!-- ==================================
+         TOP BAR
+    =================================== -->
+
+    <div class="topbar">
+
+        <button
+            type="button"
+            class="primary"
+            id="newBtn">
+
+            🎮 NEW WORD
+
+        </button>
+
+
+        <button
+            type="button"
+            id="resetBtn">
+
+            ↺ RESET
+
+        </button>
+
+    </div>
+
+
+    <!-- ==================================
+         SETUP
+    =================================== -->
+
+    <div id="setup">
+
+        <section class="setup">
+
+            <h2>
+                🔐 Choose the keyword
+            </h2>
+
+            <p>
+                Digite a palavra que os alunos deverão descobrir.
+            </p>
+
+
+            <div class="input-wrap">
+
+
+                <!-- PASSWORD -->
+
+                <div class="password-container">
+
+                    <input
+                        id="keywordInput"
+                        type="password"
+                        autocomplete="off"
+                        spellcheck="false"
+                        placeholder="Digite a keyword..."
+                    >
+
+
+                    <!-- VISUALIZAR -->
+
+                    <button
+                        type="button"
+                        class="eye-btn"
+                        id="togglePassword"
+                        title="Visualizar palavra"
+                        aria-label="Visualizar palavra">
+
+                        👁️
+
+                    </button>
+
+                </div>
+
+
+                <!-- START -->
+
+                <button
+                    type="button"
+                    class="primary"
+                    id="startBtn">
+
+                    START GAME
+
+                </button>
+
+            </div>
+
+
+            <p class="tip">
+
+                👁️ Use o botão para visualizar ou ocultar
+                a keyword antes de começar.
+
+            </p>
+
+            <p class="tip">
+
+                A palavra ficará oculta durante a partida.
+
+            </p>
+
+        </section>
+
+    </div>
+
+
+    <!-- ==================================
+         GAME
+    =================================== -->
+
+    <div
+        id="gameArea"
+        style="display:none">
+
+
+        <!-- COUNTER -->
+
+        <div class="counter">
+
+            <span>
+
+                Wrong attempts:
+
+                <b id="wrong">
+                    0
+                </b>
+
+                / 6
+
+            </span>
+
+        </div>
+
+
+        <!-- CARD -->
+
+        <section class="card">
+
+
+            <!-- CARD HEADER -->
+
+            <div class="card-top">
+
+                <span>
+                    🔤 GUESS THE WORD!
+                </span>
+
+                <span class="card-number">
+                    HANGMAN
+                </span>
+
+            </div>
+
+
+            <!-- HANGMAN -->
+
+            <div class="canvas-wrap">
+
+                <canvas
+                    id="hangmanCanvas"
+                    width="360"
+                    height="300"
+                    aria-label="Desenho do Hangman">
+
+                </canvas>
+
+            </div>
+
+
+            <!-- WORD -->
+
+            <div
+                id="word"
+                class="word"
+                aria-live="polite">
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div
+                id="message"
+                class="message"
+                aria-live="polite">
+
+            </div>
+
+
+            <!-- KEYBOARD -->
+
+            <div
+                id="keyboard"
+                class="keyboard">
+
+            </div>
+
+
+            <!-- PLAY AGAIN -->
+
+            <div class="actions">
+
+                <button
+                    type="button"
+                    id="playAgainBtn"
+                    style="display:none">
+
+                    🎮 PLAY AGAIN
+
+                </button>
+
+            </div>
+
+
+        </section>
+
+    </div>
+
+</main>
+
+
+
+<script>
+
+
+/* ==========================================
+   CONFIGURAÇÃO
+========================================== */
+
+const MAX_ERRORS = 6;
+
+
+/* ==========================================
+   VARIÁVEIS
+========================================== */
+
+let secretWord = "";
+
+let guessed = [];
+
+let wrongAttempts = 0;
+
+let gameOver = false;
+
+
+/* ==========================================
+   ELEMENTOS
+========================================== */
+
+const setup =
+    document.getElementById("setup");
+
+const gameArea =
+    document.getElementById("gameArea");
+
+const input =
+    document.getElementById("keywordInput");
+
+const wordDiv =
+    document.getElementById("word");
+
+const message =
+    document.getElementById("message");
+
+const keyboard =
+    document.getElementById("keyboard");
+
+const wrong =
+    document.getElementById("wrong");
+
+const canvas =
+    document.getElementById("hangmanCanvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+const togglePassword =
+    document.getElementById("togglePassword");
+
+
+/* ==========================================
+   VISUALIZAR / OCULTAR SENHA
+========================================== */
+
+togglePassword.addEventListener(
+    "click",
+    function () {
+
+        if (input.type === "password") {
+
+            input.type = "text";
+
+            togglePassword.textContent = "🙈";
+
+            togglePassword.title =
+                "Ocultar palavra";
+
+            togglePassword.setAttribute(
+                "aria-label",
+                "Ocultar palavra"
+            );
+
+        }
+
+        else {
+
+            input.type = "password";
+
+            togglePassword.textContent = "👁️";
+
+            togglePassword.title =
+                "Visualizar palavra";
+
+            togglePassword.setAttribute(
+                "aria-label",
+                "Visualizar palavra"
+            );
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   NORMALIZAR KEYWORD
+========================================== */
+
+function normalizeWord(value) {
+
+    return value
+
+        .normalize("NFD")
+
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+
+        .toUpperCase()
+
+        .replace(
+            /[^A-Z ]/g,
+            ""
+        )
+
+        .replace(
+            /\s+/g,
+            " "
+        )
+
+        .trim();
+
+}
+
+
+/* ==========================================
+   LINHA DO DESENHO
+========================================== */
+
+function drawLine(
+    x1,
+    y1,
+    x2,
+    y2
+) {
+
+    ctx.beginPath();
+
+    ctx.moveTo(x1, y1);
+
+    ctx.lineTo(x2, y2);
+
+    ctx.stroke();
+
+}
+
+
+/* ==========================================
+   DESENHAR HANGMAN
+========================================== */
+
+function drawHangman(errors) {
+
+
+    /* LIMPA */
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* CONFIGURAÇÃO */
+
+    ctx.strokeStyle = "#111";
+
+    ctx.lineWidth = 6;
+
+    ctx.lineCap = "round";
+
+
+    /* ==================================
+       ERRO 1
+       BASE
+    ================================== */
+
+    if (errors >= 1) {
+
+        drawLine(
+            55,
+            270,
+            190,
+            270
+        );
+
+    }
+
+
+    /* ==================================
+       ERRO 2
+       POSTE
+    ================================== */
+
+    if (errors >= 2) {
+
+        drawLine(
+            85,
+            270,
+            85,
+            35
+        );
+
+    }
+
+
+    /* ==================================
+       ERRO 3
+       TOPO + CORDA
+    ================================== */
+
+    if (errors >= 3) {
+
+        drawLine(
+            85,
+            35,
+            235,
+            35
+        );
+
+
+        drawLine(
+            235,
+            35,
+            235,
+            65
+        );
+
+    }
+
+
+    /* ==================================
+       ERRO 4
+       CABEÇA
+    ================================== */
+
+    if (errors >= 4) {
+
+        ctx.beginPath();
+
+        ctx.arc(
+            235,
+            92,
+            27,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    /* ==================================
+       ERRO 5
+       CORPO
+    ================================== */
+
+    if (errors >= 5) {
+
+        drawLine(
+            235,
+            119,
+            235,
+            195
+        );
+
+    }
+
+
+    /* ==================================
+       ERRO 6
+       BRAÇOS E PERNAS
+    ================================== */
+
+    if (errors >= 6) {
+
+
+        /* BRAÇO ESQUERDO */
+
+        drawLine(
+            235,
+            140,
+            195,
+            175
+        );
+
+
+        /* BRAÇO DIREITO */
+
+        drawLine(
+            235,
+            140,
+            275,
+            175
+        );
+
+
+        /* PERNA ESQUERDA */
+
+        drawLine(
+            235,
+            195,
+            195,
+            240
+        );
+
+
+        /* PERNA DIREITA */
+
+        drawLine(
+            235,
+            195,
+            275,
+            240
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   ATUALIZAR PALAVRA
+========================================== */
+
+function updateWord() {
+
+    const display = secretWord
+
+        .split("")
+
+        .map(function (char) {
+
+
+            /* ESPAÇO */
+
+            if (char === " ") {
+
+                return " ";
+
+            }
+
+
+            /* LETRA ACERTADA */
+
+            if (
+                guessed.includes(char)
+            ) {
+
+                return char;
+
+            }
+
+
+            /* LETRA ESCONDIDA */
+
+            return "_";
+
+        })
+
+        .join(" ");
+
+
+    wordDiv.textContent =
+        display;
+
+}
+
+
+/* ==========================================
+   CRIAR TECLADO
+========================================== */
+
+function setupKeyboard() {
+
+    keyboard.innerHTML = "";
+
+
+    const letters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+
+    letters
+        .split("")
+        .forEach(function (letter) {
+
+
+            const button =
+                document.createElement("button");
+
+
+            button.type = "button";
+
+
+            button.textContent =
+                letter;
+
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    handleGuess(
+                        letter,
+                        button
+                    );
+
+                }
+            );
+
+
+            keyboard.appendChild(
+                button
+            );
+
+        });
+
+}
+
+
+/* ==========================================
+   TENTATIVA
+========================================== */
+
+function handleGuess(
+    letter,
+    button
+) {
+
+
+    if (gameOver) {
+
+        return;
+
+    }
+
+
+    button.disabled = true;
+
+
+    /* ==================================
+       ACERTOU
+    ================================== */
+
+    if (
+        secretWord.includes(letter)
+    ) {
+
+
+        guessed.push(letter);
+
+
+        updateWord();
+
+
+        /*
+        Verifica as letras
+        */
+
+        const letters = [
+            ...new Set(
+                secretWord
+                    .replace(/ /g, "")
+                    .split("")
+            )
+        ];
+
+
+        const won =
+            letters.every(
+                function (letter) {
+
+                    return guessed.includes(
+                        letter
+                    );
+
+                }
+            );
+
+
+        /* VITÓRIA */
+
+        if (won) {
+
+            gameOver = true;
+
+
+            message.textContent =
+                "🎉 Congratulations! You guessed the word!";
+
+
+            disableKeyboard();
+
+
+            document
+                .getElementById(
+                    "playAgainBtn"
+                )
+                .style.display =
+                "inline-block";
+
+        }
+
+        else {
+
+            message.textContent =
+                "✓ Correct!";
+
+        }
+
+    }
+
+
+    /* ==================================
+       ERRO
+    ================================== */
+
+    else {
+
+
+        wrongAttempts++;
+
+
+        wrong.textContent =
+            wrongAttempts;
+
+
+        drawHangman(
+            wrongAttempts
+        );
+
+
+        /* DERROTA */
+
+        if (
+            wrongAttempts >= MAX_ERRORS
+        ) {
+
+
+            gameOver = true;
+
+
+            /*
+            Revela a palavra
+            somente depois que perder
+            */
+
+            wordDiv.textContent =
+                secretWord
+                    .split("")
+                    .map(function (char) {
+
+                        return char === " "
+                            ? " "
+                            : char;
+
+                    })
+                    .join(" ");
+
+
+            message.textContent =
+                "❌ Game over! The word was:";
+
+
+            disableKeyboard();
+
+
+            document
+                .getElementById(
+                    "playAgainBtn"
+                )
+                .style.display =
+                "inline-block";
+
+        }
+
+        else {
+
+            message.textContent =
+                "✗ Try another letter!";
+
+        }
+
+    }
+
+}
+
+
+/* ==========================================
+   DESABILITAR TECLADO
+========================================== */
+
+function disableKeyboard() {
+
+    [
+        ...keyboard.children
+    ]
+    .forEach(function (button) {
+
+        button.disabled = true;
+
+    });
+
+}
+
+
+/* ==========================================
+   INICIAR JOGO
+========================================== */
+
+function startGame() {
+
+
+    const value =
+        normalizeWord(
+            input.value
+        );
+
+
+    /* PALAVRA VAZIA */
+
+    if (!value) {
+
+        alert(
+            "Digite uma keyword para começar."
+        );
+
+        input.focus();
+
+        return;
+
+    }
+
+
+    /* GUARDA A PALAVRA */
+
+    secretWord =
+        value;
+
+
+    guessed = [];
+
+
+    wrongAttempts = 0;
+
+
+    gameOver = false;
+
+
+    /* ESCONDE SETUP */
+
+    setup.style.display =
+        "none";
+
+
+    /* MOSTRA JOGO */
+
+    gameArea.style.display =
+        "block";
+
+
+    /* RESET */
+
+    wrong.textContent =
+        "0";
+
+
+    message.textContent =
+        "";
+
+
+    document
+        .getElementById(
+            "playAgainBtn"
+        )
+        .style.display =
+        "none";
+
+
+    /* DESENHO VAZIO */
+
+    drawHangman(0);
+
+
+    /* PALAVRA */
+
+    updateWord();
+
+
+    /* TECLADO */
+
+    setupKeyboard();
+
+}
+
+
+/* ==========================================
+   RESET
+========================================== */
+
+function resetGame() {
+
+
+    gameArea.style.display =
+        "none";
+
+
+    setup.style.display =
+        "block";
+
+
+    input.value =
+        "";
+
+
+    input.type =
+        "password";
+
+
+    togglePassword.textContent =
+        "👁️";
+
+
+    togglePassword.title =
+        "Visualizar palavra";
+
+
+    togglePassword.setAttribute(
+        "aria-label",
+        "Visualizar palavra"
+    );
+
+
+    secretWord =
+        "";
+
+
+    guessed = [];
+
+
+    wrongAttempts =
+        0;
+
+
+    gameOver =
+        false;
+
+
+    wordDiv.textContent =
+        "";
+
+
+    message.textContent =
+        "";
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    input.focus();
+
+}
+
+
+/* ==========================================
+   BOTÕES
+========================================== */
+
+document
+    .getElementById("startBtn")
+    .addEventListener(
+        "click",
+        startGame
+    );
+
+
+document
+    .getElementById("newBtn")
+    .addEventListener(
+        "click",
+        resetGame
+    );
+
+
+document
+    .getElementById("resetBtn")
+    .addEventListener(
+        "click",
+        resetGame
+    );
+
+
+document
+    .getElementById("playAgainBtn")
+    .addEventListener(
+        "click",
+        resetGame
+    );
+
+
+/* ==========================================
+   ENTER
+========================================== */
+
+input.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            startGame();
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   INICIALIZAÇÃO
+========================================== */
+
+drawHangman(0);
+
+</script>
+
+</body>
+
+</html>
