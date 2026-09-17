@@ -6,20 +6,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tapple Web</title>
+<title>Tapple - English Game</title>
 
 <style>
+
+/* ==========================================
+   RESET
+========================================== */
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:Arial, Helvetica, sans-serif;
 }
+
+
+/* ==========================================
+   BODY
+========================================== */
 
 body{
 
-    background:#efefef;
+    background:#f4f4f2;
+
+    color:#111;
+
+    min-height:100vh;
+
+    padding:20px;
 
     display:flex;
 
@@ -27,43 +42,257 @@ body{
 
     align-items:center;
 
-    height:100vh;
-
-    overflow:hidden;
-
 }
+
+
+/* ==========================================
+   GAME
+========================================== */
 
 .game{
 
-    position:relative;
-
-    width:750px;
-    height:750px;
+    width:min(850px, 100%);
 
 }
 
+
+/* ==========================================
+   HEADER
+========================================== */
+
+header{
+
+    text-align:center;
+
+    margin-bottom:18px;
+
+}
+
+h1{
+
+    margin:0 0 6px;
+
+    font-size:clamp(32px, 6vw, 52px);
+
+    font-weight:900;
+
+    letter-spacing:-2px;
+
+}
+
+.subtitle{
+
+    margin:0;
+
+    color:#666;
+
+    font-size:15px;
+
+}
+
+
+/* ==========================================
+   TOP BAR
+========================================== */
+
+.topbar{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin:18px 0;
+
+}
+
+.topbar button{
+
+    border:2px solid #111;
+
+    background:white;
+
+    color:#111;
+
+    border-radius:10px;
+
+    padding:11px 18px;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.15s ease;
+
+}
+
+.topbar button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 0 #111;
+
+}
+
+.topbar button:active{
+
+    transform:translateY(1px);
+
+    box-shadow:none;
+
+}
+
+.topbar .primary{
+
+    background:#111;
+
+    color:white;
+
+}
+
+
+/* ==========================================
+   CARD
+========================================== */
+
+.card{
+
+    width:min(800px, 94vw);
+
+    margin:auto;
+
+    padding:20px;
+
+    background:white;
+
+    border:3px solid #111;
+
+    border-radius:18px;
+
+    box-shadow:7px 7px 0 #111;
+
+}
+
+
+/* ==========================================
+   CARD HEADER
+========================================== */
+
+.card-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding-bottom:12px;
+
+    border-bottom:3px solid #111;
+
+    font-size:17px;
+
+    font-weight:900;
+
+}
+
+.card-number{
+
+    font-size:12px;
+
+    color:#777;
+
+}
+
+
+/* ==========================================
+   CATEGORY
+========================================== */
+
+.category{
+
+    text-align:center;
+
+    margin:20px 0 10px;
+
+    font-size:clamp(28px, 6vw, 42px);
+
+    font-weight:900;
+
+    text-transform:uppercase;
+
+    cursor:pointer;
+
+    user-select:none;
+
+}
+
+.category:hover{
+
+    text-decoration:underline;
+
+}
+
+
+/* ==========================================
+   TAPPLER BOARD
+========================================== */
+
+.board-wrapper{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:10px;
+
+}
+
+
+/* ==========================================
+   BOARD
+========================================== */
+
 .board{
 
-    position:absolute;
+    position:relative;
 
-    width:100%;
-    height:100%;
+    width:min(650px, 85vw);
+
+    aspect-ratio:1/1;
 
     border-radius:50%;
 
     background:#1f73d8;
 
     box-shadow:
-    inset 0 0 40px rgba(0,0,0,.25),
-    0 20px 40px rgba(0,0,0,.30);
+
+        inset 0 0 40px rgba(0,0,0,.25),
+
+        0 12px 25px rgba(0,0,0,.25);
 
 }
+
+
+/* ==========================================
+   LETTERS
+========================================== */
 
 #letters{
 
     position:absolute;
 
     width:100%;
+
     height:100%;
 
 }
@@ -72,10 +301,11 @@ body{
 
     position:absolute;
 
-    width:62px;
-    height:62px;
+    width:58px;
 
-    border-radius:14px;
+    height:58px;
+
+    border-radius:13px;
 
     background:#181818;
 
@@ -87,7 +317,7 @@ body{
 
     align-items:center;
 
-    font-size:28px;
+    font-size:27px;
 
     font-weight:bold;
 
@@ -95,51 +325,79 @@ body{
 
     user-select:none;
 
-    transition:.25s;
+    transition:.2s ease;
 
     transform:translate(-50%,-50%);
 
-    box-shadow:0 5px 12px rgba(0,0,0,.35);
+    box-shadow:
+
+        0 5px 12px rgba(0,0,0,.35);
 
 }
 
 .letter:hover{
 
-    transform:translate(-50%,-50%) scale(1.08);
+    transform:
+        translate(-50%,-50%)
+        scale(1.08);
 
 }
+
+
+/* ==========================================
+   LETTER SELECTED
+========================================== */
 
 .selected{
 
     background:#FFD54F;
+
     color:#222;
 
     box-shadow:
-    0 0 20px #FFD54F,
-    0 0 40px rgba(255,213,79,.5);
+
+        0 0 20px #FFD54F,
+
+        0 0 40px rgba(255,213,79,.5);
 
 }
+
+
+/* ==========================================
+   LETTER USED
+========================================== */
 
 .used{
 
     background:#E53935;
 
+    color:white;
+
     box-shadow:
-    0 0 20px #E53935,
-    0 0 40px rgba(229,57,53,.5);
+
+        0 0 20px #E53935,
+
+        0 0 40px rgba(229,57,53,.5);
 
 }
+
+
+/* ==========================================
+   CENTER
+========================================== */
 
 .center{
 
     position:absolute;
 
     left:50%;
+
     top:50%;
 
     transform:translate(-50%,-50%);
 
     width:210px;
+
     height:210px;
 
     border-radius:50%;
@@ -155,20 +413,49 @@ body{
     flex-direction:column;
 
     box-shadow:
-    0 10px 25px rgba(0,0,0,.35);
+
+        0 10px 25px rgba(0,0,0,.35);
 
     cursor:pointer;
 
+    user-select:none;
+
+    transition:.15s;
+
 }
+
+.center:hover{
+
+    transform:
+        translate(-50%,-50%)
+        scale(1.03);
+
+}
+
+.center:active{
+
+    transform:
+        translate(-50%,-50%)
+        scale(.96);
+
+}
+
+
+/* ==========================================
+   TIMER SVG
+========================================== */
 
 svg{
 
     position:absolute;
 
     width:240px;
+
     height:240px;
 
     transform:rotate(-90deg);
+
+    pointer-events:none;
 
 }
 
@@ -176,7 +463,7 @@ circle{
 
     fill:none;
 
-    stroke-width:10;
+    stroke-width:9;
 
 }
 
@@ -196,7 +483,16 @@ circle{
 
 }
 
+
+/* ==========================================
+   TIMER
+========================================== */
+
 .timer{
+
+    position:relative;
+
+    z-index:2;
 
     font-size:58px;
 
@@ -208,77 +504,123 @@ circle{
 
 .text{
 
+    position:relative;
+
+    z-index:2;
+
     margin-top:5px;
 
     color:#666;
 
-    font-size:18px;
-
-}
-
-.category{
-
-    position:absolute;
-
-    width:100%;
-
-    text-align:center;
-
-    top:-70px;
-
-    font-size:40px;
+    font-size:17px;
 
     font-weight:bold;
 
-    color:#333;
+}
+
+
+/* ==========================================
+   INSTRUCTIONS
+========================================== */
+
+.instructions{
+
+    text-align:center;
+
+    margin-top:18px;
+
+    padding-top:15px;
+
+    border-top:2px solid #eee;
+
+    color:#666;
+
+    font-size:14px;
+
+    line-height:1.5;
 
 }
 
-@media(max-width:850px){
+.instructions strong{
 
-.game{
-
-width:95vw;
-height:95vw;
+    color:#111;
 
 }
 
-.category{
 
-font-size:28px;
+/* ==========================================
+   RESPONSIVE
+========================================== */
 
-top:-50px;
+@media(max-width:600px){
 
-}
+    body{
 
-.center{
+        padding:12px;
 
-width:150px;
-height:150px;
+    }
 
-}
+    .card{
 
-.timer{
+        padding:15px;
 
-font-size:40px;
+        box-shadow:5px 5px 0 #111;
 
-}
+    }
 
-.letter{
+    .card-top{
 
-width:42px;
-height:42px;
+        font-size:14px;
 
-font-size:20px;
+    }
 
-}
+    .category{
 
-svg{
+        margin-top:15px;
 
-width:170px;
-height:170px;
+        font-size:28px;
 
-}
+    }
+
+    .letter{
+
+        width:40px;
+
+        height:40px;
+
+        border-radius:10px;
+
+        font-size:19px;
+
+    }
+
+    .center{
+
+        width:145px;
+
+        height:145px;
+
+    }
+
+    .timer{
+
+        font-size:40px;
+
+    }
+
+    .text{
+
+        font-size:14px;
+
+    }
+
+    svg{
+
+        width:170px;
+
+        height:170px;
+
+    }
 
 }
 
@@ -286,294 +628,779 @@ height:170px;
 
 </head>
 
+
 <body>
+
 
 <div class="game">
 
-<div class="category">
-ANIMAIS
+
+    <!-- ==================================
+         HEADER
+    =================================== -->
+
+    <header>
+
+        <h1>TAPPLE</h1>
+
+        <p class="subtitle">
+
+            Think fast! Say a word before the time runs out.
+
+        </p>
+
+    </header>
+
+
+    <!-- ==================================
+         TOP BUTTONS
+    =================================== -->
+
+    <div class="topbar">
+
+        <button
+            type="button"
+            class="primary"
+            id="newRound">
+
+            🎮 NEW ROUND
+
+        </button>
+
+
+        <button
+            type="button"
+            id="resetGame">
+
+            ↺ RESET
+
+        </button>
+
+    </div>
+
+
+    <!-- ==================================
+         CARD
+    ================================== -->
+
+    <section class="card">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="card-top">
+
+            <span>
+
+                🔤 TAPPLE
+
+            </span>
+
+            <span class="card-number">
+
+                10 SECONDS
+
+            </span>
+
+        </div>
+
+
+        <!-- CATEGORY -->
+
+        <div
+            class="category"
+            id="category">
+
+            ANIMALS
+
+        </div>
+
+
+        <!-- BOARD -->
+
+        <div class="board-wrapper">
+
+            <div class="board">
+
+
+                <!-- LETTERS -->
+
+                <div id="letters"></div>
+
+
+                <!-- CENTER -->
+
+                <div
+                    class="center"
+                    id="startButton">
+
+
+                    <!-- TIMER CIRCLE -->
+
+                    <svg
+                        viewBox="0 0 100 100">
+
+                        <circle
+                            class="bg"
+                            cx="50"
+                            cy="50"
+                            r="45">
+                        </circle>
+
+
+                        <circle
+                            id="progress"
+                            class="progress"
+                            cx="50"
+                            cy="50"
+                            r="45">
+                        </circle>
+
+                    </svg>
+
+
+                    <!-- TIME -->
+
+                    <div
+                        class="timer"
+                        id="timer">
+
+                        10
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div
+                        class="text"
+                        id="status">
+
+                        START
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- INSTRUCTIONS -->
+
+        <div class="instructions">
+
+            <strong>Como jogar:</strong>
+
+            Clique em uma letra para marcá-la.
+
+            <br>
+
+            🟡 Amarelo = letra escolhida
+
+            &nbsp; • &nbsp;
+
+            🔴 Vermelho = letra usada
+
+            <br>
+
+            Quando o jogador falar uma palavra,
+
+            <strong>clique no centro para reiniciar os 10 segundos.</strong>
+
+            <br>
+
+            Clique na categoria para sortear uma nova categoria.
+
+        </div>
+
+
+    </section>
+
+
 </div>
 
-<div class="board">
 
-<div id="letters"></div>
-
-<div class="center" id="startButton">
-
-<svg viewBox="0 0 100 100">
-
-<circle class="bg"
-cx="50"
-cy="50"
-r="45"/>
-
-<circle
-id="progress"
-class="progress"
-cx="50"
-cy="50"
-r="45"/>
-
-</svg>
-
-<div class="timer" id="timer">
-10
-</div>
-
-<div class="text" id="status">
-START
-</div>
-
-</div>
-
-</div>
-
-</div>
 
 <script>
-  // ===============================
-// CONFIGURAÇÕES
-// ===============================
 
-const lettersContainer = document.getElementById("letters");
-const timerElement = document.getElementById("timer");
-const statusElement = document.getElementById("status");
-const startButton = document.getElementById("startButton");
-const progress = document.getElementById("progress");
 
-const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+/* ==========================================
+   ELEMENTOS
+========================================== */
+
+const lettersContainer =
+    document.getElementById("letters");
+
+const timerElement =
+    document.getElementById("timer");
+
+const statusElement =
+    document.getElementById("status");
+
+const startButton =
+    document.getElementById("startButton");
+
+const progress =
+    document.getElementById("progress");
+
+const categoryElement =
+    document.getElementById("category");
+
+const newRoundButton =
+    document.getElementById("newRound");
+
+const resetButton =
+    document.getElementById("resetGame");
+
+
+/* ==========================================
+   LETRAS
+========================================== */
+
+const letters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+
+/* ==========================================
+   CATEGORIAS
+========================================== */
+
+const categories = [
+
+    "Animais",
+
+    "Frutas",
+
+    "Países",
+
+    "Cores",
+
+    "Objetos",
+
+    "Filmes",
+
+    "Séries",
+
+    "Profissões",
+
+    "Esportes",
+
+    "Comidas",
+
+    "Instrumentos",
+
+    "Marcas",
+
+    "Personagens",
+
+    "Super-heróis",
+
+    "Cidades",
+
+    "Capitais",
+
+    "Flores",
+
+    "Árvores",
+
+    "Partes do Corpo",
+
+    "Verbos"
+
+];
+
+
+/* ==========================================
+   TIMER
+========================================== */
+
+const totalTime = 10;
+
+let time = totalTime;
+
+let running = false;
+
+let interval = null;
+
+
+/* ==========================================
+   CIRCUNFERÊNCIA
+========================================== */
+
+const circumference =
+    2 * Math.PI * 45;
+
+
+progress.style.strokeDasharray =
+    circumference;
+
+progress.style.strokeDashoffset =
+    0;
+
+
+/* ==========================================
+   RAIO DAS LETRAS
+========================================== */
 
 let radius = 315;
 
-let totalTime = 10;
-let time = totalTime;
-let running = false;
-let interval;
 
-const circumference = 2 * Math.PI * 45;
-
-progress.style.strokeDasharray = circumference;
-progress.style.strokeDashoffset = 0;
-
-
-// ===============================
-// DESENHAR LETRAS
-// ===============================
+/* ==========================================
+   DESENHAR LETRAS
+========================================== */
 
 function createLetters(){
 
-    lettersContainer.innerHTML="";
+    lettersContainer.innerHTML = "";
 
-    const boardSize=document.querySelector(".board").offsetWidth;
 
-    const center=boardSize/2;
+    const board =
+        document.querySelector(".board");
 
-    radius=boardSize*0.42;
 
-    letters.forEach((letter,index)=>{
+    const boardSize =
+        board.offsetWidth;
 
-        const angle=((360/letters.length)*index)-90;
 
-        const rad=angle*Math.PI/180;
+    const center =
+        boardSize / 2;
 
-        const x=center+(radius*Math.cos(rad));
-        const y=center+(radius*Math.sin(rad));
 
-        const div=document.createElement("div");
+    radius =
+        boardSize * 0.42;
 
-        div.className="letter";
 
-        div.innerHTML=letter;
+    letters.forEach(
+        (letter, index) => {
 
-        div.style.left=x+"px";
-        div.style.top=y+"px";
 
-        div.dataset.state=0;
+            const angle =
+                ((360 / letters.length) * index) - 90;
 
-        div.addEventListener("click",changeState);
 
-        lettersContainer.appendChild(div);
+            const rad =
+                angle * Math.PI / 180;
 
-    });
+
+            const x =
+                center +
+                radius * Math.cos(rad);
+
+
+            const y =
+                center +
+                radius * Math.sin(rad);
+
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "letter";
+
+
+            div.textContent =
+                letter;
+
+
+            div.style.left =
+                x + "px";
+
+
+            div.style.top =
+                y + "px";
+
+
+            div.dataset.state =
+                "0";
+
+
+            div.addEventListener(
+                "click",
+                changeState
+            );
+
+
+            lettersContainer.appendChild(
+                div
+            );
+
+        }
+    );
 
 }
 
 
-// ===============================
-// ESTADOS DAS LETRAS
-// ===============================
+/* ==========================================
+   MUDAR ESTADO DA LETRA
+========================================== */
 
 function changeState(){
 
-    let state=parseInt(this.dataset.state);
+    let state =
+        parseInt(
+            this.dataset.state
+        );
+
 
     state++;
 
-    if(state>2){
-        state=0;
-    }
 
-    this.dataset.state=state;
+    /*
+    0 = preto
+    1 = amarelo
+    2 = vermelho
+    */
 
-    this.classList.remove("selected");
-    this.classList.remove("used");
+    if(state > 2){
 
-    if(state===1){
-
-        this.classList.add("selected");
+        state = 0;
 
     }
 
-    if(state===2){
 
-        this.classList.add("used");
+    this.dataset.state =
+        state;
+
+
+    this.classList.remove(
+        "selected"
+    );
+
+    this.classList.remove(
+        "used"
+    );
+
+
+    if(state === 1){
+
+        this.classList.add(
+            "selected"
+        );
+
+    }
+
+
+    if(state === 2){
+
+        this.classList.add(
+            "used"
+        );
 
     }
 
 }
-  // ===============================
-// CRONÔMETRO
-// ===============================
 
-function updateProgress() {
 
-    const percent = time / totalTime;
+/* ==========================================
+   ATUALIZAR PROGRESSO
+========================================== */
+
+function updateProgress(){
+
+    const percent =
+        time / totalTime;
+
 
     progress.style.strokeDashoffset =
-        circumference * (1 - percent);
+        circumference *
+        (1 - percent);
 
 }
 
-function updateTimer() {
 
-    timerElement.textContent = time;
+/* ==========================================
+   ATUALIZAR TIMER
+========================================== */
+
+function updateTimer(){
+
+    timerElement.textContent =
+        time;
+
 
     updateProgress();
 
 }
 
-function resetTimer() {
 
-    clearInterval(interval);
+/* ==========================================
+   INICIAR TIMER
+========================================== */
 
-    running = false;
+function startTimer(){
 
-    time = totalTime;
-
-    updateTimer();
-
-    statusElement.textContent = "START";
-
-}
-
-function startTimer() {
-
-    if (running) return;
-
-    running = true;
-
-    statusElement.textContent = "STOP";
-
-    interval = setInterval(() => {
-
-        time--;
-
-        updateTimer();
-
-        if (time <= 0) {
-
-            clearInterval(interval);
-
-            running = false;
-
-            statusElement.textContent = "TIME!";
-
-            setTimeout(() => {
-
-                resetTimer();
-
-            },1000);
-
-        }
-
-    },1000);
-
-}
-
-function stopTimer(){
-
-    clearInterval(interval);
-
-    running = false;
-
-    statusElement.textContent = "START";
-
-    time = totalTime;
-
-    updateTimer();
-
-}
-
-startButton.addEventListener("click",()=>{
+    /*
+    Impede criar vários
+    intervalos ao mesmo tempo.
+    */
 
     if(running){
 
-        stopTimer();
-
-    }else{
-
-        startTimer();
+        return;
 
     }
 
-});
-  // ===============================
-// CATEGORIAS
-// ===============================
 
-const categories = [
+    running = true;
 
-"Animais",
-"Frutas",
-"Países",
-"Cores",
-"Objetos",
-"Filmes",
-"Séries",
-"Profissões",
-"Esportes",
-"Comidas",
-"Instrumentos",
-"Marcas",
-"Personagens",
-"Super-heróis",
-"Cidades",
-"Capitais",
-"Flores",
-"Árvores",
-"Partes do Corpo",
-"Verbos"
 
-];
+    statusElement.textContent =
+        "PLAY";
 
-const categoryElement = document.querySelector(".category");
+
+    interval =
+        setInterval(
+            () => {
+
+
+                time--;
+
+
+                updateTimer();
+
+
+                /*
+                Quando chegar a zero,
+                volta para 10 imediatamente.
+                */
+
+                if(time <= 0){
+
+                    time =
+                        totalTime;
+
+
+                    updateTimer();
+
+                }
+
+            },
+            1000
+        );
+
+}
+
+
+/* ==========================================
+   PARAR TIMER
+========================================== */
+
+function stopTimer(){
+
+    clearInterval(
+        interval
+    );
+
+
+    interval = null;
+
+
+    running = false;
+
+
+    time =
+        totalTime;
+
+
+    updateTimer();
+
+
+    statusElement.textContent =
+        "START";
+
+}
+
+
+/* ==========================================
+   BOTÃO CENTRAL
+========================================== */
+
+startButton.addEventListener(
+    "click",
+    () => {
+
+
+        /*
+        PRIMEIRO CLIQUE
+
+        Começa o timer.
+        */
+
+        if(!running){
+
+            startTimer();
+
+            return;
+
+        }
+
+
+        /*
+        JOGADOR FALOU A PALAVRA
+
+        Reinicia para 10 segundos,
+        mas NÃO para o timer.
+        */
+
+        time =
+            totalTime;
+
+
+        updateTimer();
+
+
+        /*
+        Pequeno efeito visual
+        */
+
+        startButton.style.transform =
+            "translate(-50%,-50%) scale(.96)";
+
+
+        setTimeout(
+            () => {
+
+                startButton.style.transform =
+                    "translate(-50%,-50%) scale(1)";
+
+            },
+            120
+        );
+
+    }
+);
+
+
+/* ==========================================
+   SORTEAR CATEGORIA
+========================================== */
 
 function randomCategory(){
 
     const random =
-        Math.floor(Math.random()*categories.length);
+        Math.floor(
+            Math.random() *
+            categories.length
+        );
 
-    categoryElement.innerHTML =
+
+    categoryElement.textContent =
         categories[random];
 
 }
 
-categoryElement.addEventListener("click",randomCategory);
+
+/* ==========================================
+   CATEGORIA CLICÁVEL
+========================================== */
+
+categoryElement.addEventListener(
+    "click",
+    () => {
+
+        randomCategory();
+
+    }
+);
 
 
-// ===============================
-// INICIALIZAÇÃO
-// ===============================
+/* ==========================================
+   NOVA RODADA
+========================================== */
+
+newRoundButton.addEventListener(
+    "click",
+    () => {
+
+
+        /*
+        Nova categoria
+        */
+
+        randomCategory();
+
+
+        /*
+        Todas as letras
+        voltam ao preto.
+        */
+
+        createLetters();
+
+
+        /*
+        Reinicia o timer.
+        */
+
+        stopTimer();
+
+
+        /*
+        Começa imediatamente.
+        */
+
+        startTimer();
+
+    }
+);
+
+
+/* ==========================================
+   RESET
+========================================== */
+
+resetButton.addEventListener(
+    "click",
+    () => {
+
+
+        /*
+        Para o timer.
+        */
+
+        stopTimer();
+
+
+        /*
+        Nova categoria.
+        */
+
+        randomCategory();
+
+
+        /*
+        Reseta letras.
+        */
+
+        createLetters();
+
+    }
+);
+
+
+/* ==========================================
+   RESPONSIVIDADE
+========================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        createLetters();
+
+    }
+);
+
+
+/* ==========================================
+   INICIALIZAÇÃO
+========================================== */
 
 function init(){
 
@@ -585,13 +1412,9 @@ function init(){
 
 }
 
-window.addEventListener("resize",()=>{
-
-    createLetters();
-
-});
 
 init();
+
 
 </script>
 
