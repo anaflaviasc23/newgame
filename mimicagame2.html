@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1">
 <title>Pictionary - English Game</title>
 <style>
 *{
@@ -61,7 +62,7 @@ button:active{
 }
 button:disabled{
     opacity:.5;
-    cursor:wait;
+    cursor:not-allowed;
     transform:none;
     box-shadow:none
 }
@@ -129,8 +130,7 @@ button:disabled{
     font-size:clamp(42px,9vw,78px);
     font-weight:900;
     letter-spacing:-2px;
-    padding:20px;
-    text-transform:uppercase
+    padding:20px
 }
 .draw-note{
     background:#e8e8e8;
@@ -157,14 +157,6 @@ button:disabled{
     border:3px dashed #111;
     border-radius:18px;
     padding:30px
-}
-.loading{
-    font-size:24px;
-    font-weight:800
-}
-.error{
-    color:#b00020;
-    font-weight:700
 }
 @media(max-width:600px){
     body{
@@ -206,14 +198,18 @@ Draw the word on the board — your group has to guess!
     ⏭ SKIP CARD
 </button>
 <button
+    id="shuffleBtn">
+    🔀 SHUFFLE DECK
+</button>
+<button
     id="resetBtn">
     ↺ RESET
 </button>
 </div>
 <div class="counter">
 <span>
-Cards played:
-<b id="played">0</b>
+Cards left:
+<b id="remaining">100</b>
 </span>
 </div>
 <section
@@ -224,13 +220,10 @@ Cards played:
 <h2>🎨 Ready to draw?</h2>
 <p>
 Click <b>DRAW CARD</b>
-to generate a random English word.
+to reveal the word.
 </p>
 <p>
-Words are generated automatically.
-</p>
-<p>
-Only the person drawing should look at the screen.
+Only the person drawing should look at the screen!
 </p>
 </div>
 </div>
@@ -239,54 +232,202 @@ Only the person drawing should look at the screen.
 <script>
 /*
 ====================================================
-PICTIONARY — AUTOMATIC WORD GENERATOR
-No word list is stored in this HTML.
-The game requests a random English word
-from an external word service.
+PICTIONARY
+100 UNIQUE WORDS
+====================================================
+All words are in ONE single deck.
+There are no levels or categories.
+Once a card is drawn or skipped,
+it is permanently removed from the current game.
+SHUFFLE only rearranges the remaining cards.
+RESET creates a completely new deck.
+====================================================
+*/
+const originalCards = [
+    "SANDWICH",
+    "SALAD",
+    "CAKE",
+    "CHOCOLATE",
+    "DOG",
+    "CAT",
+    "PHONE",
+    "LAPTOP",
+    "HEADPHONES",
+    "WATCH",
+    "GLASSES",
+    "PILLOW",
+    "EAT",
+    "DRINK",
+    "SLEEP",
+    "RUN",
+    "SING",
+    "DANCE",
+    "BOOK",
+    "PEN",
+    "BALL",
+    "SHOES",
+    "ICE CREAM",
+    "COFFEE",
+    "APPLE",
+    "BIRTHDAY",
+    "FRIEND",
+    "FAMILY",
+    "SCHOOL",
+    "SUPERMARKET",
+    "RESTAURANT",
+    "PARK",
+    "BEACH",
+    "CITY",
+    "HOUSE",
+    "LIBRARY",
+    "TEACHER",
+    "DOCTOR",
+    "STUDENT",
+    "PILOT",
+    "COOK",
+    "DRIVE",
+    "SWIM",
+    "READ",
+    "WRITE",
+    "CLEAN",
+    "OPEN",
+    "CLOSE",
+    "BUY",
+    "SELL",
+    "WATCH TV",
+    "LISTEN",
+    "TALK",
+    "HELP",
+    "FIREFIGHTER",
+    "POLICE OFFICER",
+    "ARTIST",
+    "MECHANIC",
+    "WALLET",
+    "CHARGER",
+    "TRAVEL",
+    "WINTER",
+    "SUMMER",
+    "MUSIC",
+    "MOVIE",
+    "WEEKEND",
+    "EXERCISE",
+    "EXPLAIN",
+    "CHOOSE",
+    "FORGET",
+    "REMEMBER",
+    "INVITE",
+    "ARRIVE",
+    "LEAVE",
+    "BORROW",
+    "LEND",
+    "PROMISE",
+    "DECIDE",
+    "IMAGINE",
+    "DISCOVER",
+    "ELEPHANT",
+    "GIRAFFE",
+    "BUTTERFLY",
+    "MONKEY",
+    "TURTLE",
+    "RAINBOW",
+    "MOUNTAIN",
+    "VOLCANO",
+    "UMBRELLA",
+    "BACKPACK",
+    "CAMERA",
+    "BICYCLE",
+    "AIRPLANE",
+    "TRAIN",
+    "KEY",
+    "MIRROR",
+    "TOOTHBRUSH",
+    "BASKET",
+    "CANDLE",
+    "CASTLE"
+];
+/*
+====================================================
+GAME VARIABLES
+====================================================
+*/
+let deck = [];
+let cardsPlayed = 0;
+/*
+====================================================
+HTML ELEMENTS
 ====================================================
 */
 const area =
-document.getElementById("deckArea");
+    document.getElementById("deckArea");
+const remaining =
+    document.getElementById("remaining");
 const drawBtn =
-document.getElementById("drawBtn");
+    document.getElementById("drawBtn");
 const skipBtn =
-document.getElementById("skipBtn");
+    document.getElementById("skipBtn");
+const shuffleBtn =
+    document.getElementById("shuffleBtn");
 const resetBtn =
-document.getElementById("resetBtn");
-const playedElement =
-document.getElementById("played");
-let cardsPlayed = 0;
-let lastWord = "";
+    document.getElementById("resetBtn");
 /*
 ====================================================
-API
+SHUFFLE
 ====================================================
 */
-const API =
-"https://random-word-api.vercel.app/api?words=1";
+function shuffle(array){
+    const shuffled =
+        [...array];
+    for(
+        let i = shuffled.length - 1;
+        i > 0;
+        i--
+    ){
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+        [
+            shuffled[i],
+            shuffled[j]
+        ] =
+        [
+            shuffled[j],
+            shuffled[i]
+        ];
+    }
+    return shuffled;
+}
 /*
 ====================================================
 UPDATE COUNTER
 ====================================================
 */
-function updateCounter(){
-    playedElement.textContent =
-        cardsPlayed;
+function update(){
+    remaining.textContent =
+        deck.length;
 }
 /*
 ====================================================
-LOADING SCREEN
+READY SCREEN
 ====================================================
 */
-function loading(){
+function ready(){
     area.innerHTML = `
         <div class="empty">
             <div>
-                <div class="loading">
-                    🎨 Generating word...
-                </div>
+                <h2>🎨 Ready to draw?</h2>
                 <p>
-                    The next word is being selected.
+                    Click <b>DRAW CARD</b>
+                    to reveal the word.
+                </p>
+                <p>
+                    There are
+                    <b>${deck.length}</b>
+                    cards remaining.
+                </p>
+                <p>
+                    Only the person drawing
+                    should look at the screen!
                 </p>
             </div>
         </div>
@@ -294,53 +435,10 @@ function loading(){
 }
 /*
 ====================================================
-GET RANDOM WORD
-====================================================
-*/
-async function getRandomWord(){
-    try{
-        const response =
-            await fetch(API);
-        if(!response.ok){
-            throw new Error(
-                "Could not connect to word service."
-            );
-        }
-        const data =
-            await response.json();
-        if(
-            !Array.isArray(data) ||
-            !data.length
-        ){
-            throw new Error(
-                "Invalid word."
-            );
-        }
-        const word =
-            String(data[0])
-            .trim()
-            .toUpperCase();
-        /*
-        Avoid immediate repetition
-        */
-        if(
-            word === lastWord
-        ){
-            return getRandomWord();
-        }
-        lastWord =
-            word;
-        return word;
-    }catch(error){
-        throw error;
-    }
-}
-/*
-====================================================
 SHOW CARD
 ====================================================
 */
-function showCard(
+function show(
     word,
     skipped = false
 ){
@@ -373,80 +471,110 @@ function showCard(
 }
 /*
 ====================================================
-DRAW
+DRAW CARD
 ====================================================
 */
-async function draw(){
-    drawBtn.disabled =
-        true;
-    skipBtn.disabled =
-        true;
-    loading();
-    try{
-        const word =
-            await getRandomWord();
-        cardsPlayed++;
-        showCard(
-            word,
-            false
-        );
-        updateCounter();
-    }catch(error){
-        showError();
+function draw(){
+    /*
+    If there are no cards,
+    show completion screen.
+    */
+    if(deck.length === 0){
+        complete();
+        return;
     }
-    drawBtn.disabled =
-        false;
-    skipBtn.disabled =
-        false;
+    /*
+    Select one random card.
+    */
+    const index =
+        Math.floor(
+            Math.random() * deck.length
+        );
+    /*
+    IMPORTANT:
+    splice removes the card
+    permanently from the deck.
+    Therefore it CANNOT appear again
+    during this game.
+    */
+    const word =
+        deck.splice(index,1)[0];
+    cardsPlayed++;
+    show(
+        word,
+        false
+    );
+    update();
 }
 /*
 ====================================================
-SKIP
+SKIP CARD
 ====================================================
 */
-async function skip(){
-    drawBtn.disabled =
-        true;
-    skipBtn.disabled =
-        true;
-    loading();
-    try{
-        const word =
-            await getRandomWord();
-        cardsPlayed++;
-        showCard(
-            word,
-            true
-        );
-        updateCounter();
-    }catch(error){
-        showError();
+function skip(){
+    if(deck.length === 0){
+        complete();
+        return;
     }
-    drawBtn.disabled =
-        false;
-    skipBtn.disabled =
-        false;
+    /*
+    SKIP also removes the card
+    permanently.
+    It will NOT return to the deck.
+    */
+    const index =
+        Math.floor(
+            Math.random() * deck.length
+        );
+    const word =
+        deck.splice(index,1)[0];
+    cardsPlayed++;
+    show(
+        word,
+        true
+    );
+    update();
 }
 /*
 ====================================================
-ERROR
+SHUFFLE REMAINING CARDS
 ====================================================
 */
-function showError(){
+function shuffleDeck(){
+    /*
+    Only the cards that are still
+    inside the deck are shuffled.
+    Used cards are NOT added back.
+    */
+    deck =
+        shuffle(deck);
+    update();
+    if(deck.length){
+        ready();
+    }else{
+        complete();
+    }
+}
+/*
+====================================================
+DECK COMPLETE
+====================================================
+*/
+function complete(){
     area.innerHTML = `
         <div class="empty">
             <div>
-                <h2>⚠️ Something went wrong</h2>
-                <p class="error">
-                    We couldn't generate a word.
+                <h2>🎉 Deck complete!</h2>
+                <p>
+                    You played
+                    <b>${cardsPlayed}</b>
+                    cards.
                 </p>
                 <p>
-                    Check your internet connection
-                    and try again.
+                    No card was repeated.
                 </p>
                 <button
-                    onclick="draw()">
-                    🔄 TRY AGAIN
+                    onclick="resetGame()">
+                    ↺ PLAY AGAIN
                 </button>
             </div>
         </div>
@@ -458,29 +586,16 @@ RESET
 ====================================================
 */
 function resetGame(){
+    /*
+    Creates a completely fresh copy
+    of all 100 cards.
+    */
+    deck =
+        shuffle(originalCards);
     cardsPlayed =
         0;
-    lastWord =
-        "";
-    updateCounter();
-    area.innerHTML = `
-        <div class="empty">
-            <div>
-                <h2>🎨 Ready to draw?</h2>
-                <p>
-                    Click <b>DRAW CARD</b>
-                    to generate a random English word.
-                </p>
-                <p>
-                    Words are generated automatically.
-                </p>
-                <p>
-                    Only the person drawing should look
-                    at the screen.
-                </p>
-            </div>
-        </div>
-    `;
+    update();
+    ready();
 }
 /*
 ====================================================
@@ -491,9 +606,16 @@ drawBtn.onclick =
     draw;
 skipBtn.onclick =
     skip;
+shuffleBtn.onclick =
+    shuffleDeck;
 resetBtn.onclick =
     resetGame;
-updateCounter();
+/*
+====================================================
+START GAME
+====================================================
+*/
+resetGame();
 </script>
 </body>
 </html>
