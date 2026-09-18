@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IN, ON or AT?</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f4f2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        color: #111;
+    }
+
+    .game {
+        width: 100%;
+        max-width: 950px;
+        background: #fff;
+        border: 3px solid #000;
+        border-radius: 18px;
+        box-shadow: 8px 8px 0 #000;
+        padding: 28px;
+    }
+
+    /* HEADER */
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+        padding-bottom: 18px;
+        border-bottom: 3px solid #000;
+    }
+
+    .title {
+        margin: 0;
+        font-size: clamp(28px, 5vw, 45px);
+        font-weight: 900;
+        letter-spacing: -2px;
+    }
+
+    .title span {
+        text-decoration: underline;
+    }
+
+    .score-box {
+        display: flex;
+        gap: 10px;
+    }
+
+    .score-item {
+        min-width: 90px;
+        padding: 8px 12px;
+        text-align: center;
+        background: #f4d6e7;
+        border: 3px solid #000;
+        border-radius: 10px;
+    }
+
+    .score-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 900;
+        text-transform: uppercase;
+    }
+
+    .score {
+        display: block;
+        font-size: 25px;
+        font-weight: 900;
+    }
+
+    /* INSTRUCTION */
+
+    .instruction {
+        display: inline-block;
+        background: #000;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 900;
+        margin-bottom: 22px;
+    }
+
+    /* QUESTION */
+
+    .question-area {
+        border: 3px dashed #000;
+        border-radius: 14px;
+        padding: 35px 25px;
+        background: #fafafa;
+        text-align: center;
+    }
+
+    .question-number {
+        font-size: 14px;
+        font-weight: 900;
+        opacity: .55;
+        margin-bottom: 20px;
+    }
+
+    .sentence {
+        margin: 0 auto;
+        max-width: 850px;
+        font-size: clamp(24px, 5vw, 38px);
+        line-height: 1.45;
+        font-weight: 900;
+    }
+
+    .blank {
+        display: inline-block;
+        min-width: 90px;
+        height: 42px;
+        border-bottom: 5px solid #000;
+        vertical-align: middle;
+        margin: 0 5px;
+    }
+
+    /* ANSWERS */
+
+    .answers {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .answer {
+        border: 3px solid #000;
+        border-radius: 12px;
+        padding: 20px;
+        font-size: 25px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: .15s;
+        color: #000;
+    }
+
+    .answer:nth-child(1) {
+        background: #e9e3dc;
+    }
+
+    .answer:nth-child(2) {
+        background: #f4d6e7;
+    }
+
+    .answer:nth-child(3) {
+        background: #dcecf2;
+    }
+
+    .answer:hover:not(:disabled) {
+        transform: translate(-3px, -3px);
+        box-shadow: 5px 5px 0 #000;
+    }
+
+    .answer:disabled {
+        cursor: default;
+    }
+
+    .answer.correct {
+        background: #000 !important;
+        color: #fff;
+    }
+
+    .answer.wrong {
+        background: #ddd !important;
+        color: #777;
+        border-color: #777;
+    }
+
+    /* FEEDBACK */
+
+    .feedback {
+        min-height: 32px;
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: 900;
+    }
+
+    .correct-text {
+        color: #111;
+    }
+
+    .wrong-text {
+        color: #c00000;
+    }
+
+    /* NEXT */
+
+    .next-btn {
+        width: 100%;
+        margin-top: 15px;
+        padding: 16px;
+        border: 3px solid #000;
+        border-radius: 10px;
+        background: #000;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: .15s;
+    }
+
+    .next-btn:hover {
+        background: #fff;
+        color: #000;
+    }
+
+    /* FINAL */
+
+    .final-screen {
+        display: none;
+        text-align: center;
+        padding: 45px 20px;
+    }
+
+    .final-screen h2 {
+        margin: 0 0 15px;
+        font-size: clamp(32px, 7vw, 50px);
+        font-weight: 900;
+    }
+
+    .final-score {
+        font-size: 27px;
+        font-weight: 900;
+        margin-bottom: 30px;
+    }
+
+    .restart-btn {
+        border: 3px solid #000;
+        background: #f4d6e7;
+        color: #000;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 5px 5px 0 #000;
+        transition: .15s;
+    }
+
+    .restart-btn:hover {
+        transform: translate(3px, 3px);
+        box-shadow: 2px 2px 0 #000;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 650px) {
+
+        body {
+            padding: 12px;
+        }
+
+        .game {
+            padding: 18px;
+            box-shadow: 5px 5px 0 #000;
+        }
+
+        .header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .score-box {
+            width: 100%;
+        }
+
+        .score-item {
+            flex: 1;
+        }
+
+        .answers {
+            grid-template-columns: 1fr;
+        }
+
+        .question-area {
+            padding: 25px 15px;
+        }
+
+        .sentence {
+            font-size: 25px;
+        }
+
+        .blank {
+            min-width: 70px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <!-- GAME SCREEN -->
+
+    <div id="gameScreen">
+
+        <div class="header">
+
+            <h1 class="title">
+                <span>IN</span>, <span>ON</span> or <span>AT</span>?
+            </h1>
+
+            <div class="score-box">
+
+                <div class="score-item">
+                    <span class="score-label">Score</span>
+                    <span class="score" id="score">0</span>
+                </div>
+
+                <div class="score-item">
+                    <span class="score-label">Question</span>
+                    <span class="score" id="progress">1/30</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="instruction">
+            CHOOSE THE CORRECT PREPOSITION.
+        </div>
+
+        <div class="question-area">
+
+            <div class="question-number" id="questionNumber">
+                QUESTION 1
+            </div>
+
+            <p class="sentence" id="sentence"></p>
+
+            <div class="answers">
+
+                <button
+                    class="answer"
+                    type="button"
+                    data-answer="IN">
+                    IN
+                </button>
+
+                <button
+                    class="answer"
+                    type="button"
+                    data-answer="ON">
+                    ON
+                </button>
+
+                <button
+                    class="answer"
+                    type="button"
+                    data-answer="AT">
+                    AT
+                </button>
+
+            </div>
+
+            <div
+                class="feedback"
+                id="feedback">
+            </div>
+
+            <button
+                class="next-btn"
+                id="nextBtn"
+                type="button"
+                style="display:none;">
+                NEXT QUESTION →
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FINAL SCREEN -->
+
+    <div
+        class="final-screen"
+        id="finalScreen">
+
+        <h2>🎉 GREAT JOB!</h2>
+
+        <div
+            class="final-score"
+            id="finalScore">
+        </div>
+
+        <button
+            class="restart-btn"
+            id="restartBtn"
+            type="button">
+            PLAY AGAIN
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   QUESTIONS
+   30 QUESTIONS - TIME + PLACE MIXED
+===================================================== */
+
+const questions = [
+
+    {
+        sentence: "I wake up ___ 7 o'clock.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "She is ___ the classroom.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "My birthday is ___ July.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "The book is ___ the table.",
+        answer: "ON"
+    },
+
+    {
+        sentence: "We have English class ___ Monday.",
+        answer: "ON"
+    },
+
+    {
+        sentence: "We are waiting ___ the bus stop.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "They live ___ Brazil.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "The movie starts ___ 8:30 p.m.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "There is a picture ___ the wall.",
+        answer: "ON"
+    },
+
+    {
+        sentence: "She studies ___ the morning.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "He is ___ school now.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "They usually travel ___ December.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "My keys are ___ my backpack.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "I don't work ___ Sundays.",
+        answer: "ON"
+    },
+
+    {
+        sentence: "We have lunch ___ noon.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "The students are ___ the airport.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "He was born ___ 2010.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "Your phone is ___ the desk.",
+        answer: "ON"
+    },
+
+    {
+        sentence: "The party is ___ Friday night.",
+        answer: "ON"
+    },
+
+    {
+        sentence: "My parents are ___ home.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "I usually go to bed ___ midnight.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "There are many people ___ the park.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "We have a meeting ___ Tuesday afternoon.",
+        answer: "ON"
+    },
+
+    {
+        sentence: "She is waiting ___ the door.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "I started learning English ___ 2023.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "There is a clock ___ the wall.",
+        answer: "ON"
+    },
+
+    {
+        sentence: "The school closes ___ 5 p.m.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "The children are playing ___ the garden.",
+        answer: "IN"
+    },
+
+    {
+        sentence: "We are ___ the hotel.",
+        answer: "AT"
+    },
+
+    {
+        sentence: "I usually watch TV ___ the evening.",
+        answer: "IN"
+    }
+
+];
+
+
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
+
+let currentQuestion = 0;
+let score = 0;
+let answered = false;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const sentence =
+    document.getElementById("sentence");
+
+const scoreElement =
+    document.getElementById("score");
+
+const progress =
+    document.getElementById("progress");
+
+const questionNumber =
+    document.getElementById("questionNumber");
+
+const feedback =
+    document.getElementById("feedback");
+
+const nextBtn =
+    document.getElementById("nextBtn");
+
+const answerButtons =
+    document.querySelectorAll(".answer");
+
+
+/* =====================================================
+   LOAD QUESTION
+===================================================== */
+
+function loadQuestion() {
+
+    answered = false;
+
+    const q =
+        questions[currentQuestion];
+
+    sentence.innerHTML =
+        q.sentence.replace(
+            "___",
+            '<span class="blank"></span>'
+        );
+
+    questionNumber.textContent =
+        `QUESTION ${currentQuestion + 1}`;
+
+    progress.textContent =
+        `${currentQuestion + 1}/${questions.length}`;
+
+    feedback.textContent = "";
+
+    feedback.className =
+        "feedback";
+
+    nextBtn.style.display =
+        "none";
+
+    answerButtons.forEach(button => {
+
+        button.disabled = false;
+
+        button.classList.remove(
+            "correct",
+            "wrong"
+        );
+
+    });
+}
+
+
+/* =====================================================
+   CHECK ANSWER
+===================================================== */
+
+function checkAnswer(
+    selectedAnswer,
+    button
+) {
+
+    if (answered) return;
+
+    answered = true;
+
+    const correctAnswer =
+        questions[currentQuestion].answer;
+
+    answerButtons.forEach(btn => {
+        btn.disabled = true;
+    });
+
+
+    if (selectedAnswer === correctAnswer) {
+
+        button.classList.add("correct");
+
+        score++;
+
+        scoreElement.textContent =
+            score;
+
+        feedback.textContent =
+            "✓ CORRECT!";
+
+        feedback.className =
+            "feedback correct-text";
+
+    }
+
+    else {
+
+        button.classList.add("wrong");
+
+        const correctButton =
+            [...answerButtons].find(
+                btn =>
+                    btn.dataset.answer ===
+                    correctAnswer
+            );
+
+        if (correctButton) {
+
+            correctButton.classList.add(
+                "correct"
+            );
+
+        }
+
+        feedback.textContent =
+            `✗ WRONG! The correct answer is ${correctAnswer}.`;
+
+        feedback.className =
+            "feedback wrong-text";
+    }
+
+
+    nextBtn.style.display =
+        "block";
+}
+
+
+/* =====================================================
+   ANSWER BUTTONS
+===================================================== */
+
+answerButtons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            checkAnswer(
+                button.dataset.answer,
+                button
+            );
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   NEXT QUESTION
+===================================================== */
+
+nextBtn.addEventListener(
+    "click",
+    () => {
+
+        currentQuestion++;
+
+        if (
+            currentQuestion >=
+            questions.length
+        ) {
+
+            showFinalScreen();
+
+        }
+
+        else {
+
+            loadQuestion();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   FINAL SCREEN
+===================================================== */
+
+function showFinalScreen() {
+
+    document.getElementById(
+        "gameScreen"
+    ).style.display = "none";
+
+    document.getElementById(
+        "finalScreen"
+    ).style.display = "block";
+
+    document.getElementById(
+        "finalScore"
+    ).textContent =
+        `You scored ${score} out of ${questions.length}!`;
+}
+
+
+/* =====================================================
+   RESTART
+===================================================== */
+
+document.getElementById(
+    "restartBtn"
+).addEventListener(
+    "click",
+    () => {
+
+        currentQuestion = 0;
+
+        score = 0;
+
+        scoreElement.textContent = "0";
+
+        document.getElementById(
+            "gameScreen"
+        ).style.display = "block";
+
+        document.getElementById(
+            "finalScreen"
+        ).style.display = "none";
+
+        loadQuestion();
+
+    }
+);
+
+
+/* =====================================================
+   START GAME
+===================================================== */
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
