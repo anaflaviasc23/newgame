@@ -1,0 +1,2217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>This, That, These & Those</title>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   BODY
+===================================================== */
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f4f4f2;
+
+    color: #111;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 25px;
+
+}
+
+
+/* =====================================================
+   GAME
+===================================================== */
+
+.game {
+
+    width: 100%;
+
+    max-width: 950px;
+
+    background: #fff;
+
+    border: 3px solid #111;
+
+    box-shadow: 8px 8px 0 #111;
+
+    padding: 30px;
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    border-bottom: 3px solid #111;
+
+    padding-bottom: 20px;
+
+    margin-bottom: 20px;
+
+}
+
+.header h1 {
+
+    margin: 0;
+
+    color: #111;
+
+    font-size: 32px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+}
+
+.header p {
+
+    margin: 8px 0 0;
+
+    color: #555;
+
+    font-size: 15px;
+
+}
+
+
+/* =====================================================
+   INFO
+===================================================== */
+
+.info {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    background: #111;
+
+    color: #fff;
+
+    padding: 11px 18px;
+
+    margin-bottom: 20px;
+
+    font-weight: bold;
+
+    font-size: 16px;
+
+}
+
+
+/* =====================================================
+   PROGRESS BAR
+===================================================== */
+
+.progress-container {
+
+    width: 100%;
+
+    height: 8px;
+
+    background: #ddd;
+
+    overflow: hidden;
+
+    margin-bottom: 25px;
+
+}
+
+.progress {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: #111;
+
+    transition: width .3s ease;
+
+}
+
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+.image-box {
+
+    width: 100%;
+
+    height: 350px;
+
+    background: #fafafa;
+
+    border: 3px dashed #111;
+
+    overflow: hidden;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+#scene {
+
+    width: 100%;
+
+    height: 100%;
+
+}
+
+#scene svg {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+}
+
+
+/* =====================================================
+   QUESTION
+===================================================== */
+
+.question {
+
+    text-align: center;
+
+    margin: 25px 0 20px;
+
+}
+
+.question h2 {
+
+    margin: 0;
+
+    font-size: 25px;
+
+    color: #111;
+
+    font-weight: 900;
+
+}
+
+.blank {
+
+    color: #e91e63;
+
+    font-weight: 900;
+
+}
+
+
+/* =====================================================
+   ANSWERS
+===================================================== */
+
+.answers {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+.answer {
+
+    background: #f4f4f2;
+
+    color: #111;
+
+    border: 3px solid #111;
+
+    padding: 16px;
+
+    min-height: 60px;
+
+    font-size: 19px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: .15s;
+
+    box-shadow: 4px 4px 0 #111;
+
+}
+
+.answer:hover:not(:disabled) {
+
+    transform:
+        translate(2px, 2px);
+
+    box-shadow:
+        2px 2px 0 #111;
+
+    background: #e9e3dc;
+
+}
+
+.answer:active:not(:disabled) {
+
+    transform:
+        translate(4px, 4px);
+
+    box-shadow: none;
+
+}
+
+.answer:disabled {
+
+    cursor: default;
+
+}
+
+
+/* =====================================================
+   CORRECT / WRONG
+===================================================== */
+
+.answer.correct {
+
+    background: #111;
+
+    border-color: #111;
+
+    color: #fff;
+
+}
+
+.answer.wrong {
+
+    background: #e91e63;
+
+    border-color: #111;
+
+    color: #fff;
+
+}
+
+
+/* =====================================================
+   FEEDBACK
+===================================================== */
+
+.feedback {
+
+    text-align: center;
+
+    min-height: 28px;
+
+    margin: 20px 0;
+
+    font-size: 18px;
+
+    font-weight: 900;
+
+}
+
+
+/* =====================================================
+   NEXT BUTTON
+===================================================== */
+
+.next {
+
+    display: block;
+
+    margin: auto;
+
+    padding: 14px 30px;
+
+    border: 3px solid #111;
+
+    background: #111;
+
+    color: #fff;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 4px 4px 0 #ccc;
+
+}
+
+.next:hover {
+
+    transform:
+        translate(2px, 2px);
+
+    box-shadow:
+        2px 2px 0 #ccc;
+
+}
+
+.next:active {
+
+    transform:
+        translate(4px, 4px);
+
+    box-shadow: none;
+
+}
+
+
+/* =====================================================
+   FINAL
+===================================================== */
+
+.final {
+
+    text-align: center;
+
+    padding: 40px 10px;
+
+}
+
+.final h2 {
+
+    color: #111;
+
+    font-size: 32px;
+
+    font-weight: 900;
+
+}
+
+.final p {
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    line-height: 1.7;
+
+}
+
+.restart {
+
+    border: 3px solid #111;
+
+    background: #111;
+
+    color: white;
+
+    padding: 14px 28px;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 4px 4px 0 #ccc;
+
+}
+
+.restart:hover {
+
+    transform:
+        translate(2px, 2px);
+
+    box-shadow:
+        2px 2px 0 #ccc;
+
+}
+
+.restart:active {
+
+    transform:
+        translate(4px, 4px);
+
+    box-shadow: none;
+
+}
+
+
+.hidden {
+
+    display: none !important;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width: 700px) {
+
+    body {
+
+        padding: 15px;
+
+        align-items: flex-start;
+
+    }
+
+    .game {
+
+        margin-top: 8px;
+
+        padding: 20px;
+
+        box-shadow: 5px 5px 0 #111;
+
+    }
+
+    .header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        text-align: center;
+
+    }
+
+    .header h1 {
+
+        font-size: 27px;
+
+    }
+
+    .info {
+
+        justify-content: center;
+
+        gap: 20px;
+
+        flex-wrap: wrap;
+
+    }
+
+    .image-box {
+
+        height: 280px;
+
+    }
+
+    .question h2 {
+
+        font-size: 21px;
+
+    }
+
+    .answers {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .answer {
+
+        padding: 15px;
+
+    }
+
+}
+
+
+@media(max-width: 450px) {
+
+    .game {
+
+        padding: 15px;
+
+    }
+
+    .image-box {
+
+        height: 245px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="game">
+
+
+    <!-- =================================================
+         HEADER
+    ================================================== -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                📚 This, That, These & Those
+            </h1>
+
+            <p>
+                Look at the picture and complete the sentence.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         INFO
+    ================================================== -->
+
+    <div class="info">
+
+        <span id="questionNumber">
+            Question 1/30
+        </span>
+
+        <span>
+            ⭐ Score:
+            <span id="score">0</span>
+        </span>
+
+    </div>
+
+
+    <!-- =================================================
+         PROGRESS
+    ================================================== -->
+
+    <div class="progress-container">
+
+        <div
+            id="progress"
+            class="progress">
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         GAME AREA
+    ================================================== -->
+
+    <div id="gameArea">
+
+
+        <!-- =================================================
+             IMAGE
+        ================================================== -->
+
+        <div class="image-box">
+
+            <div id="scene"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             QUESTION
+        ================================================== -->
+
+        <div class="question">
+
+            <h2 id="questionText"></h2>
+
+        </div>
+
+
+        <!-- =================================================
+             ANSWERS
+        ================================================== -->
+
+        <div
+            id="answers"
+            class="answers">
+        </div>
+
+
+        <!-- =================================================
+             FEEDBACK
+        ================================================== -->
+
+        <div
+            id="feedback"
+            class="feedback">
+        </div>
+
+
+        <!-- =================================================
+             NEXT
+        ================================================== -->
+
+        <button
+            id="nextButton"
+            class="next hidden">
+
+            Next Question ➜
+
+        </button>
+
+
+    </div>
+
+
+    <!-- =================================================
+         FINAL SCREEN
+    ================================================== -->
+
+    <div
+        id="finalScreen"
+        class="final hidden">
+
+        <h2>
+            🎉 Game Finished!
+        </h2>
+
+        <p id="finalScore"></p>
+
+        <button
+            id="restartButton"
+            class="restart">
+
+            🔄 Play Again
+
+        </button>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   CONFIGURAÇÕES
+===================================================== */
+
+const TOTAL_QUESTIONS = 30;
+
+const POINTS_PER_QUESTION = 10;
+
+
+/* =====================================================
+   OBJETOS DISPONÍVEIS
+===================================================== */
+
+const objects = [
+
+    {
+        singular: "book",
+        plural: "books",
+        kind: "book",
+        article: "a"
+    },
+
+    {
+        singular: "pencil",
+        plural: "pencils",
+        kind: "pencil",
+        article: "a"
+    },
+
+    {
+        singular: "apple",
+        plural: "apples",
+        kind: "apple",
+        article: "an"
+    },
+
+    {
+        singular: "phone",
+        plural: "phones",
+        kind: "phone",
+        article: "a"
+    },
+
+    {
+        singular: "ball",
+        plural: "balls",
+        kind: "ball",
+        article: "a"
+    },
+
+    {
+        singular: "cup",
+        plural: "cups",
+        kind: "cup",
+        article: "a"
+    },
+
+    {
+        singular: "shoe",
+        plural: "shoes",
+        kind: "shoe",
+        article: "a"
+    },
+
+    {
+        singular: "toy",
+        plural: "toys",
+        kind: "toy",
+        article: "a"
+    }
+
+];
+
+
+/* =====================================================
+   DEMONSTRATIVOS
+===================================================== */
+
+const demonstratives = [
+
+    {
+        word: "This",
+        type: "this",
+        singular: true,
+        near: true
+    },
+
+    {
+        word: "That",
+        type: "that",
+        singular: true,
+        near: false
+    },
+
+    {
+        word: "These",
+        type: "these",
+        singular: false,
+        near: true
+    },
+
+    {
+        word: "Those",
+        type: "those",
+        singular: false,
+        near: false
+    }
+
+];
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+let questions = [];
+
+let currentQuestion = 0;
+
+let score = 0;
+
+let answered = false;
+
+
+/* =====================================================
+   ELEMENTOS
+===================================================== */
+
+const scene =
+    document.getElementById("scene");
+
+const questionText =
+    document.getElementById("questionText");
+
+const answers =
+    document.getElementById("answers");
+
+const feedback =
+    document.getElementById("feedback");
+
+const nextButton =
+    document.getElementById("nextButton");
+
+const scoreElement =
+    document.getElementById("score");
+
+const questionNumber =
+    document.getElementById("questionNumber");
+
+const progress =
+    document.getElementById("progress");
+
+const gameArea =
+    document.getElementById("gameArea");
+
+const finalScreen =
+    document.getElementById("finalScreen");
+
+const finalScore =
+    document.getElementById("finalScore");
+
+const restartButton =
+    document.getElementById("restartButton");
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffle(array) {
+
+    const newArray =
+        [...array];
+
+    for(
+        let i = newArray.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+        [
+            newArray[i],
+            newArray[j]
+        ] =
+        [
+            newArray[j],
+            newArray[i]
+        ];
+
+    }
+
+    return newArray;
+
+}
+
+
+/* =====================================================
+   OBJETOS ALEATÓRIOS
+===================================================== */
+
+function getRandomObjects(amount) {
+
+    return shuffle(objects)
+        .slice(0, amount);
+
+}
+
+
+/* =====================================================
+   CRIAR 30 QUESTÕES
+===================================================== */
+
+function createQuestions() {
+
+    const generated = [];
+
+
+    /* THIS */
+
+    getRandomObjects(8)
+        .forEach(obj => {
+
+            generated.push(
+                createQuestion(
+                    demonstratives[0],
+                    obj
+                )
+            );
+
+        });
+
+
+    /* THAT */
+
+    getRandomObjects(7)
+        .forEach(obj => {
+
+            generated.push(
+                createQuestion(
+                    demonstratives[1],
+                    obj
+                )
+            );
+
+        });
+
+
+    /* THESE */
+
+    getRandomObjects(8)
+        .forEach(obj => {
+
+            generated.push(
+                createQuestion(
+                    demonstratives[2],
+                    obj
+                )
+            );
+
+        });
+
+
+    /* THOSE */
+
+    getRandomObjects(7)
+        .forEach(obj => {
+
+            generated.push(
+                createQuestion(
+                    demonstratives[3],
+                    obj
+                )
+            );
+
+        });
+
+
+    return shuffle(generated);
+
+}
+
+
+/* =====================================================
+   CRIAR QUESTÃO
+===================================================== */
+
+function createQuestion(
+    demonstrative,
+    object
+) {
+
+    let sentence;
+
+
+    if(
+        demonstrative.singular
+    ) {
+
+        sentence =
+            `______ is ${object.article} ${object.singular}.`;
+
+    }
+
+    else {
+
+        sentence =
+            `______ are ${object.plural}.`;
+
+    }
+
+
+    return {
+
+        type:
+            demonstrative.type,
+
+        correct:
+            demonstrative.word,
+
+        object:
+            object,
+
+        sentence:
+            sentence,
+
+        singular:
+            demonstrative.singular,
+
+        near:
+            demonstrative.near
+
+    };
+
+}
+
+
+/* =====================================================
+   SVG BASE
+===================================================== */
+
+function createSVG(content) {
+
+    return `
+
+    <svg
+        viewBox="0 0 700 350"
+        xmlns="http://www.w3.org/2000/svg">
+
+        <rect
+            width="700"
+            height="350"
+            fill="#fffdfb"/>
+
+
+        <circle
+            cx="80"
+            cy="55"
+            r="20"
+            fill="#f0f0f0"/>
+
+
+        <circle
+            cx="640"
+            cy="65"
+            r="30"
+            fill="#f0f0f0"/>
+
+
+        <rect
+            y="285"
+            width="700"
+            height="65"
+            fill="#eadfd5"/>
+
+
+        <line
+            x1="0"
+            y1="285"
+            x2="700"
+            y2="285"
+            stroke="#d4c4b8"
+            stroke-width="3"/>
+
+
+        ${content}
+
+    </svg>
+
+    `;
+
+}
+
+
+/* =====================================================
+   PERSON
+===================================================== */
+
+function person() {
+
+    return `
+
+        <circle
+            cx="105"
+            cy="105"
+            r="30"
+            fill="#f0b48c"/>
+
+
+        <path
+            d="
+            M76 100
+            Q78 65 105 68
+            Q132 65 134 100
+            Q120 85 105 88
+            Q90 85 76 100
+            Z"
+            fill="#4a3028"/>
+
+
+        <path
+            d="
+            M68 145
+            Q105 120 142 145
+            L155 250
+            L55 250
+            Z"
+            fill="#111"/>
+
+
+        <rect
+            x="72"
+            y="240"
+            width="25"
+            height="55"
+            rx="10"
+            fill="#333"/>
+
+
+        <rect
+            x="113"
+            y="240"
+            width="25"
+            height="55"
+            rx="10"
+            fill="#333"/>
+
+
+        <line
+            x1="72"
+            y1="155"
+            x2="45"
+            y2="210"
+            stroke="#f0b48c"
+            stroke-width="17"
+            stroke-linecap="round"/>
+
+
+        <line
+            x1="138"
+            y1="155"
+            x2="165"
+            y2="210"
+            stroke="#f0b48c"
+            stroke-width="17"
+            stroke-linecap="round"/>
+
+
+        <ellipse
+            cx="80"
+            cy="297"
+            rx="25"
+            ry="8"
+            fill="#222"/>
+
+
+        <ellipse
+            cx="130"
+            cy="297"
+            rx="25"
+            ry="8"
+            fill="#222"/>
+
+
+        <circle
+            cx="94"
+            cy="105"
+            r="3"
+            fill="#333"/>
+
+
+        <circle
+            cx="116"
+            cy="105"
+            r="3"
+            fill="#333"/>
+
+
+        <path
+            d="M96 119 Q105 126 114 119"
+            fill="none"
+            stroke="#333"
+            stroke-width="3"
+            stroke-linecap="round"/>
+
+    `;
+
+}
+
+
+/* =====================================================
+   OBJETOS
+===================================================== */
+
+function objectSVG(
+    type,
+    x,
+    y,
+    scale = 1
+) {
+
+    let object = "";
+
+
+    switch(type) {
+
+
+        case "book":
+
+            object = `
+
+                <rect
+                    x="-45"
+                    y="-32"
+                    width="90"
+                    height="65"
+                    rx="5"
+                    fill="#111"/>
+
+                <line
+                    x1="0"
+                    y1="-30"
+                    x2="0"
+                    y2="30"
+                    stroke="#fff"
+                    stroke-width="4"/>
+
+                <line
+                    x1="-32"
+                    y1="-10"
+                    x2="-8"
+                    y2="-10"
+                    stroke="#fff"
+                    stroke-width="3"/>
+
+                <line
+                    x1="8"
+                    y1="-10"
+                    x2="32"
+                    y2="-10"
+                    stroke="#fff"
+                    stroke-width="3"/>
+
+                <line
+                    x1="-32"
+                    y1="3"
+                    x2="-8"
+                    y2="3"
+                    stroke="#fff"
+                    stroke-width="3"/>
+
+                <line
+                    x1="8"
+                    y1="3"
+                    x2="32"
+                    y2="3"
+                    stroke="#fff"
+                    stroke-width="3"/>
+
+            `;
+
+            break;
+
+
+        case "pencil":
+
+            object = `
+
+                <rect
+                    x="-60"
+                    y="-12"
+                    width="120"
+                    height="24"
+                    rx="5"
+                    fill="#555"/>
+
+                <polygon
+                    points="
+                    60,-12
+                    84,0
+                    60,12"
+                    fill="#ccc"/>
+
+                <polygon
+                    points="
+                    84,0
+                    70,-5
+                    70,5"
+                    fill="#111"/>
+
+                <rect
+                    x="-60"
+                    y="-12"
+                    width="15"
+                    height="24"
+                    fill="#e91e63"/>
+
+            `;
+
+            break;
+
+
+        case "apple":
+
+            object = `
+
+                <circle
+                    cx="-18"
+                    cy="5"
+                    r="28"
+                    fill="#e91e63"/>
+
+                <circle
+                    cx="18"
+                    cy="5"
+                    r="28"
+                    fill="#e91e63"/>
+
+                <path
+                    d="
+                    M0 -18
+                    Q5 -40 22 -42"
+                    stroke="#333"
+                    stroke-width="8"
+                    fill="none"/>
+
+                <ellipse
+                    cx="20"
+                    cy="-35"
+                    rx="13"
+                    ry="7"
+                    fill="#777"
+                    transform="
+                    rotate(-25 20 -35)"/>
+
+            `;
+
+            break;
+
+
+        case "phone":
+
+            object = `
+
+                <rect
+                    x="-42"
+                    y="-70"
+                    width="84"
+                    height="140"
+                    rx="13"
+                    fill="#111"/>
+
+                <rect
+                    x="-34"
+                    y="-55"
+                    width="68"
+                    height="105"
+                    rx="5"
+                    fill="#ddd"/>
+
+                <circle
+                    cx="0"
+                    cy="60"
+                    r="5"
+                    fill="#aaa"/>
+
+                <circle
+                    cx="0"
+                    cy="-43"
+                    r="4"
+                    fill="#111"/>
+
+            `;
+
+            break;
+
+
+        case "ball":
+
+            object = `
+
+                <circle
+                    cx="0"
+                    cy="0"
+                    r="48"
+                    fill="#e91e63"/>
+
+                <path
+                    d="
+                    M-35 -28
+                    Q0 0 35 -28"
+                    stroke="#fff"
+                    stroke-width="5"
+                    fill="none"/>
+
+                <path
+                    d="
+                    M-35 28
+                    Q0 0 35 28"
+                    stroke="#fff"
+                    stroke-width="5"
+                    fill="none"/>
+
+            `;
+
+            break;
+
+
+        case "cup":
+
+            object = `
+
+                <path
+                    d="
+                    M-35 -40
+                    L35 -40
+                    L25 45
+                    L-25 45
+                    Z"
+                    fill="#777"/>
+
+                <path
+                    d="
+                    M35 -25
+                    Q75 -25 60 20
+                    Q50 38 28 30"
+                    fill="none"
+                    stroke="#777"
+                    stroke-width="14"/>
+
+                <ellipse
+                    cx="0"
+                    cy="-40"
+                    rx="35"
+                    ry="10"
+                    fill="#555"/>
+
+            `;
+
+            break;
+
+
+        case "shoe":
+
+            object = `
+
+                <path
+                    d="
+                    M-70 -10
+                    Q-40 -45 -10 -25
+                    L20 20
+                    L70 28
+                    Q90 35 75 55
+                    L-55 55
+                    Q-80 40 -70 -10
+                    Z"
+                    fill="#555"/>
+
+                <line
+                    x1="-25"
+                    y1="-5"
+                    x2="15"
+                    y2="20"
+                    stroke="#fff"
+                    stroke-width="5"/>
+
+                <line
+                    x1="-30"
+                    y1="5"
+                    x2="10"
+                    y2="30"
+                    stroke="#fff"
+                    stroke-width="5"/>
+
+            `;
+
+            break;
+
+
+        case "toy":
+
+            object = `
+
+                <circle
+                    cx="0"
+                    cy="0"
+                    r="42"
+                    fill="#e91e63"/>
+
+                <circle
+                    cx="-15"
+                    cy="-8"
+                    r="6"
+                    fill="#333"/>
+
+                <circle
+                    cx="15"
+                    cy="-8"
+                    r="6"
+                    fill="#333"/>
+
+                <path
+                    d="
+                    M-15 15
+                    Q0 28 15 15"
+                    fill="none"
+                    stroke="#333"
+                    stroke-width="5"/>
+
+                <circle
+                    cx="-35"
+                    cy="-35"
+                    r="18"
+                    fill="#777"/>
+
+                <circle
+                    cx="35"
+                    cy="-35"
+                    r="18"
+                    fill="#777"/>
+
+            `;
+
+            break;
+
+    }
+
+
+    return `
+
+        <g
+            transform="
+            translate(${x},${y})
+            scale(${scale})">
+
+            ${object}
+
+        </g>
+
+    `;
+
+}
+
+
+/* =====================================================
+   CRIAR CENA
+===================================================== */
+
+function createScene(question) {
+
+    const type =
+        question.type;
+
+    const object =
+        question.object.kind;
+
+
+    /* =================================================
+       THIS
+    ================================================= */
+
+    if(type === "this") {
+
+        return createSVG(`
+
+            ${person()}
+
+            <ellipse
+                cx="350"
+                cy="286"
+                rx="65"
+                ry="10"
+                fill="#cdbfb4"/>
+
+            ${objectSVG(
+                object,
+                350,
+                245,
+                .8
+            )}
+
+        `);
+
+    }
+
+
+    /* =================================================
+       THAT
+    ================================================= */
+
+    if(type === "that") {
+
+        return createSVG(`
+
+            ${person()}
+
+            <ellipse
+                cx="590"
+                cy="286"
+                rx="50"
+                ry="8"
+                fill="#cdbfb4"/>
+
+            ${objectSVG(
+                object,
+                590,
+                235,
+                .7
+            )}
+
+        `);
+
+    }
+
+
+    /* =================================================
+       THESE
+    ================================================= */
+
+    if(type === "these") {
+
+        return createSVG(`
+
+            ${person()}
+
+            <ellipse
+                cx="285"
+                cy="285"
+                rx="35"
+                ry="7"
+                fill="#cdbfb4"/>
+
+            <ellipse
+                cx="350"
+                cy="285"
+                rx="35"
+                ry="7"
+                fill="#cdbfb4"/>
+
+            <ellipse
+                cx="415"
+                cy="285"
+                rx="35"
+                ry="7"
+                fill="#cdbfb4"/>
+
+
+            ${objectSVG(
+                object,
+                285,
+                245,
+                .55
+            )}
+
+            ${objectSVG(
+                object,
+                350,
+                245,
+                .55
+            )}
+
+            ${objectSVG(
+                object,
+                415,
+                245,
+                .55
+            )}
+
+        `);
+
+    }
+
+
+    /* =================================================
+       THOSE
+    ================================================= */
+
+    if(type === "those") {
+
+        return createSVG(`
+
+            ${person()}
+
+            <ellipse
+                cx="535"
+                cy="278"
+                rx="30"
+                ry="6"
+                fill="#cdbfb4"/>
+
+            <ellipse
+                cx="600"
+                cy="278"
+                rx="30"
+                ry="6"
+                fill="#cdbfb4"/>
+
+            <ellipse
+                cx="665"
+                cy="278"
+                rx="30"
+                ry="6"
+                fill="#cdbfb4"/>
+
+
+            ${objectSVG(
+                object,
+                535,
+                235,
+                .45
+            )}
+
+            ${objectSVG(
+                object,
+                600,
+                235,
+                .45
+            )}
+
+            ${objectSVG(
+                object,
+                665,
+                235,
+                .45
+            )}
+
+        `);
+
+    }
+
+}
+
+
+/* =====================================================
+   PROGRESSO
+===================================================== */
+
+function updateProgress() {
+
+    const percentage =
+        (
+            currentQuestion /
+            TOTAL_QUESTIONS
+        ) * 100;
+
+    progress.style.width =
+        `${percentage}%`;
+
+}
+
+
+/* =====================================================
+   CARREGAR QUESTÃO
+===================================================== */
+
+function loadQuestion() {
+
+    answered = false;
+
+
+    const question =
+        questions[currentQuestion];
+
+
+    questionNumber.textContent =
+        `Question ${currentQuestion + 1}/${TOTAL_QUESTIONS}`;
+
+
+    updateProgress();
+
+
+    scene.innerHTML =
+        createScene(question);
+
+
+    questionText.innerHTML =
+        question.sentence.replace(
+            "______",
+            `<span class="blank">______</span>`
+        );
+
+
+    feedback.innerHTML = "";
+
+
+    nextButton.classList.add(
+        "hidden"
+    );
+
+
+    answers.innerHTML = "";
+
+
+    /* =================================================
+       ALTERNATIVAS
+    ================================================= */
+
+    shuffle(
+        demonstratives
+    ).forEach(
+        demonstrative => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "answer";
+
+
+            button.textContent =
+                demonstrative.word;
+
+
+            button.dataset.answer =
+                demonstrative.word;
+
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    checkAnswer(
+                        this,
+                        this.dataset.answer,
+                        question.correct
+                    );
+
+                }
+            );
+
+
+            answers.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   VERIFICAR RESPOSTA
+===================================================== */
+
+function checkAnswer(
+    selectedButton,
+    selectedAnswer,
+    correctAnswer
+) {
+
+    if(answered) {
+
+        return;
+
+    }
+
+
+    answered = true;
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".answer"
+        );
+
+
+    buttons.forEach(
+        button => {
+
+            button.disabled = true;
+
+        }
+    );
+
+
+    /* =================================================
+       MOSTRAR RESPOSTA CORRETA
+    ================================================= */
+
+    buttons.forEach(
+        button => {
+
+            if(
+                button.dataset.answer ===
+                correctAnswer
+            ) {
+
+                button.classList.add(
+                    "correct"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =================================================
+       ACERTO
+    ================================================= */
+
+    if(
+        selectedAnswer ===
+        correctAnswer
+    ) {
+
+        selectedButton.classList.add(
+            "correct"
+        );
+
+
+        score += POINTS_PER_QUESTION;
+
+
+        scoreElement.textContent =
+            score;
+
+
+        feedback.innerHTML =
+
+            `✅ Correct!
+             <strong>${correctAnswer}</strong>
+             is the correct answer.`;
+
+    }
+
+
+    /* =================================================
+       ERRO
+    ================================================= */
+
+    else {
+
+        selectedButton.classList.add(
+            "wrong"
+        );
+
+
+        feedback.innerHTML =
+
+            `❌ Incorrect!
+             The correct answer is
+             <strong>${correctAnswer}</strong>.`;
+
+    }
+
+
+    nextButton.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =====================================================
+   PRÓXIMA QUESTÃO
+===================================================== */
+
+nextButton.addEventListener(
+    "click",
+    function() {
+
+        currentQuestion++;
+
+
+        if(
+            currentQuestion >=
+            questions.length
+        ) {
+
+            showFinal();
+
+            return;
+
+        }
+
+
+        loadQuestion();
+
+    }
+);
+
+
+/* =====================================================
+   FINAL
+===================================================== */
+
+function showFinal() {
+
+    gameArea.classList.add(
+        "hidden"
+    );
+
+
+    finalScreen.classList.remove(
+        "hidden"
+    );
+
+
+    progress.style.width =
+        "100%";
+
+
+    const maxScore =
+        TOTAL_QUESTIONS *
+        POINTS_PER_QUESTION;
+
+
+    const percentage =
+        Math.round(
+            (
+                score /
+                maxScore
+            ) * 100
+        );
+
+
+    let message;
+
+
+    if(
+        percentage >= 90
+    ) {
+
+        message =
+            "🌟 Excellent!";
+
+    }
+
+    else if(
+        percentage >= 70
+    ) {
+
+        message =
+            "👏 Very good!";
+
+    }
+
+    else if(
+        percentage >= 50
+    ) {
+
+        message =
+            "👍 Good job! Keep practicing!";
+
+    }
+
+    else {
+
+        message =
+            "📚 Keep practicing! You can do it!";
+
+    }
+
+
+    finalScore.innerHTML = `
+
+        ${message}
+
+        <br><br>
+
+        You scored
+
+        <strong>
+            ${score}
+        </strong>
+
+        out of
+
+        <strong>
+            ${maxScore}
+        </strong>
+
+        points.
+
+        <br>
+
+        Accuracy:
+
+        <strong>
+            ${percentage}%
+        </strong>
+
+    `;
+
+}
+
+
+/* =====================================================
+   REINICIAR
+===================================================== */
+
+restartButton.addEventListener(
+    "click",
+    function() {
+
+        currentQuestion = 0;
+
+        score = 0;
+
+        answered = false;
+
+
+        scoreElement.textContent =
+            "0";
+
+
+        questions =
+            createQuestions();
+
+
+        finalScreen.classList.add(
+            "hidden"
+        );
+
+
+        gameArea.classList.remove(
+            "hidden"
+        );
+
+
+        loadQuestion();
+
+    }
+);
+
+
+/* =====================================================
+   INICIAR
+===================================================== */
+
+questions =
+    createQuestions();
+
+
+loadQuestion();
+
+</script>
+
+
+</body>
+
+</html>
