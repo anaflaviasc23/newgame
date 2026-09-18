@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Prepositions of Place</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f4f4f2;
+
+    color: #111;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 25px;
+
+}
+
+
+/* =====================================================
+   GAME
+===================================================== */
+
+.game {
+
+    width: 100%;
+
+    max-width: 950px;
+
+    background: #fff;
+
+    border: 3px solid #111;
+
+    box-shadow: 8px 8px 0 #111;
+
+    padding: 30px;
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    border-bottom: 3px solid #111;
+
+    padding-bottom: 20px;
+
+    margin-bottom: 20px;
+
+}
+
+.header h1 {
+
+    margin: 0;
+
+    color: #111;
+
+    font-size: 32px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+}
+
+.header p {
+
+    margin: 8px 0 0;
+
+    color: #555;
+
+    font-size: 15px;
+
+}
+
+
+/* =====================================================
+   INFO
+===================================================== */
+
+.info {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    background: #111;
+
+    color: #fff;
+
+    padding: 11px 18px;
+
+    margin-bottom: 25px;
+
+    font-weight: bold;
+
+    font-size: 16px;
+
+}
+
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+.image-box {
+
+    width: 100%;
+
+    height: 350px;
+
+    background: #fafafa;
+
+    border: 3px dashed #111;
+
+    overflow: hidden;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+#scene {
+
+    width: 100%;
+
+    height: 100%;
+
+}
+
+#scene svg {
+
+    width: 100%;
+
+    height: 100%;
+
+}
+
+
+/* =====================================================
+   QUESTION
+===================================================== */
+
+.question {
+
+    text-align: center;
+
+    margin: 25px 0 20px;
+
+}
+
+.question h2 {
+
+    margin: 0;
+
+    font-size: 25px;
+
+    color: #111;
+
+    font-weight: 900;
+
+}
+
+.blank {
+
+    color: #e91e63;
+
+    font-weight: 900;
+
+}
+
+
+/* =====================================================
+   ANSWERS
+===================================================== */
+
+.answers {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 15px;
+
+}
+
+.answer {
+
+    background: #f4f4f2;
+
+    color: #111;
+
+    border: 3px solid #111;
+
+    padding: 16px;
+
+    min-height: 60px;
+
+    font-size: 17px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: .15s;
+
+    box-shadow: 4px 4px 0 #111;
+
+}
+
+.answer:hover {
+
+    transform:
+        translate(2px, 2px);
+
+    box-shadow:
+        2px 2px 0 #111;
+
+    background: #e9e3dc;
+
+}
+
+.answer:active {
+
+    transform:
+        translate(4px, 4px);
+
+    box-shadow: none;
+
+}
+
+
+/* =====================================================
+   CORRECT / WRONG
+===================================================== */
+
+.answer.correct {
+
+    background: #111;
+
+    border-color: #111;
+
+    color: #fff;
+
+}
+
+.answer.wrong {
+
+    background: #e91e63;
+
+    border-color: #111;
+
+    color: #fff;
+
+}
+
+
+/* =====================================================
+   FEEDBACK
+===================================================== */
+
+.feedback {
+
+    text-align: center;
+
+    min-height: 28px;
+
+    margin: 20px 0;
+
+    font-size: 18px;
+
+    font-weight: 900;
+
+}
+
+
+/* =====================================================
+   NEXT BUTTON
+===================================================== */
+
+.next {
+
+    display: block;
+
+    margin: auto;
+
+    padding: 14px 30px;
+
+    border: 3px solid #111;
+
+    background: #111;
+
+    color: #fff;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 4px 4px 0 #ccc;
+
+}
+
+.next:hover {
+
+    transform:
+        translate(2px, 2px);
+
+    box-shadow:
+        2px 2px 0 #ccc;
+
+}
+
+.next:active {
+
+    transform:
+        translate(4px, 4px);
+
+    box-shadow: none;
+
+}
+
+
+/* =====================================================
+   FINAL
+===================================================== */
+
+.final {
+
+    text-align: center;
+
+    padding: 40px 10px;
+
+}
+
+.final h2 {
+
+    color: #111;
+
+    font-size: 32px;
+
+    font-weight: 900;
+
+}
+
+.final p {
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+}
+
+.restart {
+
+    border: 3px solid #111;
+
+    background: #111;
+
+    color: white;
+
+    padding: 14px 28px;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 4px 4px 0 #ccc;
+
+}
+
+.restart:hover {
+
+    transform:
+        translate(2px, 2px);
+
+    box-shadow:
+        2px 2px 0 #ccc;
+
+}
+
+.hidden {
+
+    display: none !important;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width: 700px) {
+
+    body {
+
+        padding: 15px;
+
+        align-items: flex-start;
+
+    }
+
+    .game {
+
+        margin-top: 8px;
+
+        padding: 20px;
+
+        box-shadow: 5px 5px 0 #111;
+
+    }
+
+    .header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        text-align: center;
+
+    }
+
+    .header h1 {
+
+        font-size: 27px;
+
+    }
+
+    .info {
+
+        justify-content: center;
+
+        gap: 20px;
+
+        flex-wrap: wrap;
+
+    }
+
+    .image-box {
+
+        height: 280px;
+
+    }
+
+    .question h2 {
+
+        font-size: 21px;
+
+    }
+
+    .answers {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .answer {
+
+        padding: 15px;
+
+    }
+
+}
+
+@media(max-width: 450px) {
+
+    .game {
+
+        padding: 15px;
+
+    }
+
+    .image-box {
+
+        height: 245px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="game">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                📍 Prepositions of Place
+            </h1>
+
+            <p>
+                Look at the picture and complete the sentence.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SCORE -->
+
+    <div class="info">
+
+        <span id="questionNumber">
+            Question 1/25
+        </span>
+
+        <span>
+            ⭐ Score:
+            <span id="score">0</span>
+        </span>
+
+    </div>
+
+
+    <!-- GAME -->
+
+    <div id="gameArea">
+
+
+        <!-- SVG IMAGE -->
+
+        <div class="image-box">
+
+            <div id="scene"></div>
+
+        </div>
+
+
+        <!-- QUESTION -->
+
+        <div class="question">
+
+            <h2 id="questionText"></h2>
+
+        </div>
+
+
+        <!-- ANSWERS -->
+
+        <div
+            id="answers"
+            class="answers">
+        </div>
+
+
+        <!-- FEEDBACK -->
+
+        <div
+            id="feedback"
+            class="feedback">
+        </div>
+
+
+        <!-- NEXT -->
+
+        <button
+            id="nextButton"
+            class="next hidden">
+
+            Next Question ➜
+
+        </button>
+
+
+    </div>
+
+
+    <!-- FINAL -->
+
+    <div
+        id="finalScreen"
+        class="final hidden">
+
+        <h2>
+            🎉 Congratulations!
+        </h2>
+
+        <p id="finalScore"></p>
+
+        <button
+            id="restartButton"
+            class="restart">
+
+            🔄 Play Again
+
+        </button>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   QUESTÕES
+===================================================== */
+
+const questions = [
+
+    {
+        type: "above",
+        correct: "Above",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "across",
+        correct: "Across from",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "after",
+        correct: "After",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "along",
+        correct: "Along",
+        sentence: "The raccoon is moving ______ the box."
+    },
+
+    {
+        type: "among",
+        correct: "Among",
+        sentence: "The raccoon is ______ the boxes."
+    },
+
+    {
+        type: "around",
+        correct: "Around",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "at",
+        correct: "At",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "before",
+        correct: "Before",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "behind",
+        correct: "Behind",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "below",
+        correct: "Below",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "between",
+        correct: "Between",
+        sentence: "The raccoon is ______ the boxes."
+    },
+
+    {
+        type: "beside",
+        correct: "Beside",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "by",
+        correct: "By",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "close",
+        correct: "Close to",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "in",
+        correct: "In",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "front",
+        correct: "In front of",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "inside",
+        correct: "Inside",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "near",
+        correct: "Near",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "next",
+        correct: "Next to",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "on",
+        correct: "On",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "outside",
+        correct: "Outside",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "beyond",
+        correct: "Beyond",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "over",
+        correct: "Over",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "under",
+        correct: "Under",
+        sentence: "The raccoon is ______ the box."
+    },
+
+    {
+        type: "far",
+        correct: "Far from",
+        sentence: "The raccoon is ______ the box."
+    }
+
+];
+
+
+/* =====================================================
+   TODAS AS ALTERNATIVAS
+===================================================== */
+
+const options = [
+
+    "Above",
+    "Across from",
+    "After",
+    "Along",
+    "Among",
+    "Around",
+    "At",
+    "Before",
+    "Behind",
+    "Below",
+    "Between",
+    "Beside",
+    "By",
+    "Close to",
+    "In",
+    "In front of",
+    "Inside",
+    "Near",
+    "Next to",
+    "On",
+    "Outside",
+    "Beyond",
+    "Over",
+    "Under",
+    "Far from"
+
+];
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+let current = 0;
+
+let score = 0;
+
+let answered = false;
+
+
+/* =====================================================
+   ELEMENTOS
+===================================================== */
+
+const scene =
+    document.getElementById("scene");
+
+const questionText =
+    document.getElementById("questionText");
+
+const answers =
+    document.getElementById("answers");
+
+const feedback =
+    document.getElementById("feedback");
+
+const nextButton =
+    document.getElementById("nextButton");
+
+const scoreElement =
+    document.getElementById("score");
+
+const questionNumber =
+    document.getElementById("questionNumber");
+
+
+/* =====================================================
+   SVG BASE
+===================================================== */
+
+function svg(content) {
+
+    return `
+
+    <svg
+        viewBox="0 0 700 350"
+        xmlns="http://www.w3.org/2000/svg">
+
+        <rect
+            width="700"
+            height="350"
+            fill="#fffdfb"/>
+
+        <rect
+            x="0"
+            y="285"
+            width="700"
+            height="65"
+            fill="#eadfd5"/>
+
+        ${content}
+
+    </svg>
+
+    `;
+
+}
+
+
+/* =====================================================
+   BOX
+===================================================== */
+
+function box(x, y, scale = 1) {
+
+    return `
+
+    <g transform="
+        translate(${x},${y})
+        scale(${scale})">
+
+        <path
+            d="
+            M0 25
+            L70 0
+            L140 25
+            L70 50
+            Z"
+            fill="#e8a64d"/>
+
+        <path
+            d="
+            M0 25
+            V105
+            L70 130
+            V50
+            Z"
+            fill="#d88f38"/>
+
+        <path
+            d="
+            M140 25
+            V105
+            L70 130
+            V50
+            Z"
+            fill="#c77d2d"/>
+
+        <path
+            d="
+            M0 25
+            L10 -5
+            L70 15
+            L70 50
+            Z"
+            fill="#f3bc69"/>
+
+        <path
+            d="
+            M70 15
+            L130 -5
+            L140 25
+            L70 50
+            Z"
+            fill="#f0b45f"/>
+
+    </g>
+
+    `;
+
+}
+
+
+/* =====================================================
+   RACCOON
+===================================================== */
+
+function raccoon(x, y, scale = 1, flip = false) {
+
+    const direction =
+        flip ? -1 : 1;
+
+    return `
+
+    <g
+        transform="
+        translate(${x},${y})
+        scale(${direction * scale},${scale})">
+
+        <path
+            d="
+            M75 65
+            C145 20 155 90 105 105"
+            fill="none"
+            stroke="#555"
+            stroke-width="25"
+            stroke-linecap="round"/>
+
+        <path
+            d="
+            M108 65
+            C125 60 130 75 145 80"
+            fill="none"
+            stroke="#eee"
+            stroke-width="7"/>
+
+        <path
+            d="
+            M115 48
+            C132 45 137 58 150 63"
+            fill="none"
+            stroke="#eee"
+            stroke-width="7"/>
+
+        <ellipse
+            cx="55"
+            cy="75"
+            rx="48"
+            ry="38"
+            fill="#777"/>
+
+        <circle
+            cx="25"
+            cy="38"
+            r="35"
+            fill="#777"/>
+
+        <path
+            d="
+            M-3 15
+            L5 -15
+            L25 10
+            Z"
+            fill="#666"/>
+
+        <path
+            d="
+            M45 10
+            L58 -14
+            L65 18
+            Z"
+            fill="#666"/>
+
+        <path
+            d="
+            M-5 35
+            Q25 10 55 35
+            Q25 60 -5 35"
+            fill="#222"/>
+
+        <ellipse
+            cx="25"
+            cy="38"
+            rx="20"
+            ry="14"
+            fill="#eeeeee"/>
+
+        <circle
+            cx="16"
+            cy="36"
+            r="4"
+            fill="#111"/>
+
+        <circle
+            cx="35"
+            cy="36"
+            r="4"
+            fill="#111"/>
+
+        <circle
+            cx="25"
+            cy="47"
+            r="4"
+            fill="#111"/>
+
+        <ellipse
+            cx="28"
+            cy="108"
+            rx="14"
+            ry="8"
+            fill="#555"/>
+
+        <ellipse
+            cx="75"
+            cy="108"
+            rx="14"
+            ry="8"
+            fill="#555"/>
+
+        <circle
+            cx="95"
+            cy="68"
+            r="10"
+            fill="#777"/>
+
+    </g>
+
+    `;
+
+}
+
+
+/* =====================================================
+   CENAS
+===================================================== */
+
+function createScene(type) {
+
+    switch(type) {
+
+        case "above":
+
+            return svg(`
+
+                ${box(300,190)}
+
+                ${raccoon(300,55,.9)}
+
+            `);
+
+
+        case "across":
+
+            return svg(`
+
+                <rect
+                    x="0"
+                    y="185"
+                    width="700"
+                    height="75"
+                    fill="#777"/>
+
+                <line
+                    x1="0"
+                    y1="222"
+                    x2="700"
+                    y2="222"
+                    stroke="#fff"
+                    stroke-width="6"
+                    stroke-dasharray="35 25"/>
+
+                ${box(70,55,.9)}
+
+                ${raccoon(510,100,.9,true)}
+
+            `);
+
+
+        case "after":
+
+            return svg(`
+
+                ${box(350,185)}
+
+                ${raccoon(150,180,.8)}
+
+                <path
+                    d="M250 245 L330 245"
+                    stroke="#555"
+                    stroke-width="5"
+                    stroke-dasharray="10 8"/>
+
+            `);
+
+
+        case "along":
+
+            return svg(`
+
+                ${box(480,190,.8)}
+
+                ${raccoon(130,180,.85)}
+
+                <path
+                    d="M120 270 L560 270"
+                    stroke="#777"
+                    stroke-width="5"
+                    stroke-dasharray="12 8"/>
+
+            `);
+
+
+        case "among":
+
+            return svg(`
+
+                ${box(120,180,.65)}
+
+                ${box(430,180,.65)}
+
+                ${box(275,115,.65)}
+
+                ${raccoon(290,175,.8)}
+
+            `);
+
+
+        case "around":
+
+            return svg(`
+
+                ${box(300,120,.9)}
+
+                ${raccoon(180,170,.75)}
+
+                <path
+                    d="
+                    M160 120
+                    C90 180 120 275 250 285"
+                    fill="none"
+                    stroke="#777"
+                    stroke-width="5"
+                    stroke-dasharray="12 8"/>
+
+                <path
+                    d="M240 270 L250 285 L235 288"
+                    fill="none"
+                    stroke="#777"
+                    stroke-width="5"/>
+
+            `);
+
+
+        case "at":
+
+            return svg(`
+
+                ${box(300,175,.9)}
+
+                ${raccoon(300,95,.7)}
+
+            `);
+
+
+        case "before":
+
+            return svg(`
+
+                ${raccoon(120,180,.8)}
+
+                ${box(400,180,.9)}
+
+                <path
+                    d="M250 245 L350 245"
+                    stroke="#777"
+                    stroke-width="5"
+                    stroke-dasharray="10 8"/>
+
+            `);
+
+
+        case "behind":
+
+            return svg(`
+
+                ${raccoon(310,180,.75)}
+
+                ${box(300,115,.9)}
+
+            `);
+
+
+        case "below":
+
+            return svg(`
+
+                ${box(300,80,.9)}
+
+                ${raccoon(300,210,.75)}
+
+            `);
+
+
+        case "between":
+
+            return svg(`
+
+                ${box(100,180,.8)}
+
+                ${box(490,180,.8)}
+
+                ${raccoon(300,175,.75)}
+
+            `);
+
+
+        case "beside":
+
+            return svg(`
+
+                ${box(390,180,.85)}
+
+                ${raccoon(180,180,.8)}
+
+            `);
+
+
+        case "by":
+
+            return svg(`
+
+                ${box(370,185,.85)}
+
+                ${raccoon(245,185,.8)}
+
+            `);
+
+
+        case "close":
+
+            return svg(`
+
+                ${box(375,185,.85)}
+
+                ${raccoon(270,185,.8)}
+
+            `);
+
+
+        case "in":
+
+            return svg(`
+
+                <g transform="translate(270,120)">
+
+                    <path
+                        d="
+                        M0 30
+                        L80 0
+                        L160 30
+                        L80 60
+                        Z"
+                        fill="#e8a64d"/>
+
+                    <path
+                        d="
+                        M0 30
+                        V125
+                        L80 155
+                        V60
+                        Z"
+                        fill="#d88f38"/>
+
+                    <path
+                        d="
+                        M160 30
+                        V125
+                        L80 155
+                        V60
+                        Z"
+                        fill="#c77d2d"/>
+
+                </g>
+
+                ${raccoon(315,150,.55)}
+
+            `);
+
+
+        case "front":
+
+            return svg(`
+
+                ${box(300,100,.9)}
+
+                ${raccoon(300,205,.8)}
+
+            `);
+
+
+        case "inside":
+
+            return svg(`
+
+                <g transform="translate(270,130)">
+
+                    <path
+                        d="
+                        M0 30
+                        L80 0
+                        L160 30
+                        L80 60
+                        Z"
+                        fill="#e8a64d"/>
+
+                    <path
+                        d="
+                        M0 30
+                        V125
+                        L80 155
+                        V60
+                        Z"
+                        fill="#d88f38"/>
+
+                    <path
+                        d="
+                        M160 30
+                        V125
+                        L80 155
+                        V60
+                        Z"
+                        fill="#c77d2d"/>
+
+                </g>
+
+                ${raccoon(315,145,.55)}
+
+            `);
+
+
+        case "near":
+
+            return svg(`
+
+                ${box(390,180,.8)}
+
+                ${raccoon(250,180,.75)}
+
+            `);
+
+
+        case "next":
+
+            return svg(`
+
+                ${box(400,180,.85)}
+
+                ${raccoon(250,180,.8)}
+
+                <path
+                    d="M355 240 L385 240"
+                    stroke="#777"
+                    stroke-width="4"/>
+
+            `);
+
+
+        case "on":
+
+            return svg(`
+
+                ${box(300,175,.9)}
+
+                ${raccoon(300,75,.75)}
+
+            `);
+
+
+        case "outside":
+
+            return svg(`
+
+                ${box(300,125,.9)}
+
+                ${raccoon(500,180,.8)}
+
+            `);
+
+
+        case "beyond":
+
+            return svg(`
+
+                ${box(150,180,.8)}
+
+                ${raccoon(500,180,.75)}
+
+                <path
+                    d="M270 245 L450 245"
+                    stroke="#777"
+                    stroke-width="5"
+                    stroke-dasharray="10 8"/>
+
+            `);
+
+
+        case "over":
+
+            return svg(`
+
+                ${box(300,210,.8)}
+
+                ${raccoon(300,65,.8)}
+
+                <path
+                    d="M330 135 L330 195"
+                    stroke="#777"
+                    stroke-width="4"
+                    stroke-dasharray="8 7"/>
+
+            `);
+
+
+        case "under":
+
+            return svg(`
+
+                ${box(300,80,.9)}
+
+                ${raccoon(300,200,.75)}
+
+            `);
+
+
+        case "far":
+
+            return svg(`
+
+                ${box(80,180,.85)}
+
+                ${raccoon(510,180,.8)}
+
+                <path
+                    d="M220 245 L470 245"
+                    stroke="#aaa"
+                    stroke-width="4"
+                    stroke-dasharray="10 10"/>
+
+            `);
+
+
+        default:
+
+            return svg(`
+
+                ${box(300,180)}
+
+                ${raccoon(300,70,.8)}
+
+            `);
+
+    }
+
+}
+
+
+/* =====================================================
+   EMBARALHAR
+===================================================== */
+
+function shuffle(array) {
+
+    return [...array].sort(
+        () => Math.random() - 0.5
+    );
+
+}
+
+
+/* =====================================================
+   CARREGAR QUESTÃO
+===================================================== */
+
+function loadQuestion() {
+
+    answered = false;
+
+    const q =
+        questions[current];
+
+
+    questionNumber.textContent =
+        `Question ${current + 1}/${questions.length}`;
+
+
+    scene.innerHTML =
+        createScene(q.type);
+
+
+    questionText.innerHTML =
+        q.sentence.replace(
+            "______",
+            `<span class="blank">______</span>`
+        );
+
+
+    feedback.textContent = "";
+
+    nextButton.classList.add("hidden");
+
+
+    const wrong =
+        shuffle(
+            options.filter(
+                option =>
+                option !== q.correct
+            )
+        ).slice(0,3);
+
+
+    const answerOptions =
+        shuffle([
+            q.correct,
+            ...wrong
+        ]);
+
+
+    answers.innerHTML = "";
+
+
+    answerOptions.forEach(
+        option => {
+
+            const button =
+                document.createElement("button");
+
+            button.className =
+                "answer";
+
+            button.textContent =
+                option;
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    checkAnswer(
+                        button,
+                        option,
+                        q.correct
+                    );
+
+                }
+            );
+
+
+            answers.appendChild(button);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   VERIFICAR
+===================================================== */
+
+function checkAnswer(
+    button,
+    selected,
+    correct
+) {
+
+    if (answered)
+        return;
+
+
+    answered = true;
+
+
+    const buttons =
+        document.querySelectorAll(
+            ".answer"
+        );
+
+
+    buttons.forEach(btn => {
+
+        btn.disabled = true;
+
+
+        if (
+            btn.textContent === correct
+        ) {
+
+            btn.classList.add(
+                "correct"
+            );
+
+        }
+
+    });
+
+
+    if (
+        selected === correct
+    ) {
+
+        button.classList.add(
+            "correct"
+        );
+
+
+        score += 10;
+
+
+        scoreElement.textContent =
+            score;
+
+
+        feedback.textContent =
+            "✅ Correct! Great job!";
+
+    }
+
+    else {
+
+        button.classList.add(
+            "wrong"
+        );
+
+
+        feedback.textContent =
+            `❌ The correct answer is: ${correct}`;
+
+    }
+
+
+    nextButton.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =====================================================
+   PRÓXIMA QUESTÃO
+===================================================== */
+
+nextButton.addEventListener(
+    "click",
+    () => {
+
+        current++;
+
+        if (
+            current >=
+            questions.length
+        ) {
+
+            showFinal();
+
+        }
+
+        else {
+
+            loadQuestion();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   FINAL
+===================================================== */
+
+function showFinal() {
+
+    document
+        .getElementById("gameArea")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("finalScreen")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("finalScore")
+        .textContent =
+        `You scored ${score} out of ${questions.length * 10} points!`;
+
+}
+
+
+/* =====================================================
+   RESTART
+===================================================== */
+
+document
+    .getElementById("restartButton")
+    .addEventListener(
+        "click",
+        () => {
+
+            current = 0;
+
+            score = 0;
+
+            scoreElement.textContent =
+                "0";
+
+
+            document
+                .getElementById("finalScreen")
+                .classList.add("hidden");
+
+
+            document
+                .getElementById("gameArea")
+                .classList.remove("hidden");
+
+
+            loadQuestion();
+
+        }
+    );
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadQuestion();
+
+</script>
+
+</body>
+
+</html>
