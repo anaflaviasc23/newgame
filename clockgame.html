@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>What Time Is It?</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f4f2;
+    color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
+
+/* ==========================
+   CARD PRINCIPAL
+========================== */
+
+.game {
+    width: 100%;
+    max-width: 950px;
+    background: white;
+    border: 3px solid #111;
+    box-shadow: 8px 8px 0 #111;
+    padding: 30px;
+    text-align: center;
+}
+
+/* ==========================
+   TOPO
+========================== */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 3px solid #111;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    color: #555;
+    font-size: 15px;
+    margin-top: 8px;
+}
+
+/* ==========================
+   PONTUAÇÃO
+========================== */
+
+.score {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    background: #111;
+    color: white;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* ==========================
+   INSTRUÇÃO
+========================== */
+
+.instruction {
+    display: inline-block;
+    background: #111;
+    color: white;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+}
+
+/* ==========================
+   ÁREA DO RELÓGIO
+========================== */
+
+.clock-area {
+    border: 3px dashed #111;
+    background: #fafafa;
+    padding: 30px 20px;
+    margin-bottom: 25px;
+}
+
+/* ==========================
+   RELÓGIO
+========================== */
+
+.clock {
+    width: 280px;
+    height: 280px;
+    border: 10px solid #111;
+    border-radius: 50%;
+    margin: 0 auto;
+    position: relative;
+    background: #fff;
+    box-shadow: inset 0 0 0 4px #eee;
+}
+
+/* ==========================
+   NÚMEROS
+========================== */
+
+.number {
+    position: absolute;
+    font-weight: 900;
+    font-size: 22px;
+    transform: translate(-50%, -50%);
+}
+
+.n12 { top: 8%; left: 50%; }
+.n1  { top: 15%; left: 75%; }
+.n2  { top: 29%; left: 90%; }
+.n3  { top: 50%; left: 94%; }
+.n4  { top: 71%; left: 90%; }
+.n5  { top: 85%; left: 75%; }
+.n6  { top: 92%; left: 50%; }
+.n7  { top: 85%; left: 25%; }
+.n8  { top: 71%; left: 10%; }
+.n9  { top: 50%; left: 6%; }
+.n10 { top: 29%; left: 10%; }
+.n11 { top: 15%; left: 25%; }
+
+/* ==========================
+   PONTEIROS
+========================== */
+
+.hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    border-radius: 10px;
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.hour {
+    width: 8px;
+    height: 70px;
+    background: #111;
+}
+
+.minute {
+    width: 5px;
+    height: 95px;
+    background: #e91e63;
+}
+
+.center {
+    width: 18px;
+    height: 18px;
+    background: #e91e63;
+    border: 3px solid #111;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+}
+
+/* ==========================
+   PERGUNTA
+========================== */
+
+.question {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* ==========================
+   ALTERNATIVAS
+========================== */
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.option {
+    min-height: 60px;
+    border: 3px solid #111;
+    padding: 15px 10px;
+    background: #f4f4f2;
+    color: #111;
+    font-size: 17px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #111;
+    transition: 0.15s;
+}
+
+.option:hover {
+    background: #e9e3dc;
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #111;
+}
+
+.option:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+}
+
+/* ==========================
+   RESPOSTAS
+========================== */
+
+.option.correct {
+    background: #111 !important;
+    color: white !important;
+}
+
+.option.wrong {
+    background: #111 !important;
+    color: white !important;
+}
+
+/* ==========================
+   MENSAGEM
+========================== */
+
+.message {
+    min-height: 28px;
+    margin-top: 20px;
+    font-weight: 900;
+    font-size: 18px;
+}
+
+/* ==========================
+   BOTÃO NEXT
+========================== */
+
+.next {
+    display: none;
+    margin: 18px auto 0;
+    padding: 14px 28px;
+    border: 3px solid #111;
+    background: #111;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #ccc;
+}
+
+.next:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #ccc;
+}
+
+/* ==========================
+   RESPONSIVO
+========================== */
+
+@media (max-width: 650px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .game {
+        padding: 20px;
+        box-shadow: 5px 5px 0 #111;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+
+    .score {
+        justify-content: center;
+    }
+
+    .clock {
+        width: 230px;
+        height: 230px;
+    }
+
+    .hour {
+        height: 58px;
+    }
+
+    .minute {
+        height: 77px;
+    }
+
+    .number {
+        font-size: 18px;
+    }
+
+    .options {
+        grid-template-columns: 1fr;
+    }
+
+    .option {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .clock {
+        width: 205px;
+        height: 205px;
+        border-width: 8px;
+    }
+
+    .hour {
+        height: 52px;
+    }
+
+    .minute {
+        height: 68px;
+    }
+
+    .number {
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <!-- TOPO -->
+
+    <div class="header">
+
+        <div>
+            <h1>🕐 WHAT TIME IS IT?</h1>
+
+            <div class="subtitle">
+                Look at the clock and choose the correct answer.
+            </div>
+        </div>
+
+        <div class="score">
+            <span>Score: <span id="score">0</span></span>
+            <span>Question: <span id="questionNumber">1</span></span>
+        </div>
+
+    </div>
+
+
+    <!-- INSTRUÇÃO -->
+
+    <div class="instruction">
+        LOOK AT THE CLOCK
+    </div>
+
+
+    <!-- RELÓGIO -->
+
+    <div class="clock-area">
+
+        <div class="clock">
+
+            <div class="number n12">12</div>
+            <div class="number n1">1</div>
+            <div class="number n2">2</div>
+            <div class="number n3">3</div>
+            <div class="number n4">4</div>
+            <div class="number n5">5</div>
+            <div class="number n6">6</div>
+            <div class="number n7">7</div>
+            <div class="number n8">8</div>
+            <div class="number n9">9</div>
+            <div class="number n10">10</div>
+            <div class="number n11">11</div>
+
+            <div id="hourHand" class="hand hour"></div>
+
+            <div id="minuteHand" class="hand minute"></div>
+
+            <div class="center"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PERGUNTA -->
+
+    <div class="question">
+        What time is it?
+    </div>
+
+
+    <!-- ALTERNATIVAS -->
+
+    <div class="options" id="options"></div>
+
+
+    <!-- MENSAGEM -->
+
+    <div class="message" id="message"></div>
+
+
+    <!-- NEXT -->
+
+    <button class="next" id="nextButton">
+        Next Question →
+    </button>
+
+</div>
+
+
+<script>
+
+/* ==========================
+   VARIÁVEIS
+========================== */
+
+let score = 0;
+let questionNumber = 1;
+let currentAnswer = "";
+let answered = false;
+
+let lastHour = -1;
+let lastMinute = -1;
+
+
+/* ==========================
+   HORÁRIOS
+========================== */
+
+const minutesAvailable = [
+    0,
+    5,
+    10,
+    15,
+    20,
+    25,
+    30,
+    35,
+    40,
+    45,
+    50,
+    55
+];
+
+
+/* ==========================
+   CONVERTE HORÁRIO
+========================== */
+
+function timeToEnglish(hour, minute) {
+
+    let displayHour = hour % 12;
+
+    if (displayHour === 0) {
+        displayHour = 12;
+    }
+
+    const nextHour =
+        displayHour === 12
+            ? 1
+            : displayHour + 1;
+
+
+    if (minute === 0) {
+        return `${displayHour} o'clock`;
+    }
+
+    if (minute === 5) {
+        return `five past ${displayHour}`;
+    }
+
+    if (minute === 10) {
+        return `ten past ${displayHour}`;
+    }
+
+    if (minute === 15) {
+        return `quarter past ${displayHour}`;
+    }
+
+    if (minute === 20) {
+        return `twenty past ${displayHour}`;
+    }
+
+    if (minute === 25) {
+        return `twenty-five past ${displayHour}`;
+    }
+
+    if (minute === 30) {
+        return `half past ${displayHour}`;
+    }
+
+    if (minute === 35) {
+        return `twenty-five to ${nextHour}`;
+    }
+
+    if (minute === 40) {
+        return `twenty to ${nextHour}`;
+    }
+
+    if (minute === 45) {
+        return `quarter to ${nextHour}`;
+    }
+
+    if (minute === 50) {
+        return `ten to ${nextHour}`;
+    }
+
+    if (minute === 55) {
+        return `five to ${nextHour}`;
+    }
+
+}
+
+
+/* ==========================
+   RELÓGIO
+========================== */
+
+function updateClock(hour, minute) {
+
+    const hourAngle =
+        ((hour % 12) * 30) +
+        (minute * 0.5);
+
+    const minuteAngle =
+        minute * 6;
+
+
+    document.getElementById("hourHand").style.transform =
+        `translateX(-50%) rotate(${hourAngle}deg)`;
+
+
+    document.getElementById("minuteHand").style.transform =
+        `translateX(-50%) rotate(${minuteAngle}deg)`;
+}
+
+
+/* ==========================
+   NOVA PERGUNTA
+========================== */
+
+function newQuestion() {
+
+    answered = false;
+
+    document.getElementById("message").textContent = "";
+
+    document.getElementById("nextButton").style.display =
+        "none";
+
+
+    let hour;
+    let minute;
+
+
+    do {
+
+        hour =
+            Math.floor(Math.random() * 12) + 1;
+
+        minute =
+            minutesAvailable[
+                Math.floor(
+                    Math.random() *
+                    minutesAvailable.length
+                )
+            ];
+
+    } while (
+        hour === lastHour &&
+        minute === lastMinute
+    );
+
+
+    lastHour = hour;
+    lastMinute = minute;
+
+
+    currentAnswer =
+        timeToEnglish(hour, minute);
+
+
+    updateClock(hour, minute);
+
+    createOptions(hour, minute);
+
+
+    document.getElementById("questionNumber").textContent =
+        questionNumber;
+}
+
+
+/* ==========================
+   ALTERNATIVAS
+========================== */
+
+function createOptions(hour, minute) {
+
+    const optionsContainer =
+        document.getElementById("options");
+
+    optionsContainer.innerHTML = "";
+
+
+    let answers = [];
+
+
+    answers.push(currentAnswer);
+
+
+    while (answers.length < 4) {
+
+        let randomHour =
+            Math.floor(Math.random() * 12) + 1;
+
+        let randomMinute =
+            minutesAvailable[
+                Math.floor(
+                    Math.random() *
+                    minutesAvailable.length
+                )
+            ];
+
+
+        let wrongAnswer =
+            timeToEnglish(
+                randomHour,
+                randomMinute
+            );
+
+
+        if (!answers.includes(wrongAnswer)) {
+            answers.push(wrongAnswer);
+        }
+
+    }
+
+
+    answers.sort(() => Math.random() - 0.5);
+
+
+    answers.forEach(answer => {
+
+        const button =
+            document.createElement("button");
+
+        button.className = "option";
+
+        button.textContent = answer;
+
+
+        button.onclick = function() {
+
+            checkAnswer(
+                button,
+                answer
+            );
+
+        };
+
+
+        optionsContainer.appendChild(button);
+
+    });
+
+}
+
+
+/* ==========================
+   VERIFICA
+========================== */
+
+function checkAnswer(button, answer) {
+
+    if (answered) return;
+
+    answered = true;
+
+
+    const buttons =
+        document.querySelectorAll(".option");
+
+
+    buttons.forEach(btn => {
+
+        if (btn.textContent === currentAnswer) {
+
+            btn.classList.add("correct");
+
+        }
+
+    });
+
+
+    if (answer === currentAnswer) {
+
+        score++;
+
+
+        document.getElementById("score").textContent =
+            score;
+
+
+        document.getElementById("message").textContent =
+            "✓ Correct! Great job!";
+
+
+        button.classList.add("correct");
+
+    } else {
+
+        button.classList.add("wrong");
+
+
+        document.getElementById("message").textContent =
+            `✗ The correct answer is "${currentAnswer}".`;
+
+    }
+
+
+    document.getElementById("nextButton").style.display =
+        "block";
+}
+
+
+/* ==========================
+   PRÓXIMA QUESTÃO
+========================== */
+
+document.getElementById("nextButton").onclick =
+    function() {
+
+        questionNumber++;
+
+        newQuestion();
+
+    };
+
+
+/* ==========================
+   INICIA
+========================== */
+
+newQuestion();
+
+</script>
+
+</body>
+</html>
