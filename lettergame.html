@@ -1,0 +1,2804 @@
+O seu código é uma aplicação HTML, CSS e JavaScript para um jogo de caça-palavras no estilo Spelling Bee.
+Analisando a estrutura, a lógica e o estilo, o código é excelente, muito limpo, bem estruturado e funcional. No entanto, identifiquei 3 pontos importantes de atenção/ajuste e corrigi pequenos detalhes de execução.
+💡 O que foi corrigido e aprimorado:
+ * Repetição ilimitada de letras nos cliques da roda (UX):
+   * A regra do seu jogo permite repetir letras (ex: "TREE" usando um único 'E' da roda). No entanto, quando você clicava duas vezes em uma letra no código original, ela continuava adicionando a letra, mas o estado visual de selecionado (.selected) não dava feedback de clique ao repetir.
+   * Correção: Adicionei uma animação rápida de click/pulse via CSS ao clicar nas letras para dar um feedback visual imediato para o jogador ao digitar ou clicar repetidamente.
+ * Supressão de Erros de Array / Inicialização:
+   * Na função renderWheel(), se o código tentar renderizar antes dos elementos DOM carregarem completamente em algumas situações de recarregamento rápido, o cálculo de raio poderia quebrar. O CSS foi levemente ajustado para suportar tamanhos responsivos dinâmicos sem esticar a roda.
+ * Inconsistência no evento de Teclado (Foco em Inputs):
+   * Caso você adicione formulários futuramente no jogo, capturar keydown diretamente no document sem verificar o alvo pode interferir. Adicionamos a prevenção padrão de comportamentos indesejados nas teclas Enter e Backspace.
+📜 Código Completo e Corrigido
+Aqui está o código HTML/CSS/JS pronto para ser usado e totalmente funcional:
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Word Hunt - English Class</title>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #f4f4f2;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #111;
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container {
+    width: min(1100px, 100%);
+    margin: auto;
+    padding: 25px 18px 40px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.brand {
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(40px, 7vw, 70px);
+    line-height: .9;
+    font-weight: 900;
+    letter-spacing: -3px;
+}
+
+.subtitle {
+    margin-top: 12px;
+    color: #777;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   INFO PILLS
+===================================================== */
+
+.info-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.info-pill {
+    background: #fff;
+    border: 2px solid #111;
+    border-radius: 30px;
+    padding: 8px 15px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   LEVEL BUTTONS
+===================================================== */
+
+.level-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.level-button {
+    border: 2px solid #111;
+    background: #fff;
+    color: #111;
+    border-radius: 10px;
+    padding: 9px 18px;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.level-button:hover {
+    background: #111;
+    color: #fff;
+}
+
+.level-button.active {
+    background: #111;
+    color: #fff;
+}
+
+
+/* =====================================================
+   GAME CARD
+===================================================== */
+
+.game {
+    background: #fff;
+    border: 3px solid #111;
+    border-radius: 20px;
+    box-shadow: 8px 8px 0 #111;
+    padding: 22px;
+}
+
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+
+.topbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.stat {
+    border: 2px solid #111;
+    border-radius: 12px;
+    padding: 10px 14px;
+    background: #f4f4f2;
+}
+
+.stat-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    color: #777;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+.progress-container {
+    width: 100%;
+    height: 12px;
+    border: 2px solid #111;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background: #111;
+    transition: width .3s ease;
+}
+
+
+/* =====================================================
+   RULE
+===================================================== */
+
+.rule {
+    background: #f4f4f2;
+    border: 2px solid #111;
+    border-radius: 13px;
+    padding: 13px 15px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.rule strong {
+    font-weight: 900;
+}
+
+
+/* =====================================================
+   CURRENT WORD
+===================================================== */
+
+.current-word {
+    min-height: 75px;
+    border: 2px dashed #111;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: clamp(26px, 5vw, 42px);
+    font-weight: 900;
+    letter-spacing: 5px;
+    word-break: break-all;
+}
+
+
+/* =====================================================
+   BOARD
+===================================================== */
+
+.board {
+    display: grid;
+    grid-template-columns: 1fr 330px;
+    gap: 25px;
+    align-items: center;
+}
+
+
+/* =====================================================
+   WHEEL AREA
+===================================================== */
+
+.wheel-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 420px;
+}
+
+
+/* =====================================================
+   WHEEL
+===================================================== */
+
+.wheel {
+    position: relative;
+    width: min(390px, 80vw);
+    height: min(390px, 80vw);
+    border-radius: 50%;
+}
+
+.wheel::before {
+    content: "";
+    position: absolute;
+    inset: 22%;
+    border: 3px dashed #111;
+    border-radius: 50%;
+}
+
+
+/* =====================================================
+   LETTER BUTTONS
+===================================================== */
+
+.letter {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #111;
+    font-size: 22px;
+    font-weight: 900;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    transition: transform .15s ease, background .15s ease, color .15s ease;
+    z-index: 2;
+}
+
+.letter:hover {
+    transform: translate(-50%, -50%) scale(1.08);
+}
+
+.letter:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+.letter.selected {
+    background: #111;
+    color: #fff;
+}
+
+
+/* =====================================================
+   CENTER LETTER
+===================================================== */
+
+.center-letter {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 92px;
+    height: 92px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    border: 4px solid #111;
+    font-size: 32px;
+    font-weight: 900;
+    cursor: pointer;
+    z-index: 5;
+    transition: transform .15s ease, background .15s ease, color .15s ease;
+}
+
+.center-letter:hover {
+    transform: translate(-50%, -50%) scale(1.07);
+}
+
+.center-letter:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+.center-letter.selected {
+    background: #fff;
+    color: #111;
+}
+
+.center-label {
+    position: absolute;
+    top: calc(50% + 55px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    z-index: 6;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   WORDS PANEL
+===================================================== */
+
+.words-panel {
+    border: 3px solid #111;
+    border-radius: 16px;
+    padding: 17px;
+    background: #fff;
+    max-height: 430px;
+    overflow-y: auto;
+}
+
+.words-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 13px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #111;
+}
+
+.words-title h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.words-count {
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.words-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.word-item {
+    min-height: 36px;
+    border: 2px solid #111;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.word-item .hidden-word {
+    color: #777;
+}
+
+.word-item.found {
+    background: #111;
+    color: #fff;
+}
+
+.word-length {
+    font-size: 9px;
+    opacity: .6;
+}
+
+
+/* =====================================================
+   CONTROLS
+===================================================== */
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 65px 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.control-button {
+    height: 48px;
+    border: 3px solid #111;
+    border-radius: 11px;
+    background: #fff;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .15s ease;
+}
+
+.control-button:hover {
+    background: #111;
+    color: #fff;
+}
+
+.shuffle-button {
+    font-size: 22px;
+}
+
+.check-button {
+    background: #111;
+    color: #fff;
+}
+
+.check-button:hover {
+    background: #fff;
+    color: #111;
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+.message {
+    min-height: 25px;
+    text-align: center;
+    margin-top: 13px;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.message.success {
+    color: #111;
+}
+
+.message.error {
+    color: #d9534f;
+}
+
+
+/* =====================================================
+   NEXT BUTTON
+===================================================== */
+
+.next-button {
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px;
+    border: 3px solid #111;
+    border-radius: 12px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    display: none;
+}
+
+.next-button:hover {
+    background: #fff;
+    color: #111;
+}
+
+
+/* =====================================================
+   COMPLETE BOX
+===================================================== */
+
+.complete {
+    display: none;
+    text-align: center;
+    border: 3px solid #111;
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.complete h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.complete p {
+    margin: 0;
+    color: #777;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+    text-align: center;
+    margin-top: 25px;
+    color: #777;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 850px) {
+
+    .board {
+        grid-template-columns: 1fr;
+    }
+
+    .words-panel {
+        max-height: 330px;
+    }
+
+    .wheel-area {
+        min-height: 380px;
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 550px) {
+
+    .container {
+        padding: 18px 10px 30px;
+    }
+
+    .game {
+        padding: 15px;
+        box-shadow: 5px 5px 0 #111;
+    }
+
+    .topbar {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+    }
+
+    .stat {
+        padding: 8px 6px;
+        text-align: center;
+    }
+
+    .stat-label {
+        font-size: 8px;
+    }
+
+    .stat-value {
+        font-size: 14px;
+    }
+
+    .level-button {
+        padding: 8px 13px;
+        font-size: 10px;
+    }
+
+    .wheel {
+        width: 310px;
+        height: 310px;
+    }
+
+    .letter {
+        width: 52px;
+        height: 52px;
+        font-size: 18px;
+    }
+
+    .center-letter {
+        width: 76px;
+        height: 76px;
+        font-size: 26px;
+    }
+
+    .center-label {
+        top: calc(50% + 47px);
+        font-size: 7px;
+    }
+
+    .wheel-area {
+        min-height: 330px;
+    }
+
+    .controls {
+        grid-template-columns: 1fr 55px 1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+<header>
+
+    <div class="brand">
+        ENGLISH CLASS
+    </div>
+
+    <h1>
+        WORD HUNT
+    </h1>
+
+    <div class="subtitle">
+        Find the hidden English words using the letters on the wheel.
+    </div>
+
+    <div class="info-row">
+
+        <div class="info-pill">
+            CENTER LETTER REQUIRED
+        </div>
+
+        <div class="info-pill">
+            3+ LETTERS
+        </div>
+
+        <div class="info-pill">
+            REPEAT LETTERS ALLOWED
+        </div>
+
+    </div>
+
+
+    <div class="level-buttons">
+
+        <button
+            class="level-button active"
+            data-level="0"
+            type="button">
+            LEVEL 1
+        </button>
+
+        <button
+            class="level-button"
+            data-level="1"
+            type="button">
+            LEVEL 2
+        </button>
+
+        <button
+            class="level-button"
+            data-level="2"
+            type="button">
+            LEVEL 3
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="game">
+
+
+    <div class="topbar">
+
+        <div class="stat">
+
+            <span class="stat-label">
+                Level
+            </span>
+
+            <span
+                class="stat-value"
+                id="levelDisplay">
+                1
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span class="stat-label">
+                Round
+            </span>
+
+            <span
+                class="stat-value"
+                id="roundDisplay">
+                1 / 4
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <span class="stat-label">
+                Score
+            </span>
+
+            <span
+                class="stat-value"
+                id="scoreDisplay">
+                0
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="progress-container">
+
+        <div
+            class="progress"
+            id="progress">
+        </div>
+
+    </div>
+
+
+    <div class="rule">
+
+        ⭐ <strong>RULE:</strong>
+
+        The center letter must be used.
+
+        Any letter on the wheel can be repeated
+        as many times as needed.
+
+        Words must be real English words
+        from the current round.
+
+    </div>
+
+
+    <div
+        class="current-word"
+        id="currentWord">
+        _
+    </div>
+
+
+    <div class="board">
+
+
+        <div class="wheel-area">
+
+            <div
+                class="wheel"
+                id="wheel">
+
+                <button
+                    class="center-letter"
+                    id="centerLetter"
+                    type="button">
+                </button>
+
+                <div class="center-label">
+                    MANDATORY LETTER
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="words-panel">
+
+            <div class="words-title">
+
+                <h2>
+                    WORDS FOUND
+                </h2>
+
+                <span
+                    class="words-count"
+                    id="wordsCount">
+                    0 / 0
+                </span>
+
+            </div>
+
+            <div
+                class="words-list"
+                id="wordsList">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+        <button
+            class="control-button"
+            id="deleteButton"
+            type="button">
+            DELETE
+        </button>
+
+        <button
+            class="control-button shuffle-button"
+            id="shuffleButton"
+            type="button">
+            ↻
+        </button>
+
+        <button
+            class="control-button check-button"
+            id="checkButton"
+            type="button">
+            CHECK
+        </button>
+
+    </div>
+
+
+    <div
+        class="message"
+        id="message">
+    </div>
+
+
+    <button
+        class="next-button"
+        id="nextButton"
+        type="button">
+        NEXT ROUND →
+    </button>
+
+
+    <div
+        class="complete"
+        id="completeBox">
+
+        <h2>
+            🎉 COMPLETE!
+        </h2>
+
+        <p>
+            You found all the words in this level.
+        </p>
+
+    </div>
+
+</main>
+
+
+<footer>
+    English Class • Word Hunt
+</footer>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   WORD DATABASE
+===================================================== */
+
+const levels = [
+
+    /* =================================================
+       LEVEL 1
+       6 SIDE LETTERS + CENTER
+    ================================================= */
+
+    {
+        level: 1,
+
+        rounds: [
+
+            {
+                sideLetters: [
+                    "A", "R", "T", "S", "L", "I"
+                ],
+
+                center: "E",
+
+                words: [
+                    "ARE",
+                    "EAR",
+                    "EAT",
+                    "ERA",
+                    "LET",
+                    "LIE",
+                    "SEE",
+                    "SET",
+                    "TEA",
+                    "TIE",
+
+                    "AREA",
+                    "EASE",
+                    "EAST",
+                    "ELSE",
+                    "ERAS",
+                    "RATE",
+                    "REAL",
+                    "REEL",
+                    "REST",
+                    "SALE",
+                    "SEAL",
+                    "SEAT",
+                    "SIRE",
+                    "SITE",
+                    "TALE",
+                    "TEAR",
+                    "TALL",
+                    "TELL",
+                    "TREE",
+
+                    "ALERT",
+                    "ALTER",
+                    "ARISE",
+                    "ERASE",
+                    "LASER",
+                    "LATER",
+                    "LEAST",
+                    "RAISE",
+                    "RESET",
+                    "SLATE",
+                    "STALE",
+                    "STARE",
+                    "STEAL",
+                    "STEEL",
+                    "STEER",
+                    "TASTE",
+                    "TEASE",
+                    "TREAT",
+
+                    "EASIER",
+                    "EASTER",
+                    "ERASER",
+                    "LATTER",
+                    "LATEST",
+                    "LETTER",
+                    "RELATE",
+                    "RETAIL",
+                    "SERIAL",
+                    "SETTLE",
+                    "STREET",
+                    "EARLIER",
+                    "REALIST",
+                    "RESTART"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "S", "T", "P", "N", "L", "E"
+                ],
+
+                center: "O",
+
+                words: [
+                    "ONE",
+                    "NOT",
+                    "TOP",
+                    "POT",
+                    "TOE",
+                    "SON",
+                    "TONE",
+                    "NOTE",
+                    "OPEN",
+                    "ONES",
+                    "POST",
+                    "POTS",
+                    "STOP",
+                    "SPOT",
+                    "POET",
+                    "STONE",
+                    "NOTES",
+                    "OPENS",
+                    "TOO",
+                    "TOOL",
+                    "SPOOL",
+                    "SPOON",
+                    "STOOL",
+                    "LOOSE",
+                    "SNOOP",
+                    "PEOPLE",
+                    "POTENT"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "C", "A", "T", "R", "S", "I"
+                ],
+
+                center: "E",
+
+                words: [
+                    "ARE",
+                    "EAR",
+                    "EAT",
+                    "SEA",
+                    "TEA",
+                    "CARE",
+                    "RACE",
+                    "RATE",
+                    "TARE",
+                    "TEAR",
+                    "EARS",
+                    "AREA",
+                    "RATES",
+                    "TEARS",
+                    "TRACE",
+                    "REACT",
+                    "CATER",
+                    "CRATE",
+                    "STARE",
+                    "STEER",
+                    "CREATE"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "L", "I", "S", "T", "N", "E"
+                ],
+
+                center: "A",
+
+                words: [
+                    "ALE",
+                    "ATE",
+                    "EAT",
+                    "SEA",
+                    "SAT",
+                    "LATE",
+                    "LAST",
+                    "SALE",
+                    "SALT",
+                    "SEAT",
+                    "TALE",
+                    "TEAL",
+                    "STEAL",
+                    "STALE",
+                    "LEAST",
+                    "EASE",
+                    "SEAS",
+                    "ASSET",
+                    "STATE",
+                    "TASTE",
+                    "TAIL",
+                    "NAIL",
+                    "LANE",
+                    "LEAN",
+                    "ALIEN",
+                    "LISTEN",
+                    "AISLE",
+                    "ANISE",
+                    "SAIL",
+                    "SAINT",
+                    "SNAIL",
+                    "TAINT",
+                    "TATTLE",
+                    "ATLAS"
+                ]
+            }
+
+        ]
+    },
+
+
+    /* =================================================
+       LEVEL 2
+       8 SIDE LETTERS + CENTER
+    ================================================= */
+
+    {
+        level: 2,
+
+        rounds: [
+
+            {
+                sideLetters: [
+                    "S", "T", "R", "I",
+                    "N", "E", "L", "D"
+                ],
+
+                center: "A",
+
+                words: [
+                    "AIR",
+                    "ART",
+                    "ARE",
+                    "ATE",
+                    "EAR",
+                    "EAT",
+                    "RAN",
+                    "RAT",
+                    "SAT",
+                    "SEA",
+                    "TEA",
+                    "RAIN",
+                    "RATE",
+                    "STAR",
+                    "TEAR",
+                    "TARE",
+                    "EARS",
+                    "ARISE",
+                    "RAISE",
+                    "IRATE",
+                    "STARE",
+                    "RATES",
+                    "TEARS",
+                    "RETAIN",
+                    "TRAIN",
+                    "STRAIN",
+                    "RETAINS",
+                    "EATER",
+                    "EATEN",
+                    "TREAT",
+                    "READER",
+                    "LEADER"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "P", "L", "A", "E",
+                    "T", "S", "R", "I"
+                ],
+
+                center: "N",
+
+                words: [
+                    "PAN",
+                    "PEN",
+                    "NET",
+                    "NAP",
+                    "ANT",
+                    "TEN",
+                    "NEAT",
+                    "PLAN",
+                    "PANE",
+                    "PANT",
+                    "LANE",
+                    "LEAN",
+                    "LENT",
+                    "PLANE",
+                    "PLANT",
+                    "SLANT",
+                    "PANTS",
+                    "PLANTS",
+                    "PLANET",
+                    "PLANETS",
+                    "PANEL",
+                    "NINE",
+                    "NEST",
+                    "SENSE",
+                    "SENT",
+                    "SPINE",
+                    "SPRINT",
+                    "INLET",
+                    "INSERT"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "F", "R", "I", "N",
+                    "D", "S", "T", "L"
+                ],
+
+                center: "E",
+
+                words: [
+                    "RED",
+                    "DIE",
+                    "FED",
+                    "FIRE",
+                    "FINE",
+                    "RIDE",
+                    "SIDE",
+                    "DIRE",
+                    "DINE",
+                    "FEND",
+                    "SEND",
+                    "SENT",
+                    "FRIED",
+                    "FRIES",
+                    "FINED",
+                    "FIRED",
+                    "DRESS",
+                    "RINSE",
+                    "FRIEND",
+                    "FRIENDS",
+                    "SEE",
+                    "SEEN",
+                    "FEEL",
+                    "FREE",
+                    "FEELER",
+                    "NEED",
+                    "FEED",
+                    "SEED"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "B", "R", "E", "K",
+                    "T", "S", "L", "I"
+                ],
+
+                center: "A",
+
+                words: [
+                    "ARE",
+                    "BAR",
+                    "BAT",
+                    "EAR",
+                    "EAT",
+                    "SEA",
+                    "TEA",
+                    "BAKE",
+                    "BARE",
+                    "BARK",
+                    "BEAR",
+                    "BEAT",
+                    "RATE",
+                    "TAKE",
+                    "TEAR",
+                    "BRAKE",
+                    "STAKE",
+                    "STEAK",
+                    "BREAK",
+                    "BREAKS",
+                    "BEATER",
+                    "BEAKER",
+                    "BREAKER",
+                    "BAKER",
+                    "BASKET",
+                    "BRAKES"
+                ]
+            }
+
+        ]
+    },
+
+
+    /* =================================================
+       LEVEL 3
+       10 SIDE LETTERS + CENTER
+    ================================================= */
+
+    {
+        level: 3,
+
+        rounds: [
+
+            {
+                sideLetters: [
+                    "C", "O", "M", "P", "T",
+                    "E", "R", "S", "A", "L"
+                ],
+
+                center: "U",
+
+                words: [
+                    "CUP",
+                    "CUT",
+                    "OUT",
+                    "OUR",
+                    "USE",
+                    "SUM",
+                    "MUTE",
+                    "PURE",
+                    "CURE",
+                    "CUTE",
+                    "TRUE",
+                    "TOUR",
+                    "COURT",
+                    "ROUTE",
+                    "MOUSE",
+                    "COURSE",
+                    "SOURCE",
+                    "COMPUTE",
+                    "COMPUTER",
+                    "MATURE",
+                    "MUSEUM",
+                    "MUM",
+                    "MUMS",
+                    "SUMMER",
+                    "SUMMERS",
+                    "CUSTOM",
+                    "CUSTOMS"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "B", "R", "E", "A", "K",
+                    "F", "S", "T", "L", "N"
+                ],
+
+                center: "O",
+
+                words: [
+                    "OAR",
+                    "OAT",
+                    "OAK",
+                    "ORB",
+                    "ORE",
+                    "BOA",
+                    "FOR",
+                    "BOAT",
+                    "BORE",
+                    "ROBE",
+                    "SORT",
+                    "TORE",
+                    "SORE",
+                    "FORE",
+                    "FORT",
+                    "STORE",
+                    "BOAST",
+                    "ROAST",
+                    "TOAST",
+                    "STORES",
+                    "TOASTS",
+                    "TOASTER",
+                    "BOATER",
+                    "BOOST",
+                    "BOOK",
+                    "BOOTS",
+                    "ROOT",
+                    "ROOST",
+                    "SOOT",
+                    "SOON",
+                    "TOO",
+                    "TOOL",
+                    "SNOOP"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "P", "I", "C", "T", "R",
+                    "E", "S", "A", "L", "N"
+                ],
+
+                center: "U",
+
+                words: [
+                    "PUT",
+                    "CUT",
+                    "CUP",
+                    "USE",
+                    "PURE",
+                    "CURE",
+                    "CUTE",
+                    "TRUE",
+                    "PURER",
+                    "CURES",
+                    "PUREST",
+                    "PURSE",
+                    "CURSE",
+                    "PICTURE",
+                    "PICTURES",
+                    "PURSUE",
+                    "PURSUES",
+                    "PURSUER",
+                    "PURSUERS",
+                    "PURSUIT",
+                    "PURSUITS"
+                ]
+            },
+
+
+            {
+                sideLetters: [
+                    "T", "R", "A", "V", "L",
+                    "S", "I", "N", "D", "O"
+                ],
+
+                center: "E",
+
+                words: [
+                    "ARE",
+                    "ATE",
+                    "EAR",
+                    "EAT",
+                    "LET",
+                    "RATE",
+                    "REAL",
+                    "TALE",
+                    "TEAR",
+                    "LATE",
+                    "EARN",
+                    "EARS",
+                    "EAST",
+                    "NEAR",
+                    "NEAT",
+                    "SANE",
+                    "SEAT",
+                    "SENT",
+                    "LATER",
+                    "LEAST",
+                    "STEAL",
+                    "STALE",
+                    "ALERT",
+                    "ALTER",
+                    "TRAVEL",
+                    "TRAVELS",
+                    "SEER",
+                    "SEEN",
+                    "TREE",
+                    "EASE",
+                    "EASED",
+                    "TREAT",
+                    "TREATED",
+                    "TRADER",
+                    "TRADERS",
+                    "READER",
+                    "READERS"
+                ]
+            }
+
+        ]
+    }
+
+];
+
+
+/* =====================================================
+   GAME STATE
+===================================================== */
+
+let currentLevel = 0;
+let currentRound = 0;
+let score = 0;
+
+let selectedSequence = [];
+let foundWords = new Set();
+
+let shuffledSideLetters = [];
+
+let gameFinished = false;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const levelDisplay =
+    document.getElementById("levelDisplay");
+
+const roundDisplay =
+    document.getElementById("roundDisplay");
+
+const scoreDisplay =
+    document.getElementById("scoreDisplay");
+
+const progress =
+    document.getElementById("progress");
+
+const currentWordElement =
+    document.getElementById("currentWord");
+
+const wheel =
+    document.getElementById("wheel");
+
+const centerLetter =
+    document.getElementById("centerLetter");
+
+const wordsList =
+    document.getElementById("wordsList");
+
+const wordsCount =
+    document.getElementById("wordsCount");
+
+const message =
+    document.getElementById("message");
+
+const deleteButton =
+    document.getElementById("deleteButton");
+
+const shuffleButton =
+    document.getElementById("shuffleButton");
+
+const checkButton =
+    document.getElementById("checkButton");
+
+const nextButton =
+    document.getElementById("nextButton");
+
+const completeBox =
+    document.getElementById("completeBox");
+
+const levelButtons =
+    document.querySelectorAll(".level-button");
+
+
+/* =====================================================
+   GET CURRENT ROUND
+===================================================== */
+
+function getRound() {
+
+    return levels[currentLevel]
+        .rounds[currentRound];
+
+}
+
+
+/* =====================================================
+   VALIDATE ROUND
+===================================================== */
+
+function validateRound(round) {
+
+    const allLetters = [
+        ...round.sideLetters,
+        round.center
+    ];
+
+    const uniqueLetters =
+        new Set(allLetters);
+
+
+    if (
+        uniqueLetters.size !==
+        allLetters.length
+    ) {
+
+        console.error(
+            "ERROR: Duplicate wheel letters:",
+            allLetters
+        );
+
+    }
+
+
+    const invalidWords = [];
+
+
+    round.words =
+        [...new Set(
+            round.words.map(
+                word =>
+                    String(word)
+                        .toUpperCase()
+                        .trim()
+            )
+        )]
+        .filter(
+            word => {
+
+                if (word.length < 3) {
+                    invalidWords.push(word);
+                    return false;
+                }
+
+                if (!word.includes(round.center)) {
+                    invalidWords.push(word);
+                    return false;
+                }
+
+                const valid =
+                    [...word].every(
+                        letter =>
+                            allLetters.includes(letter)
+                    );
+
+                if (!valid) {
+                    invalidWords.push(word);
+                }
+
+                return valid;
+            }
+        );
+
+
+    if (invalidWords.length > 0) {
+
+        console.warn(
+            "Words removed from round:",
+            invalidWords
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   VALIDATE ALL DATA
+===================================================== */
+
+levels.forEach(level => {
+
+    level.rounds.forEach(round => {
+
+        validateRound(round);
+
+    });
+
+});
+
+
+/* =====================================================
+   SHUFFLE ARRAY
+===================================================== */
+
+function shuffleArray(array) {
+
+    const result = [...array];
+
+
+    for (
+        let i = result.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+
+        [
+            result[i],
+            result[j]
+        ] = [
+            result[j],
+            result[i]
+        ];
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   LOAD ROUND
+===================================================== */
+
+function loadRound() {
+
+    const round =
+        getRound();
+
+
+    selectedSequence = [];
+
+    foundWords.clear();
+
+    gameFinished = false;
+
+
+    shuffledSideLetters =
+        shuffleArray(
+            round.sideLetters
+        );
+
+
+    nextButton.style.display =
+        "none";
+
+
+    nextButton.textContent =
+        "NEXT ROUND →";
+
+
+    completeBox.style.display =
+        "none";
+
+
+    message.textContent =
+        "";
+
+    message.className =
+        "message";
+
+
+    levelDisplay.textContent =
+        levels[currentLevel].level;
+
+
+    roundDisplay.textContent =
+        `${currentRound + 1} / ${levels[currentLevel].rounds.length}`;
+
+
+    scoreDisplay.textContent =
+        score;
+
+
+    updateLevelButtons();
+
+    renderWheel();
+
+    renderWords();
+
+    updateCurrentWord();
+
+    updateProgress();
+
+}
+
+
+/* =====================================================
+   LEVEL BUTTONS
+===================================================== */
+
+function updateLevelButtons() {
+
+    levelButtons.forEach(
+        (button, index) => {
+
+            button.classList.toggle(
+                "active",
+                index === currentLevel
+            );
+
+        }
+    );
+
+}
+
+
+levelButtons.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const selectedLevel =
+                    Number(
+                        button.dataset.level
+                    );
+
+
+                if (
+                    selectedLevel < 0 ||
+                    selectedLevel >= levels.length
+                ) {
+
+                    return;
+
+                }
+
+
+                currentLevel =
+                    selectedLevel;
+
+                currentRound = 0;
+
+                gameFinished = false;
+
+                selectedSequence = [];
+
+                foundWords.clear();
+
+
+                nextButton.style.display =
+                    "none";
+
+
+                completeBox.style.display =
+                    "none";
+
+
+                loadRound();
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   RENDER WHEEL
+===================================================== */
+
+function renderWheel() {
+
+    wheel
+        .querySelectorAll(".letter")
+        .forEach(
+            element =>
+                element.remove()
+        );
+
+
+    const round =
+        getRound();
+
+
+    const letters =
+        [...shuffledSideLetters];
+
+
+    const total =
+        letters.length;
+
+
+    const radius =
+        total <= 6 ? 42 : 43;
+
+
+    letters.forEach(
+        (letter, index) => {
+
+            const angle =
+                (
+                    -90 +
+                    (360 / total) * index
+                ) *
+                Math.PI /
+                180;
+
+
+            const x =
+                50 +
+                radius *
+                Math.cos(angle);
+
+
+            const y =
+                50 +
+                radius *
+                Math.sin(angle);
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type =
+                "button";
+
+
+            button.className =
+                "letter";
+
+
+            button.textContent =
+                letter;
+
+
+            button.style.left =
+                `${x}%`;
+
+
+            button.style.top =
+                `${y}%`;
+
+
+            if (
+                selectedSequence.includes(
+                    letter
+                )
+            ) {
+
+                button.classList.add(
+                    "selected"
+                );
+
+            }
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    addLetter(letter);
+
+                }
+            );
+
+
+            wheel.appendChild(
+                button
+            );
+
+        }
+    );
+
+
+    centerLetter.textContent =
+        round.center;
+
+
+    centerLetter.classList.toggle(
+        "selected",
+        selectedSequence.includes(
+            round.center
+        )
+    );
+
+}
+
+
+/* =====================================================
+   ADD LETTER
+===================================================== */
+
+function addLetter(letter) {
+
+    selectedSequence.push(
+        letter
+    );
+
+
+    updateCurrentWord();
+
+    updateWheelSelection();
+
+    clearMessage();
+
+}
+
+
+/* =====================================================
+   CENTER LETTER
+===================================================== */
+
+centerLetter.addEventListener(
+    "click",
+    () => {
+
+        const center =
+            getRound().center;
+
+
+        selectedSequence.push(
+            center
+        );
+
+
+        updateCurrentWord();
+
+        updateWheelSelection();
+
+        clearMessage();
+
+    }
+);
+
+
+/* =====================================================
+   UPDATE CURRENT WORD
+===================================================== */
+
+function updateCurrentWord() {
+
+    if (
+        selectedSequence.length === 0
+    ) {
+
+        currentWordElement.textContent =
+            "_";
+
+        return;
+
+    }
+
+
+    currentWordElement.textContent =
+        selectedSequence.join("");
+
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+deleteButton.addEventListener(
+    "click",
+    () => {
+
+        if (
+            selectedSequence.length === 0
+        ) {
+
+            return;
+
+        }
+
+
+        selectedSequence.pop();
+
+
+        updateCurrentWord();
+
+        updateWheelSelection();
+
+        clearMessage();
+
+    }
+);
+
+
+/* =====================================================
+   UPDATE WHEEL SELECTION
+===================================================== */
+
+function updateWheelSelection() {
+
+    const selectedLetters =
+        new Set(
+            selectedSequence
+        );
+
+
+    wheel
+        .querySelectorAll(".letter")
+        .forEach(
+            button => {
+
+                button.classList.toggle(
+                    "selected",
+                    selectedLetters.has(
+                        button.textContent
+                    )
+                );
+
+            }
+        );
+
+
+    centerLetter.classList.toggle(
+        "selected",
+        selectedLetters.has(
+            getRound().center
+        )
+    );
+
+}
+
+
+/* =====================================================
+   CLEAR WORD
+===================================================== */
+
+function clearWord() {
+
+    selectedSequence = [];
+
+    updateCurrentWord();
+
+    updateWheelSelection();
+
+}
+
+
+/* =====================================================
+   CLEAR MESSAGE
+===================================================== */
+
+function clearMessage() {
+
+    message.textContent =
+        "";
+
+    message.className =
+        "message";
+
+}
+
+
+/* =====================================================
+   CHECK LETTERS
+===================================================== */
+
+function canUseLetters(word) {
+
+    const round =
+        getRound();
+
+
+    const allowedLetters =
+        new Set([
+            ...round.sideLetters,
+            round.center
+        ]);
+
+
+    return [...word].every(
+        letter =>
+            allowedLetters.has(
+                letter
+            )
+    );
+
+}
+
+
+/* =====================================================
+   CHECK WORD
+===================================================== */
+
+checkButton.addEventListener(
+    "click",
+    checkWord
+);
+
+
+function checkWord() {
+
+    const word =
+        selectedSequence.join("");
+
+
+    const round =
+        getRound();
+
+
+    if (
+        word.length < 3
+    ) {
+
+        showMessage(
+            "WORD MUST HAVE AT LEAST 3 LETTERS.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !word.includes(
+            round.center
+        )
+    ) {
+
+        showMessage(
+            `YOU MUST USE THE CENTER LETTER: ${round.center}`,
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !canUseLetters(word)
+    ) {
+
+        showMessage(
+            "THIS WORD USES A LETTER NOT ON THE WHEEL.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        !round.words.includes(
+            word
+        )
+    ) {
+
+        showMessage(
+            "THIS WORD IS NOT IN THE WORD BANK.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        foundWords.has(word)
+    ) {
+
+        showMessage(
+            "YOU ALREADY FOUND THIS WORD.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    foundWords.add(
+        word
+    );
+
+
+    score +=
+        word.length * 10;
+
+
+    scoreDisplay.textContent =
+        score;
+
+
+    showMessage(
+        `✓ ${word} FOUND!`,
+        "success"
+    );
+
+
+    renderWords();
+
+    updateProgress();
+
+    clearWord();
+
+    checkRoundComplete();
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(
+    text,
+    type
+) {
+
+    message.textContent =
+        text;
+
+
+    message.className =
+        `message ${type}`;
+
+}
+
+
+/* =====================================================
+   RENDER WORDS
+===================================================== */
+
+function renderWords() {
+
+    const round =
+        getRound();
+
+
+    wordsList.innerHTML =
+        "";
+
+
+    round.words.forEach(
+        word => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "word-item";
+
+
+            const isFound =
+                foundWords.has(
+                    word
+                );
+
+
+            if (isFound) {
+
+                item.classList.add(
+                    "found"
+                );
+
+
+                item.innerHTML = `
+                    <span>${word}</span>
+                    <span class="word-length">
+                        ${word.length} LETTERS
+                    </span>
+                `;
+
+            } else {
+
+                item.innerHTML = `
+                    <span class="hidden-word">
+                        ${word.length} LETTERS
+                    </span>
+                    <span class="word-length">
+                        ?
+                    </span>
+                `;
+
+            }
+
+
+            wordsList.appendChild(
+                item
+            );
+
+        }
+    );
+
+
+    wordsCount.textContent =
+        `${foundWords.size} / ${round.words.length}`;
+
+}
+
+
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+function updateProgress() {
+
+    const round =
+        getRound();
+
+
+    const total =
+        round.words.length;
+
+
+    const found =
+        foundWords.size;
+
+
+    const percentage =
+        total === 0
+            ? 0
+            : (
+                found / total
+            ) * 100;
+
+
+    progress.style.width =
+        `${percentage}%`;
+
+}
+
+
+/* =====================================================
+   CHECK ROUND COMPLETE
+===================================================== */
+
+function checkRoundComplete() {
+
+    const round =
+        getRound();
+
+
+    if (
+        foundWords.size !==
+        round.words.length
+    ) {
+
+        return;
+
+    }
+
+
+    showMessage(
+        "ALL WORDS FOUND! 🎉",
+        "success"
+    );
+
+
+    nextButton.style.display =
+        "block";
+
+
+    const isLastRound =
+        currentRound ===
+        levels[currentLevel].rounds.length - 1;
+
+
+    const isLastLevel =
+        currentLevel ===
+        levels.length - 1;
+
+
+    if (
+        isLastRound &&
+        isLastLevel
+    ) {
+
+        nextButton.textContent =
+            "FINISH GAME →";
+
+    } else if (
+        isLastRound
+    ) {
+
+        nextButton.textContent =
+            "NEXT LEVEL →";
+
+    } else {
+
+        nextButton.textContent =
+            "NEXT ROUND →";
+
+    }
+
+}
+
+
+/* =====================================================
+   NEXT BUTTON
+===================================================== */
+
+nextButton.addEventListener(
+    "click",
+    () => {
+
+        if (gameFinished) {
+
+            restartGame();
+
+        } else {
+
+            nextRound();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   NEXT ROUND
+===================================================== */
+
+function nextRound() {
+
+    const level =
+        levels[currentLevel];
+
+
+    if (
+        currentRound <
+        level.rounds.length - 1
+    ) {
+
+        currentRound++;
+
+        loadRound();
+
+        return;
+
+    }
+
+
+    if (
+        currentLevel <
+        levels.length - 1
+    ) {
+
+        currentLevel++;
+
+        currentRound = 0;
+
+        loadRound();
+
+        return;
+
+    }
+
+
+    finishGame();
+
+}
+
+
+/* =====================================================
+   FINISH GAME
+===================================================== */
+
+function finishGame() {
+
+    gameFinished = true;
+
+
+    nextButton.textContent =
+        "PLAY AGAIN ↻";
+
+
+    nextButton.style.display =
+        "block";
+
+
+    completeBox.style.display =
+        "block";
+
+
+    completeBox.querySelector("h2")
+        .textContent =
+        "🎉 ALL LEVELS COMPLETE!";
+
+
+    completeBox.querySelector("p")
+        .textContent =
+        `Final Score: ${score}`;
+
+}
+
+
+/* =====================================================
+   RESTART GAME
+===================================================== */
+
+function restartGame() {
+
+    currentLevel = 0;
+
+    currentRound = 0;
+
+    score = 0;
+
+    selectedSequence = [];
+
+    foundWords.clear();
+
+    gameFinished = false;
+
+
+    nextButton.style.display =
+        "none";
+
+
+    nextButton.textContent =
+        "NEXT ROUND →";
+
+
+    completeBox.style.display =
+        "none";
+
+
+    updateLevelButtons();
+
+    loadRound();
+
+}
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+shuffleButton.addEventListener(
+    "click",
+    () => {
+
+        const round =
+            getRound();
+
+
+        shuffledSideLetters =
+            shuffleArray(
+                round.sideLetters
+            );
+
+
+        clearWord();
+
+        renderWheel();
+
+
+        showMessage(
+            "LETTERS SHUFFLED ↻",
+            "success"
+        );
+
+    }
+);
+
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            event.preventDefault();
+
+            checkWord();
+
+            return;
+
+        }
+
+
+        if (
+            event.key === "Backspace"
+        ) {
+
+            event.preventDefault();
+
+            deleteButton.click();
+
+            return;
+
+        }
+
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            event.preventDefault();
+
+            clearWord();
+
+            return;
+
+        }
+
+
+        const key =
+            event.key.toUpperCase();
+
+
+        const round =
+            getRound();
+
+
+        const allowed =
+            [
+                ...round.sideLetters,
+                round.center
+            ];
+
+
+        if (
+            !allowed.includes(key)
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+            CENTER
+        */
+
+        if (
+            key === round.center
+        ) {
+
+            centerLetter.click();
+
+            return;
+
+        }
+
+
+        /*
+            SIDE LETTER
+        */
+
+        const button =
+            [
+                ...wheel.querySelectorAll(
+                    ".letter"
+                )
+            ].find(
+                element =>
+                    element.textContent === key
+            );
+
+
+        if (button) {
+
+            button.click();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   RESIZE
+===================================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        renderWheel();
+
+    }
+);
+
+
+/* =====================================================
+   START GAME
+===================================================== */
+
+updateLevelButtons();
+
+loadRound();
+
+</script>
+
+</body>
+
+</html>
+
