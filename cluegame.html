@@ -4,8 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <br>
 
-<title>3 Clues - Present Continuous</title>
+<title>3 Clues - English Game</title>
 
 <style>
 
@@ -31,16 +33,14 @@ body {
     width: min(1000px, 100%);
 }
 
-/* HEADER */
-
 header {
+    padding:22px;
     text-align: center;
     margin-bottom: 18px;
 }
 
 h1 {
     margin: 0 0 6px;
-
     font-size: clamp(30px, 6vw, 52px);
 }
 
@@ -54,17 +54,13 @@ h1 {
 .topbar {
     display: flex;
     flex-wrap: wrap;
-
     gap: 10px;
-
     justify-content: center;
-
     margin: 18px 0;
 }
 
 button {
     border: 2px solid #111;
-
     background: #fff;
     color: #111;
 
@@ -92,11 +88,8 @@ button:active {
 
 button:disabled {
     opacity: .45;
-
     cursor: not-allowed;
-
     transform: none;
-
     box-shadow: none;
 }
 
@@ -109,19 +102,14 @@ button:disabled {
 
 .counter {
     text-align: center;
-
     font-weight: 800;
-
     margin: 10px 0 20px;
 }
 
 .counter span {
     background: #fff;
-
     border: 2px solid #111;
-
     border-radius: 999px;
-
     padding: 7px 16px;
 }
 
@@ -130,7 +118,6 @@ button:disabled {
 .deck-area {
     display: flex;
     justify-content: center;
-
     min-height: 520px;
 }
 
@@ -138,13 +125,11 @@ button:disabled {
 
 .card {
     width: min(650px, 94vw);
-
     min-height: 490px;
 
     background: #fff;
 
     border: 3px solid #111;
-
     border-radius: 18px;
 
     box-shadow: 7px 7px 0 #111;
@@ -171,17 +156,14 @@ button:disabled {
 
 }
 
-/* CARD HEADER */
+/* CARD TOP */
 
 .card-top {
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
 
     font-weight: 800;
-
     font-size: 18px;
 
     padding-bottom: 12px;
@@ -198,7 +180,6 @@ button:disabled {
 
 .clues {
     display: flex;
-
     flex-direction: column;
 
     gap: 12px;
@@ -232,13 +213,11 @@ button:disabled {
     color: #555;
 }
 
-/* HIDDEN CLUES */
-
 .hidden {
     display: none;
 }
 
-/* ACTION BUTTONS */
+/* ACTIONS */
 
 .actions {
     display: flex;
@@ -304,6 +283,14 @@ button:disabled {
     outline: none;
 }
 
+.answer-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 12px;
+}
+
 /* NEXT */
 
 .next-area {
@@ -316,7 +303,6 @@ button:disabled {
 
 .next-area button {
     width: 100%;
-
     max-width: 300px;
 }
 
@@ -326,7 +312,6 @@ button:disabled {
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     text-align: center;
@@ -392,13 +377,11 @@ button:disabled {
 <h1>3 CLUES</h1>
 
 <p class="subtitle">
-Guess the action in the Present Continuous!
+Guess the word or action!
 </p>
 
 </header>
 
-
-<!-- TOP BUTTONS -->
 
 <div class="topbar">
 
@@ -445,8 +428,6 @@ Guess the action in the Present Continuous!
 </div>
 
 
-<!-- COUNTER -->
-
 <div class="counter">
 
 <span>
@@ -458,8 +439,6 @@ Cards left:
 
 </div>
 
-
-<!-- GAME -->
 
 <section
     id="deckArea"
@@ -476,7 +455,7 @@ Click <b>START CARD</b> to begin.
 </p>
 
 <p>
-Guess the action using the clues.
+Guess the word using the three clues!
 </p>
 
 </div>
@@ -491,10 +470,13 @@ Guess the action using the clues.
 <script>
 
 /* =====================================================
-   CARD DATA
+   100 CARDS
+   MIXED: ACTIONS + NOUNS
 ===================================================== */
 
 const originalCards = [
+
+/* 1 */
 
 {
     answer: "RUNNING",
@@ -505,23 +487,18 @@ const originalCards = [
     ]
 },
 
+/* 2 */
+
 {
-    answer: "WALKING",
+    answer: "TEACHER",
     clues: [
-        "The person is moving.",
-        "They are using their legs.",
-        "They are not running."
+        "This person works at a school.",
+        "They help students learn.",
+        "They can explain English grammar."
     ]
 },
 
-{
-    answer: "JUMPING",
-    clues: [
-        "The person is moving upward.",
-        "Their feet are leaving the ground.",
-        "They can do this over something."
-    ]
-},
+/* 3 */
 
 {
     answer: "SWIMMING",
@@ -532,149 +509,40 @@ const originalCards = [
     ]
 },
 
+/* 4 */
+
 {
-    answer: "CLIMBING",
+    answer: "BACKPACK",
     clues: [
-        "The person is moving upward.",
-        "They are using their hands and feet.",
-        "They could be climbing a mountain."
+        "Students often carry this.",
+        "You can put books inside it.",
+        "You can carry it on your back."
     ]
 },
 
-{
-    answer: "CRAWLING",
-    clues: [
-        "The person is very close to the ground.",
-        "They are using their hands and knees.",
-        "Babies often do this."
-    ]
-},
-
-{
-    answer: "SITTING",
-    clues: [
-        "The person is not standing.",
-        "They could be on a chair.",
-        "Their body is in a resting position."
-    ]
-},
-
-{
-    answer: "STANDING",
-    clues: [
-        "The person is on their feet.",
-        "They are not sitting.",
-        "They can do this in a classroom."
-    ]
-},
-
-{
-    answer: "SLEEPING",
-    clues: [
-        "The person is resting.",
-        "They are probably in bed.",
-        "They are not awake."
-    ]
-},
-
-{
-    answer: "EATING",
-    clues: [
-        "The person has food.",
-        "They are using their mouth.",
-        "They could be having lunch."
-    ]
-},
-
-{
-    answer: "DRINKING",
-    clues: [
-        "The person has a drink.",
-        "They are using their mouth.",
-        "They could be drinking water."
-    ]
-},
-
-{
-    answer: "COOKING",
-    clues: [
-        "The person is in the kitchen.",
-        "They are preparing food.",
-        "They could be using a stove."
-    ]
-},
-
-{
-    answer: "WASHING",
-    clues: [
-        "The person is using water.",
-        "They could be using soap.",
-        "They are making something clean."
-    ]
-},
-
-{
-    answer: "CLEANING",
-    clues: [
-        "The person is removing dirt.",
-        "They could be cleaning a room.",
-        "They are making something look better."
-    ]
-},
-
-{
-    answer: "BRUSHING",
-    clues: [
-        "The person is in the bathroom.",
-        "They are using a toothbrush.",
-        "They are taking care of their teeth."
-    ]
-},
+/* 5 */
 
 {
     answer: "READING",
     clues: [
-        "The person has a book.",
+        "The person has something with words.",
         "They are using their eyes.",
         "They could be in a library."
     ]
 },
 
+/* 6 */
+
 {
-    answer: "WRITING",
+    answer: "AIRPORT",
     clues: [
-        "The person has a pen or pencil.",
-        "They are putting words on paper.",
-        "Students often do this in class."
+        "People travel through this place.",
+        "You can see airplanes there.",
+        "You may need a passport there."
     ]
 },
 
-{
-    answer: "SPEAKING",
-    clues: [
-        "The person is using their voice.",
-        "They could be using another language.",
-        "Someone might be listening to them."
-    ]
-},
-
-{
-    answer: "LISTENING",
-    clues: [
-        "The person is using their ears.",
-        "They could be listening to music.",
-        "They are paying attention to a sound."
-    ]
-},
-
-{
-    answer: "SINGING",
-    clues: [
-        "The person is using their voice.",
-        "There could be music.",
-        "They could be on a stage."
-    ]
-},
+/* 7 */
 
 {
     answer: "DANCING",
@@ -685,140 +553,106 @@ const originalCards = [
     ]
 },
 
+/* 8 */
+
 {
-    answer: "PLAYING",
+    answer: "TELEPHONE",
     clues: [
-        "The person is having fun.",
-        "They could be using a ball.",
-        "Children often do this."
+        "People use this to communicate.",
+        "It can fit in your pocket.",
+        "You can call someone with it."
     ]
 },
 
+/* 9 */
+
 {
-    answer: "WATCHING",
+    answer: "COOKING",
     clues: [
-        "The person is using their eyes.",
-        "They could be looking at a movie.",
-        "They could be watching television."
+        "The person is preparing food.",
+        "They could be in a kitchen.",
+        "They might be using a stove."
     ]
 },
 
+/* 10 */
+
 {
-    answer: "LOOKING",
+    answer: "LIBRARY",
     clues: [
-        "The person is using their eyes.",
-        "They are paying attention to something.",
-        "They could be looking at a picture."
+        "You can find many books here.",
+        "People usually speak quietly here.",
+        "Students can study here."
     ]
 },
 
+/* 11 */
+
 {
-    answer: "OPENING",
+    answer: "JUMPING",
     clues: [
-        "The person is using their hands.",
-        "They could be opening a door.",
-        "The opposite action is closing."
+        "The person is moving upward.",
+        "Their feet leave the ground.",
+        "They can do this over something."
     ]
 },
 
+/* 12 */
+
 {
-    answer: "CLOSING",
+    answer: "DOG",
     clues: [
-        "The person is using their hands.",
-        "They could be closing a door.",
-        "The opposite action is opening."
+        "This animal can be a pet.",
+        "It can bark.",
+        "It is often called man's best friend."
     ]
 },
 
+/* 13 */
+
 {
-    answer: "GIVING",
+    answer: "WRITING",
     clues: [
-        "The person is holding something.",
-        "They are offering it to someone.",
-        "It could be a present."
+        "The person is using a pen or pencil.",
+        "They are creating words.",
+        "Students often do this in class."
     ]
 },
 
+/* 14 */
+
 {
-    answer: "TAKING",
+    answer: "CLASSROOM",
     clues: [
-        "The person is getting something.",
-        "They could be picking up an object.",
-        "The opposite action can be giving."
+        "Students study here.",
+        "There may be desks and chairs.",
+        "A teacher can work here."
     ]
 },
 
+/* 15 */
+
 {
-    answer: "BUYING",
+    answer: "EATING",
     clues: [
-        "The person is in a store.",
-        "They are getting something.",
-        "They are probably paying for it."
+        "The person has food.",
+        "They are using their mouth.",
+        "They could be having lunch."
     ]
 },
 
+/* 16 */
+
 {
-    answer: "PAYING",
+    answer: "PIZZA",
     clues: [
-        "The person is buying something.",
-        "They could be using a card.",
-        "They are giving money."
+        "It is a popular food.",
+        "It usually has cheese.",
+        "It is often cut into slices."
     ]
 },
 
-{
-    answer: "HELPING",
-    clues: [
-        "The person is assisting someone.",
-        "Someone needs support.",
-        "They are doing something useful for another person."
-    ]
-},
-
-{
-    answer: "CALLING",
-    clues: [
-        "The person has a phone.",
-        "They are communicating with someone.",
-        "They could be talking to a friend."
-    ]
-},
-
-{
-    answer: "TEXTING",
-    clues: [
-        "The person has a phone.",
-        "They are typing a message.",
-        "They are communicating digitally."
-    ]
-},
-
-{
-    answer: "WAITING",
-    clues: [
-        "The person is staying in one place.",
-        "Something has not happened yet.",
-        "They could be waiting for a bus."
-    ]
-},
-
-{
-    answer: "STARTING",
-    clues: [
-        "Something is beginning.",
-        "The person is beginning an action.",
-        "The opposite action is finishing."
-    ]
-},
-
-{
-    answer: "STOPPING",
-    clues: [
-        "The person is ending an action.",
-        "They are no longer continuing.",
-        "The opposite action is starting."
-    ]
-},
+/* 17 */
 
 {
     answer: "DRIVING",
@@ -829,50 +663,260 @@ const originalCards = [
     ]
 },
 
+/* 18 */
+
 {
-    answer: "RIDING",
+    answer: "CAR",
     clues: [
-        "The person is on a bicycle.",
-        "They are moving using wheels.",
-        "They could be wearing a helmet."
+        "It has four wheels.",
+        "People use it to travel.",
+        "It usually has a steering wheel."
     ]
 },
 
+/* 19 */
+
 {
-    answer: "FLYING",
+    answer: "SINGING",
     clues: [
-        "The person is traveling through the air.",
-        "They could be inside a plane.",
-        "They are not on the ground."
+        "The person is using their voice.",
+        "There could be music.",
+        "They could be on a stage."
     ]
 },
 
+/* 20 */
+
 {
-    answer: "TRAVELING",
+    answer: "HEADPHONES",
     clues: [
-        "The person is going to another place.",
-        "They could be on vacation.",
-        "They could be using a plane or car."
+        "You put these on your ears.",
+        "You can listen to music with them.",
+        "They can block outside sounds."
     ]
 },
 
+/* 21 */
+
 {
-    answer: "CARRYING",
+    answer: "WALKING",
     clues: [
-        "The person is holding something.",
-        "They are moving with it.",
-        "It could be a backpack or bag."
+        "The person is moving.",
+        "They are using their legs.",
+        "They are not running."
     ]
 },
+
+/* 22 */
+
+{
+    answer: "BICYCLE",
+    clues: [
+        "It has two wheels.",
+        "You can ride it.",
+        "You use pedals to move it."
+    ]
+},
+
+/* 23 */
+
+{
+    answer: "DRINKING",
+    clues: [
+        "The person has a drink.",
+        "They are using their mouth.",
+        "It could be water."
+    ]
+},
+
+/* 24 */
+
+{
+    answer: "WATER BOTTLE",
+    clues: [
+        "You can put water inside it.",
+        "People carry it to school or work.",
+        "You can drink from it."
+    ]
+},
+
+/* 25 */
+
+{
+    answer: "LISTENING",
+    clues: [
+        "The person is using their ears.",
+        "They are paying attention to a sound.",
+        "They could be listening to music."
+    ]
+},
+
+/* 26 */
+
+{
+    answer: "MUSIC",
+    clues: [
+        "You can listen to it.",
+        "It can have rhythm.",
+        "People can sing or dance to it."
+    ]
+},
+
+/* 27 */
+
+{
+    answer: "CLIMBING",
+    clues: [
+        "The person is moving upward.",
+        "They are using their hands and feet.",
+        "They could be climbing a mountain."
+    ]
+},
+
+/* 28 */
+
+{
+    answer: "MOUNTAIN",
+    clues: [
+        "It is very high.",
+        "People can climb it.",
+        "It is found in nature."
+    ]
+},
+
+/* 29 */
+
+{
+    answer: "SLEEPING",
+    clues: [
+        "The person is resting.",
+        "They are probably in bed.",
+        "They are not awake."
+    ]
+},
+
+/* 30 */
+
+{
+    answer: "BEDROOM",
+    clues: [
+        "People sleep here.",
+        "There is usually a bed.",
+        "It is a room in a house."
+    ]
+},
+
+/* 31 */
+
+{
+    answer: "TEXTING",
+    clues: [
+        "The person is using a phone.",
+        "They are typing a message.",
+        "They are communicating digitally."
+    ]
+},
+
+/* 32 */
+
+{
+    answer: "LAPTOP",
+    clues: [
+        "It is a type of computer.",
+        "You can carry it.",
+        "It has a screen and keyboard."
+    ]
+},
+
+/* 33 */
+
+{
+    answer: "TYPING",
+    clues: [
+        "The person is using their fingers.",
+        "They are probably using a keyboard.",
+        "They are writing digitally."
+    ]
+},
+
+/* 34 */
+
+{
+    answer: "KEYBOARD",
+    clues: [
+        "You use your fingers with it.",
+        "It has many keys.",
+        "You can use it to type."
+    ]
+},
+
+/* 35 */
+
+{
+    answer: "SHOPPING",
+    clues: [
+        "The person is looking at things to buy.",
+        "They could be in a store.",
+        "They may be carrying a bag."
+    ]
+},
+
+/* 36 */
+
+{
+    answer: "SUPERMARKET",
+    clues: [
+        "You can buy food here.",
+        "There are many products.",
+        "People use shopping carts here."
+    ]
+},
+
+/* 37 */
+
+{
+    answer: "BUYING",
+    clues: [
+        "The person is getting something.",
+        "They are probably in a store.",
+        "They usually have to pay."
+    ]
+},
+
+/* 38 */
+
+{
+    answer: "MONEY",
+    clues: [
+        "People use it to buy things.",
+        "It can be made of paper or metal.",
+        "You can save it."
+    ]
+},
+
+/* 39 */
 
 {
     answer: "THROWING",
     clues: [
         "The person is using their arm.",
-        "An object is moving through the air.",
+        "Something is moving through the air.",
         "It could be a ball."
     ]
 },
+
+/* 40 */
+
+{
+    answer: "BALL",
+    clues: [
+        "It is usually round.",
+        "People can throw it.",
+        "Many sports use it."
+    ]
+},
+
+/* 41 */
 
 {
     answer: "CATCHING",
@@ -883,6 +927,19 @@ const originalCards = [
     ]
 },
 
+/* 42 */
+
+{
+    answer: "SPORT",
+    clues: [
+        "People can play it.",
+        "It can involve competition.",
+        "Football and basketball are examples."
+    ]
+},
+
+/* 43 */
+
 {
     answer: "KICKING",
     clues: [
@@ -892,41 +949,18 @@ const originalCards = [
     ]
 },
 
+/* 44 */
+
 {
-    answer: "PUSHING",
+    answer: "FOOTBALL",
     clues: [
-        "The person is using their hands.",
-        "Something is moving away from them.",
-        "The opposite action is pulling."
+        "It is a popular sport.",
+        "Players use a ball.",
+        "Teams try to score."
     ]
 },
 
-{
-    answer: "PULLING",
-    clues: [
-        "The person is using their hands.",
-        "Something is moving toward them.",
-        "The opposite action is pushing."
-    ]
-},
-
-{
-    answer: "BUILDING",
-    clues: [
-        "The person is creating something.",
-        "They could be using tools.",
-        "Construction workers often do this."
-    ]
-},
-
-{
-    answer: "CUTTING",
-    clues: [
-        "The person is using scissors or a knife.",
-        "They are separating something.",
-        "They could be cutting paper."
-    ]
-},
+/* 45 */
 
 {
     answer: "DRAWING",
@@ -937,6 +971,19 @@ const originalCards = [
     ]
 },
 
+/* 46 */
+
+{
+    answer: "PENCIL",
+    clues: [
+        "Students use it to write.",
+        "It can be sharpened.",
+        "It is usually made of wood."
+    ]
+},
+
+/* 47 */
+
 {
     answer: "PAINTING",
     clues: [
@@ -946,14 +993,40 @@ const originalCards = [
     ]
 },
 
+/* 48 */
+
+{
+    answer: "BRUSH",
+    clues: [
+        "Artists can use it.",
+        "It can be used with paint.",
+        "It has bristles."
+    ]
+},
+
+/* 49 */
+
 {
     answer: "SMILING",
     clues: [
-        "The person's face is showing happiness.",
+        "The person's face shows happiness.",
         "Their mouth is changing shape.",
-        "People often do this for photographs."
+        "People often do this for photos."
     ]
 },
+
+/* 50 */
+
+{
+    answer: "CAMERA",
+    clues: [
+        "You use it to take pictures.",
+        "It can have a lens.",
+        "Phones can have one too."
+    ]
+},
+
+/* 51 */
 
 {
     answer: "LAUGHING",
@@ -964,23 +1037,18 @@ const originalCards = [
     ]
 },
 
+/* 52 */
+
 {
-    answer: "CRYING",
+    answer: "FRIEND",
     clues: [
-        "The person is showing a strong emotion.",
-        "There may be tears.",
-        "They could be feeling sad."
+        "This person is important to you.",
+        "You can spend time together.",
+        "You can talk and have fun together."
     ]
 },
 
-{
-    answer: "KISSING",
-    clues: [
-        "The person is using their lips.",
-        "They could be showing affection.",
-        "They could be kissing someone's cheek."
-    ]
-},
+/* 53 */
 
 {
     answer: "HUGGING",
@@ -991,6 +1059,19 @@ const originalCards = [
     ]
 },
 
+/* 54 */
+
+{
+    answer: "FAMILY",
+    clues: [
+        "These people can live together.",
+        "Parents and children can be part of it.",
+        "They can be related to you."
+    ]
+},
+
+/* 55 */
+
 {
     answer: "WAVING",
     clues: [
@@ -1000,32 +1081,62 @@ const originalCards = [
     ]
 },
 
+/* 56 */
+
 {
-    answer: "POINTING",
+    answer: "DOOR",
     clues: [
-        "The person is using one finger.",
-        "They are showing something.",
-        "They could be pointing at a place."
+        "It can open and close.",
+        "You can walk through it.",
+        "It is usually part of a building."
     ]
 },
 
+/* 57 */
+
 {
-    answer: "THINKING",
+    answer: "OPENING",
     clues: [
-        "The person is using their mind.",
-        "They could be solving a problem.",
-        "They may be trying to find an answer."
+        "The person is using their hands.",
+        "They could be opening a door.",
+        "The opposite action is closing."
     ]
 },
 
+/* 58 */
+
 {
-    answer: "LEARNING",
+    answer: "WINDOW",
     clues: [
-        "The person is gaining knowledge.",
-        "They could be in a classroom.",
-        "Students do this every day."
+        "You can see outside through it.",
+        "It can be opened.",
+        "It is usually part of a building."
     ]
 },
+
+/* 59 */
+
+{
+    answer: "CLOSING",
+    clues: [
+        "The person is moving something shut.",
+        "They could be closing a door.",
+        "The opposite is opening."
+    ]
+},
+
+/* 60 */
+
+{
+    answer: "CLOCK",
+    clues: [
+        "You use it to know the time.",
+        "It can have numbers.",
+        "It can hang on a wall."
+    ]
+},
+
+/* 61 */
 
 {
     answer: "STUDYING",
@@ -1036,14 +1147,18 @@ const originalCards = [
     ]
 },
 
+/* 62 */
+
 {
-    answer: "PRACTICING",
+    answer: "NOTEBOOK",
     clues: [
-        "The person is repeating something.",
-        "They are trying to improve.",
-        "Musicians and athletes often do this."
+        "Students use it at school.",
+        "You can write in it.",
+        "It has pages."
     ]
 },
+
+/* 63 */
 
 {
     answer: "ANSWERING",
@@ -1054,6 +1169,19 @@ const originalCards = [
     ]
 },
 
+/* 64 */
+
+{
+    answer: "QUESTION",
+    clues: [
+        "Someone asks this.",
+        "It needs an answer.",
+        "It can end with a question mark."
+    ]
+},
+
+/* 65 */
+
 {
     answer: "ASKING",
     clues: [
@@ -1062,6 +1190,19 @@ const originalCards = [
         "They could be talking to a teacher."
     ]
 },
+
+/* 66 */
+
+{
+    answer: "STUDENT",
+    clues: [
+        "This person goes to school.",
+        "They study different subjects.",
+        "They can do homework."
+    ]
+},
+
+/* 67 */
 
 {
     answer: "EXPLAINING",
@@ -1072,6 +1213,19 @@ const originalCards = [
     ]
 },
 
+/* 68 */
+
+{
+    answer: "BOOK",
+    clues: [
+        "You can read it.",
+        "It has pages.",
+        "It can tell a story."
+    ]
+},
+
+/* 69 */
+
 {
     answer: "SEARCHING",
     clues: [
@@ -1081,75 +1235,344 @@ const originalCards = [
     ]
 },
 
+/* 70 */
+
 {
-    answer: "FINDING",
+    answer: "COMPUTER",
     clues: [
-        "The person discovers something.",
-        "They were probably looking for it.",
-        "The opposite action is losing."
+        "You can use it to study.",
+        "It has a screen.",
+        "You can use it to access the internet."
     ]
 },
 
+/* 71 */
+
 {
-    answer: "WINNING",
+    answer: "TRAVELING",
     clues: [
-        "The person is succeeding in a competition.",
-        "They are doing better than their opponent.",
-        "The opposite action is losing."
+        "The person is going somewhere.",
+        "They could be on vacation.",
+        "They could be using a plane or car."
     ]
 },
 
+/* 72 */
+
 {
-    answer: "LOSING",
+    answer: "MAP",
     clues: [
-        "The person is not winning.",
-        "They are doing badly in a competition.",
-        "The opposite action is winning."
+        "It shows places.",
+        "You can use it when traveling.",
+        "It can help you find a location."
     ]
 },
 
+/* 73 */
+
 {
-    answer: "COMPETING",
+    answer: "FLYING",
     clues: [
-        "The person is taking part in a competition.",
-        "They are trying to win.",
-        "Sports players often do this."
+        "The person is traveling through the air.",
+        "They could be inside a plane.",
+        "They are not on the ground."
     ]
 },
 
+/* 74 */
+
 {
-    answer: "TYPING",
+    answer: "AIRPLANE",
     clues: [
-        "The person is using their fingers.",
-        "They are probably using a keyboard.",
-        "They are writing something digitally."
+        "It can fly.",
+        "People use it to travel.",
+        "It has wings."
     ]
 },
 
+/* 75 */
+
 {
-    answer: "SHOPPING",
+    answer: "RIDING",
     clues: [
-        "The person is probably in a store.",
-        "They are looking at things to buy.",
-        "They may be carrying a shopping bag."
+        "The person is using a vehicle.",
+        "They could be on a bicycle.",
+        "They are moving from one place to another."
     ]
 },
 
+/* 76 */
+
 {
-    answer: "WHISPERING",
+    answer: "BUS",
     clues: [
-        "The person is speaking very quietly.",
-        "They do not want everyone to hear.",
-        "They may be in a library."
+        "It is a vehicle.",
+        "Many people can travel in it.",
+        "Students may use it to go to school."
     ]
 },
 
+/* 77 */
+
 {
-    answer: "SHOUTING",
+    answer: "WAITING",
     clues: [
-        "The person is using a very loud voice.",
-        "People far away can hear them.",
-        "They are not speaking quietly."
+        "The person is staying in one place.",
+        "Something has not happened yet.",
+        "They could be waiting for a bus."
+    ]
+},
+
+/* 78 */
+
+{
+    answer: "TRAIN",
+    clues: [
+        "It travels on rails.",
+        "Many people can travel in it.",
+        "It can have many cars."
+    ]
+},
+
+/* 79 */
+
+{
+    answer: "CARRYING",
+    clues: [
+        "The person is holding something.",
+        "They are moving with it.",
+        "It could be a bag."
+    ]
+},
+
+/* 80 */
+
+{
+    answer: "UMBRELLA",
+    clues: [
+        "You use it when it rains.",
+        "You hold it above your head.",
+        "It can keep you dry."
+    ]
+},
+
+/* 81 */
+
+{
+    answer: "PUSHING",
+    clues: [
+        "The person is using their hands.",
+        "Something is moving away from them.",
+        "The opposite action is pulling."
+    ]
+},
+
+/* 82 */
+
+{
+    answer: "CHAIR",
+    clues: [
+        "You can sit on it.",
+        "It usually has legs.",
+        "You can find it in a classroom."
+    ]
+},
+
+/* 83 */
+
+{
+    answer: "PULLING",
+    clues: [
+        "The person is using their hands.",
+        "Something is moving toward them.",
+        "The opposite action is pushing."
+    ]
+},
+
+/* 84 */
+
+{
+    answer: "TABLE",
+    clues: [
+        "You can put things on it.",
+        "It usually has legs.",
+        "People can eat at it."
+    ]
+},
+
+/* 85 */
+
+{
+    answer: "CLEANING",
+    clues: [
+        "The person is removing dirt.",
+        "They could be cleaning a room.",
+        "They are making something look better."
+    ]
+},
+
+/* 86 */
+
+{
+    answer: "HOUSE",
+    clues: [
+        "People can live here.",
+        "It has rooms.",
+        "It can have a kitchen and bedrooms."
+    ]
+},
+
+/* 87 */
+
+{
+    answer: "WASHING",
+    clues: [
+        "The person is using water.",
+        "They could be using soap.",
+        "They are making something clean."
+    ]
+},
+
+/* 88 */
+
+{
+    answer: "BATHROOM",
+    clues: [
+        "People use this room every day.",
+        "There can be a shower here.",
+        "There is usually a sink."
+    ]
+},
+
+/* 89 */
+
+{
+    answer: "BRUSHING",
+    clues: [
+        "The person is in the bathroom.",
+        "They are using a toothbrush.",
+        "They are taking care of their teeth."
+    ]
+},
+
+/* 90 */
+
+{
+    answer: "TOOTHBRUSH",
+    clues: [
+        "You use it every day.",
+        "It helps clean your teeth.",
+        "You usually use it with toothpaste."
+    ]
+},
+
+/* 91 */
+
+{
+    answer: "PLAYING",
+    clues: [
+        "The person is having fun.",
+        "They could be using a ball.",
+        "Children often do this."
+    ]
+},
+
+/* 92 */
+
+{
+    answer: "PARK",
+    clues: [
+        "People can relax here.",
+        "Children can play here.",
+        "There can be trees and grass."
+    ]
+},
+
+/* 93 */
+
+{
+    answer: "WATCHING",
+    clues: [
+        "The person is using their eyes.",
+        "They could be watching a movie.",
+        "They could be watching television."
+    ]
+},
+
+/* 94 */
+
+{
+    answer: "MOVIE",
+    clues: [
+        "You can watch it.",
+        "It tells a story.",
+        "You can see it at a cinema."
+    ]
+},
+
+/* 95 */
+
+{
+    answer: "SMILING",
+    clues: [
+        "The person's face shows happiness.",
+        "Their mouth is changing shape.",
+        "People often do this for photographs."
+    ]
+},
+
+/* 96 */
+
+{
+    answer: "PHOTO",
+    clues: [
+        "A camera can take one.",
+        "It shows an image.",
+        "People often take them on their phones."
+    ]
+},
+
+/* 97 */
+
+{
+    answer: "EATING",
+    clues: [
+        "The person has food.",
+        "They are using their mouth.",
+        "They could be having dinner."
+    ]
+},
+
+/* 98 */
+
+{
+    answer: "SANDWICH",
+    clues: [
+        "It is a type of food.",
+        "It can have bread and different fillings.",
+        "People often eat it for lunch."
+    ]
+},
+
+/* 99 */
+
+{
+    answer: "DRINKING",
+    clues: [
+        "The person has a drink.",
+        "They are using their mouth.",
+        "They could be drinking water."
+    ]
+},
+
+/* 100 */
+
+{
+    answer: "RESTAURANT",
+    clues: [
+        "People go here to eat.",
+        "A waiter can work here.",
+        "You can order food here."
     ]
 }
 
@@ -1157,7 +1580,7 @@ const originalCards = [
 
 
 /* =====================================================
-   VARIABLES
+   GAME VARIABLES
 ===================================================== */
 
 let deck = [];
@@ -1171,19 +1594,26 @@ let cardsPlayed = 0;
    ELEMENTS
 ===================================================== */
 
-const deckArea = document.getElementById("deckArea");
+const deckArea =
+    document.getElementById("deckArea");
 
-const remaining = document.getElementById("remaining");
+const remaining =
+    document.getElementById("remaining");
 
-const startBtn = document.getElementById("startBtn");
+const startBtn =
+    document.getElementById("startBtn");
 
-const skipBtn = document.getElementById("skipBtn");
+const skipBtn =
+    document.getElementById("skipBtn");
 
-const showAnswerBtn = document.getElementById("showAnswerBtn");
+const showAnswerBtn =
+    document.getElementById("showAnswerBtn");
 
-const shuffleBtn = document.getElementById("shuffleBtn");
+const shuffleBtn =
+    document.getElementById("shuffleBtn");
 
-const resetBtn = document.getElementById("resetBtn");
+const resetBtn =
+    document.getElementById("resetBtn");
 
 
 /* =====================================================
@@ -1194,10 +1624,16 @@ function shuffle(array) {
 
     const result = [...array];
 
-    for (let i = result.length - 1; i > 0; i--) {
+    for (
+        let i = result.length - 1;
+        i > 0;
+        i--
+    ) {
 
         const j =
-            Math.floor(Math.random() * (i + 1));
+            Math.floor(
+                Math.random() * (i + 1)
+            );
 
         const temp = result[i];
 
@@ -1216,13 +1652,14 @@ function shuffle(array) {
 
 function updateCounter() {
 
-    remaining.textContent = deck.length;
+    remaining.textContent =
+        deck.length;
 
 }
 
 
 /* =====================================================
-   READY
+   READY SCREEN
 ===================================================== */
 
 function showReady() {
@@ -1240,12 +1677,12 @@ function showReady() {
                 </p>
 
                 <p>
-                    ${deck.length} cards remaining.
+                    <b>${deck.length}</b>
+                    cards remaining.
                 </p>
 
                 <p>
-                    Guess the action in
-                    <b>Present Continuous</b>.
+                    Guess the word or action!
                 </p>
 
             </div>
@@ -1263,7 +1700,7 @@ function showReady() {
 
 
 /* =====================================================
-   START
+   START CARD
 ===================================================== */
 
 function startCard() {
@@ -1275,7 +1712,8 @@ function startCard() {
         return;
     }
 
-    currentCard = deck.shift();
+    currentCard =
+        deck.shift();
 
     cardsPlayed++;
 
@@ -1304,7 +1742,7 @@ function renderCard() {
             <div class="card-top">
 
                 <span>
-                    🎯 PRESENT CONTINUOUS
+                    🎯 3 CLUES
                 </span>
 
                 <span class="card-number">
@@ -1428,8 +1866,6 @@ function renderCard() {
     `;
 
 
-    /* CLUE 2 */
-
     document
         .getElementById("clue2Btn")
         .addEventListener(
@@ -1437,8 +1873,6 @@ function renderCard() {
             revealClue2
         );
 
-
-    /* CLUE 3 */
 
     document
         .getElementById("clue3Btn")
@@ -1448,8 +1882,6 @@ function renderCard() {
         );
 
 
-    /* HIDE ANSWER */
-
     document
         .getElementById("hideAnswerBtn")
         .addEventListener(
@@ -1457,8 +1889,6 @@ function renderCard() {
             hideAnswer
         );
 
-
-    /* NEXT */
 
     document
         .getElementById("nextBtn")
@@ -1536,9 +1966,11 @@ function showAnswer() {
     }
 
 
-    answerBox.style.display = "block";
+    answerBox.style.display =
+        "block";
 
-    nextArea.style.display = "flex";
+    nextArea.style.display =
+        "flex";
 }
 
 
@@ -1557,7 +1989,8 @@ function hideAnswer() {
     }
 
 
-    answerBox.style.display = "none";
+    answerBox.style.display =
+        "none";
 }
 
 
@@ -1620,7 +2053,8 @@ function shuffleDeck() {
 
 function resetGame() {
 
-    deck = shuffle(originalCards);
+    deck =
+        shuffle(originalCards);
 
     currentCard = null;
 
@@ -1653,7 +2087,9 @@ function showComplete() {
 
             <div>
 
-                <h2>🎉 DECK COMPLETE!</h2>
+                <h2>
+                    🎉 DECK COMPLETE!
+                </h2>
 
                 <p>
                     You played
@@ -1691,7 +2127,7 @@ function showComplete() {
 
 
 /* =====================================================
-   BUTTONS
+   BUTTON EVENTS
 ===================================================== */
 
 startBtn.addEventListener(
