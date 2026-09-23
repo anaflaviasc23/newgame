@@ -186,6 +186,11 @@ button:hover {
     color: #fff;
 }
 
+.red {
+    background: #c62828;
+    color: #fff;
+}
+
 /* =====================================================
    BOARD WRAPPER
 ===================================================== */
@@ -224,6 +229,10 @@ button:hover {
     font-weight: 900;
     border-right: 1px solid #fff;
     border-bottom: 1px solid #fff;
+}
+
+.board-header:last-child {
+    border-right: none;
 }
 
 /* =====================================================
@@ -265,6 +274,10 @@ button:hover {
 
 .play-cell:hover {
     background: #f2f2f2;
+}
+
+.play-cell:last-child {
+    border-right: none;
 }
 
 /* =====================================================
@@ -491,7 +504,6 @@ button:hover {
     .question-prompt {
         font-size: 18px;
     }
-
 }
 
 </style>
@@ -499,6 +511,10 @@ button:hover {
 </head>
 
 <body>
+
+<!-- =====================================================
+     START SCREEN
+===================================================== -->
 
 <div class="start-screen" id="startScreen">
 
@@ -521,6 +537,10 @@ button:hover {
 
 </div>
 
+
+<!-- =====================================================
+     PASS DEVICE
+===================================================== -->
 
 <div
     class="overlay hidden"
@@ -545,6 +565,10 @@ button:hover {
 </div>
 
 
+<!-- =====================================================
+     GAME
+===================================================== -->
+
 <div class="game">
 
     <header>
@@ -557,6 +581,8 @@ button:hover {
 
     </header>
 
+
+    <!-- TOP BAR -->
 
     <div class="topbar">
 
@@ -575,6 +601,8 @@ button:hover {
 
     </div>
 
+
+    <!-- INFO -->
 
     <div class="info">
 
@@ -611,33 +639,8 @@ button:hover {
     </div>
 
 
-    <div class="instructions">
 
-        <h2>How to Play</h2>
-
-        <p>
-            <strong>Setup:</strong>
-            Each player secretly chooses 5 cells for their ships.
-        </p>
-
-        <p>
-            <strong>Battle:</strong>
-            Choose a cell and create the complete Present Continuous question.
-        </p>
-
-        <p>
-            Example:
-            <strong>I + WATCH TV</strong>
-            →
-            <strong>Am I watching TV?</strong>
-        </p>
-
-        <p>
-            Use <strong>SHOW ANSWER</strong> to check the sentence.
-        </p>
-
-    </div>
-
+    <!-- SETUP -->
 
     <div
         class="setup"
@@ -660,12 +663,15 @@ button:hover {
 
         <button
             class="primary"
+            id="finishButton"
             onclick="finishPlacement()">
             FINISH PLACEMENT
         </button>
 
     </div>
 
+
+    <!-- BOARD -->
 
     <div class="board-wrapper">
 
@@ -676,6 +682,8 @@ button:hover {
 
     </div>
 
+
+    <!-- MOVE BOX -->
 
     <div
         class="move-box hidden"
@@ -701,7 +709,8 @@ button:hover {
                 id="questionPrompt">
             </div>
 
-            <div class="action-buttons">
+            <div
+                class="action-buttons">
 
                 <button
                     class="pink"
@@ -733,6 +742,8 @@ button:hover {
     </div>
 
 
+    <!-- RESULT -->
+
     <div
         class="result hidden"
         id="resultBox">
@@ -741,7 +752,8 @@ button:hover {
             🎉 Game Over!
         </h2>
 
-        <p id="resultMessage"></p>
+        <p id="resultMessage">
+        </p>
 
         <button
             class="primary"
@@ -755,6 +767,10 @@ button:hover {
 
 
 <script>
+
+/* =====================================================
+   GAME DATA
+===================================================== */
 
 const subjects = [
     "I",
@@ -789,11 +805,21 @@ const actions = [
     }
 ];
 
+
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
+
 let currentPlayer = 1;
+
 let phase = "setup";
+
 let placementCount = 0;
+
 let selectedCell = null;
+
 let selectedSubject = null;
+
 let selectedAction = null;
 
 let ships = {
@@ -812,6 +838,10 @@ let attacks = {
 };
 
 
+/* =====================================================
+   START GAME
+===================================================== */
+
 function startGame() {
 
     document
@@ -823,14 +853,22 @@ function startGame() {
 }
 
 
+/* =====================================================
+   RESET GAME
+===================================================== */
+
 function resetGame() {
 
     currentPlayer = 1;
+
     phase = "setup";
+
     placementCount = 0;
 
     selectedCell = null;
+
     selectedSubject = null;
+
     selectedAction = null;
 
     ships = {
@@ -864,12 +902,22 @@ function resetGame() {
         .getElementById("grammarAnswer")
         .classList.add("hidden");
 
+    document
+        .getElementById("showAnswerButton")
+        .classList.remove("hidden");
+
     updateInfo();
+
     updateSetup();
+
     createBoard();
 
 }
 
+
+/* =====================================================
+   UPDATE INFO
+===================================================== */
 
 function updateInfo() {
 
@@ -893,6 +941,10 @@ function updateInfo() {
 }
 
 
+/* =====================================================
+   UPDATE SETUP
+===================================================== */
+
 function updateSetup() {
 
     document
@@ -903,12 +955,21 @@ function updateSetup() {
         " — Place Your Ships";
 
     document
+        .getElementById("setupText")
+        .textContent =
+        "Choose exactly 5 cells.";
+
+    document
         .getElementById("placementCount")
         .textContent =
         placementCount;
 
 }
 
+
+/* =====================================================
+   CREATE BOARD
+===================================================== */
 
 function createBoard() {
 
@@ -917,6 +978,8 @@ function createBoard() {
 
     board.innerHTML = "";
 
+
+    /* HEADER */
 
     const emptyHeader =
         document.createElement("div");
@@ -946,6 +1009,8 @@ function createBoard() {
     });
 
 
+    /* ROWS */
+
     subjects.forEach(function(subject, rowIndex) {
 
         const subjectCell =
@@ -972,9 +1037,17 @@ function createBoard() {
                 rowIndex + "-" + colIndex;
 
             cell.dataset.key = key;
-            cell.dataset.subject = subject;
-            cell.dataset.action = colIndex;
 
+            cell.dataset.subject =
+                subject;
+
+            cell.dataset.action =
+                colIndex;
+
+
+            /*
+             * SETUP
+             */
 
             if (phase === "setup") {
 
@@ -998,7 +1071,14 @@ function createBoard() {
                     }
                 );
 
-            } else {
+            }
+
+
+            /*
+             * BATTLE
+             */
+
+            else {
 
                 cell.addEventListener(
                     "click",
@@ -1014,6 +1094,9 @@ function createBoard() {
                     }
                 );
 
+                /*
+                 * Show previous attacks
+                 */
 
                 if (
                     attacks[currentPlayer].includes(key)
@@ -1029,18 +1112,23 @@ function createBoard() {
                     ) {
 
                         cell.classList.add("hit");
-                        cell.textContent = "🚢";
+
+                        cell.textContent =
+                            "🚢";
 
                     } else {
 
                         cell.classList.add("miss");
-                        cell.textContent = "🌊";
+
+                        cell.textContent =
+                            "🌊";
 
                     }
 
                 }
 
             }
+
 
             board.appendChild(cell);
 
@@ -1050,6 +1138,10 @@ function createBoard() {
 
 }
 
+
+/* =====================================================
+   SELECT SHIP
+===================================================== */
 
 function selectShipCell(
     key,
@@ -1071,10 +1163,14 @@ function selectShipCell(
 
         placementCount--;
 
-    } else {
+    }
+
+    else {
 
         if (placementCount >= 5) {
+
             return;
+
         }
 
         ships[currentPlayer].push(key);
@@ -1090,6 +1186,10 @@ function selectShipCell(
 }
 
 
+/* =====================================================
+   FINISH PLACEMENT
+===================================================== */
+
 function finishPlacement() {
 
     if (placementCount !== 5) {
@@ -1103,15 +1203,22 @@ function finishPlacement() {
     }
 
 
+    /*
+     * PLAYER 1
+     */
+
     if (currentPlayer === 1) {
 
         hideShips();
 
         currentPlayer = 2;
+
         placementCount = 0;
 
         updateInfo();
+
         updateSetup();
+
         createBoard();
 
         showPassOverlay(
@@ -1123,10 +1230,16 @@ function finishPlacement() {
     }
 
 
+    /*
+     * PLAYER 2
+     */
+
     hideShips();
 
     phase = "battle";
+
     currentPlayer = 1;
+
     placementCount = 0;
 
     updateInfo();
@@ -1148,28 +1261,42 @@ function finishPlacement() {
 }
 
 
+/* =====================================================
+   HIDE SHIPS
+===================================================== */
+
 function hideShips() {
 
-    document
-        .querySelectorAll(".play-cell.ship")
-        .forEach(function(cell) {
+    const cells =
+        document.querySelectorAll(
+            ".play-cell.ship"
+        );
 
-            cell.classList.remove("ship");
+    cells.forEach(function(cell) {
 
-        });
+        cell.classList.remove("ship");
+
+    });
 
 }
 
 
+/* =====================================================
+   PASS DEVICE
+===================================================== */
+
 function showPassOverlay(message) {
 
-    document
-        .getElementById("passMessage")
-        .textContent = message;
+    const overlay =
+        document.getElementById("passOverlay");
 
-    document
-        .getElementById("passOverlay")
-        .classList.remove("hidden");
+    const passMessage =
+        document.getElementById("passMessage");
+
+    passMessage.textContent =
+        message;
+
+    overlay.classList.remove("hidden");
 
 }
 
@@ -1182,6 +1309,10 @@ function continueAfterPass() {
 
 }
 
+
+/* =====================================================
+   HANDLE CELL CLICK
+===================================================== */
 
 function handleCellClick(
     key,
@@ -1198,9 +1329,14 @@ function handleCellClick(
 
     }
 
+
     selectedCell = key;
+
     selectedSubject = subject;
-    selectedAction = actions[actionIndex];
+
+    selectedAction =
+        actions[actionIndex];
+
 
     document
         .getElementById("selectedText")
@@ -1209,6 +1345,7 @@ function handleCellClick(
         " + " +
         selectedAction.base.toUpperCase();
 
+
     document
         .getElementById("questionPrompt")
         .textContent =
@@ -1216,9 +1353,23 @@ function handleCellClick(
         " + " +
         selectedAction.base.toUpperCase();
 
+
     document
         .getElementById("grammarAnswer")
         .classList.add("hidden");
+
+
+    /*
+     * Store the selected cell only.
+     * It becomes an attack after HIT/MISS.
+     */
+
+    selectedCell = key;
+
+
+    /*
+     * Highlight selected cell
+     */
 
     document
         .querySelectorAll(".play-cell")
@@ -1228,16 +1379,23 @@ function handleCellClick(
 
         });
 
+
     cell.style.outline =
         "4px solid #e91e63";
 
 }
 
 
+/* =====================================================
+   GET AUXILIARY
+===================================================== */
+
 function getAuxiliary(subject) {
 
     if (subject === "I") {
+
         return "Am";
+
     }
 
     if (
@@ -1245,13 +1403,19 @@ function getAuxiliary(subject) {
         subject === "She" ||
         subject === "It"
     ) {
+
         return "Is";
+
     }
 
     return "Are";
 
 }
 
+
+/* =====================================================
+   CREATE SENTENCE
+===================================================== */
 
 function createSentence(
     subject,
@@ -1273,6 +1437,10 @@ function createSentence(
 }
 
 
+/* =====================================================
+   SHOW ANSWER
+===================================================== */
+
 function showAnswer() {
 
     if (
@@ -1284,18 +1452,21 @@ function showAnswer() {
 
     }
 
+
     const answer =
         createSentence(
             selectedSubject,
             selectedAction
         );
 
+
     const answerBox =
         document.getElementById(
             "grammarAnswer"
         );
 
-    answerBox.textContent = answer;
+    answerBox.textContent =
+        answer;
 
     answerBox.classList.remove(
         "hidden"
@@ -1304,15 +1475,22 @@ function showAnswer() {
 }
 
 
+/* =====================================================
+   REGISTER HIT
+===================================================== */
+
 function registerHit() {
 
     if (!selectedCell) {
 
-        alert("Choose a cell first.");
+        alert(
+            "Choose a cell first."
+        );
 
         return;
 
     }
+
 
     if (
         attacks[currentPlayer].includes(
@@ -1324,56 +1502,77 @@ function registerHit() {
 
     }
 
+
     const opponent =
         currentPlayer === 1
             ? 2
             : 1;
 
+
     attacks[currentPlayer].push(
         selectedCell
     );
+
 
     const hit =
         ships[opponent].includes(
             selectedCell
         );
 
+
     if (hit) {
 
         hits[currentPlayer]++;
 
-        markSelectedCell("hit");
+        markSelectedCell(
+            "hit"
+        );
+
 
         if (
             hits[currentPlayer] >= 5
         ) {
 
-            endGame(currentPlayer);
+            endGame(
+                currentPlayer
+            );
 
             return;
 
         }
 
-    } else {
+    }
 
-        markSelectedCell("miss");
+    else {
+
+        markSelectedCell(
+            "miss"
+        );
 
     }
+
 
     nextTurn();
 
 }
 
 
+/* =====================================================
+   REGISTER MISS
+===================================================== */
+
 function registerMiss() {
 
     if (!selectedCell) {
 
-        alert("Choose a cell first.");
+        alert(
+            "Choose a cell first."
+        );
 
         return;
 
     }
+
 
     if (
         attacks[currentPlayer].includes(
@@ -1385,48 +1584,73 @@ function registerMiss() {
 
     }
 
+
     const opponent =
         currentPlayer === 1
             ? 2
             : 1;
 
+
     attacks[currentPlayer].push(
         selectedCell
     );
+
+
+    /*
+     * Even if the teacher selects MISS,
+     * the game checks the real hidden board.
+     */
 
     const actuallyHit =
         ships[opponent].includes(
             selectedCell
         );
 
+
     if (actuallyHit) {
 
         hits[currentPlayer]++;
 
-        markSelectedCell("hit");
+        markSelectedCell(
+            "hit"
+        );
+
 
         if (
             hits[currentPlayer] >= 5
         ) {
 
-            endGame(currentPlayer);
+            endGame(
+                currentPlayer
+            );
 
             return;
 
         }
 
-    } else {
+    }
 
-        markSelectedCell("miss");
+    else {
+
+        markSelectedCell(
+            "miss"
+        );
 
     }
+
 
     nextTurn();
 
 }
 
 
-function markSelectedCell(type) {
+/* =====================================================
+   MARK SELECTED CELL
+===================================================== */
+
+function markSelectedCell(
+    type
+) {
 
     const cell =
         document.querySelector(
@@ -1435,42 +1659,70 @@ function markSelectedCell(type) {
             '"]'
         );
 
+
     if (!cell) {
+
         return;
+
     }
+
 
     cell.style.outline = "";
 
+
     if (type === "hit") {
 
-        cell.classList.add("hit");
-        cell.textContent = "🚢";
+        cell.classList.add(
+            "hit"
+        );
 
-    } else {
-
-        cell.classList.add("miss");
-        cell.textContent = "🌊";
+        cell.textContent =
+            "🚢";
 
     }
 
-    cell.style.pointerEvents = "none";
+    else {
+
+        cell.classList.add(
+            "miss"
+        );
+
+        cell.textContent =
+            "🌊";
+
+    }
+
+
+    cell.style.pointerEvents =
+        "none";
 
 }
 
 
+/* =====================================================
+   NEXT TURN
+===================================================== */
+
 function nextTurn() {
 
     selectedCell = null;
+
     selectedSubject = null;
+
     selectedAction = null;
+
 
     currentPlayer =
         currentPlayer === 1
             ? 2
             : 1;
 
+
     updateInfo();
+
+
     createBoard();
+
 
     showPassOverlay(
         "Pass the device to Player " +
@@ -1481,19 +1733,28 @@ function nextTurn() {
 }
 
 
-function endGame(winner) {
+/* =====================================================
+   END GAME
+===================================================== */
+
+function endGame(
+    winner
+) {
 
     phase = "finished";
 
     updateInfo();
 
+
     document
         .getElementById("moveBox")
         .classList.add("hidden");
 
+
     document
         .getElementById("resultBox")
         .classList.remove("hidden");
+
 
     document
         .getElementById("resultTitle")
@@ -1502,6 +1763,7 @@ function endGame(winner) {
         winner +
         " Wins!";
 
+
     document
         .getElementById("resultMessage")
         .textContent =
@@ -1509,10 +1771,15 @@ function endGame(winner) {
         winner +
         " found all 5 hidden ships!";
 
+
     createBoard();
 
 }
 
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
 
 resetGame();
 
