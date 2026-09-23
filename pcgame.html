@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Present Continuous Game</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f4f2;
+    color: #111;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.game {
+    width: 100%;
+    max-width: 950px;
+}
+
+.card {
+    background: white;
+    border: 3px solid #111;
+    border-radius: 18px;
+    box-shadow: 8px 8px 0 #111;
+    padding: 35px;
+}
+
+/* HEADER */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+}
+
+.title {
+    text-align: left;
+}
+
+.title h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.title p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.stats {
+    display: flex;
+    gap: 10px;
+}
+
+.stat {
+    border: 2px solid #111;
+    border-radius: 10px;
+    padding: 9px 15px;
+    text-align: center;
+    min-width: 90px;
+}
+
+.stat span {
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.stat strong {
+    font-size: 22px;
+}
+
+/* TABS */
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 25px;
+    border-bottom: 3px solid #111;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.tab {
+    border: 2px solid #111;
+    background: white;
+    color: #111;
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .15s;
+}
+
+.tab:hover {
+    transform: translateY(-2px);
+}
+
+.tab.active {
+    background: #111;
+    color: white;
+}
+
+/* MODE */
+
+.mode {
+    display: inline-block;
+
+    background: #111;
+    color: white;
+
+    padding: 9px 17px;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+    font-size: 14px;
+
+    margin-bottom: 14px;
+}
+
+/* INSTRUCTION */
+
+.instruction {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+/* WORDS */
+
+.words-area {
+    border: 3px dashed #111;
+    border-radius: 14px;
+
+    padding: 22px;
+
+    min-height: 120px;
+
+    margin-bottom: 20px;
+}
+
+.words-title {
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+
+    margin-bottom: 15px;
+
+    color: #555;
+}
+
+.words {
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 10px;
+}
+
+/* WORD BUTTON */
+
+.word {
+    border: 2px solid #111;
+
+    background: white;
+    color: #111;
+
+    padding: 13px 18px;
+
+    border-radius: 10px;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .15s;
+}
+
+.word:hover {
+    transform: translateY(-2px);
+    box-shadow: 3px 3px 0 #111;
+}
+
+.word.selected {
+    background: #111;
+    color: white;
+
+    transform: translateY(2px);
+
+    box-shadow: none;
+}
+
+/* SENTENCE */
+
+.sentence-area {
+    border: 3px solid #111;
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+    min-height: 125px;
+
+    margin-bottom: 20px;
+
+    background: #fafafa;
+}
+
+.sentence-title {
+    font-size: 12px;
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    color: #555;
+
+    margin-bottom: 15px;
+}
+
+.sentence {
+    min-height: 55px;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.placeholder {
+    color: #999;
+
+    font-size: 15px;
+}
+
+/* SELECTED WORD */
+
+.selected-word {
+    background: #111;
+
+    color: white;
+
+    border: 2px solid #111;
+
+    border-radius: 8px;
+
+    padding: 10px 14px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.selected-word:hover {
+    opacity: .7;
+}
+
+/* BUTTONS */
+
+.buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+.action {
+    border: 3px solid #111;
+
+    background: white;
+    color: #111;
+
+    padding: 13px 25px;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    box-shadow: 4px 4px 0 #111;
+
+    transition: .15s;
+}
+
+.action:hover {
+    transform: translate(2px, 2px);
+
+    box-shadow: 2px 2px 0 #111;
+}
+
+.check {
+    background: #111;
+    color: white;
+}
+
+.skip {
+    background: white;
+}
+
+/* POPUP */
+
+.popup {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.65);
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    visibility: hidden;
+
+    opacity: 0;
+
+    transition: .2s;
+
+    padding: 20px;
+
+    z-index: 999;
+}
+
+.popup.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.popup-content {
+    background: white;
+
+    border: 3px solid #111;
+
+    border-radius: 16px;
+
+    box-shadow: 8px 8px 0 #111;
+
+    padding: 35px 50px;
+
+    text-align: center;
+
+    max-width: 450px;
+}
+
+.popup-content h2 {
+    margin: 0 0 10px;
+
+    font-size: 30px;
+}
+
+.popup-content p {
+    margin: 0;
+
+    font-size: 17px;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .card {
+        padding: 22px;
+    }
+
+    .title {
+        text-align: center;
+        width: 100%;
+    }
+
+    .title h1 {
+        font-size: 23px;
+    }
+
+    .header {
+        justify-content: center;
+    }
+
+    .tab {
+        padding: 10px 14px;
+        font-size: 12px;
+    }
+
+    .word {
+        font-size: 15px;
+        padding: 11px 14px;
+    }
+
+    .popup-content {
+        padding: 30px 25px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<div class="card">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="title">
+
+            <h1>PRESENT CONTINUOUS</h1>
+
+            <p>
+                Click the words in the correct order.
+            </p>
+
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+                <span>SCORE</span>
+                <strong id="score">0</strong>
+            </div>
+
+            <div class="stat">
+                <span>QUESTION</span>
+                <strong id="question">1</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABS -->
+
+    <div class="tabs">
+
+        <button
+            type="button"
+            class="tab active"
+            id="affirmativeTab">
+            AFFIRMATIVE
+        </button>
+
+        <button
+            type="button"
+            class="tab"
+            id="negativeTab">
+            NEGATIVE
+        </button>
+
+        <button
+            type="button"
+            class="tab"
+            id="interrogativeTab">
+            INTERROGATIVE
+        </button>
+
+        <button
+            type="button"
+            class="tab"
+            id="mixedTab">
+            MIXED
+        </button>
+
+    </div>
+
+    <!-- MODE -->
+
+    <div
+        class="mode"
+        id="mode">
+        AFFIRMATIVE
+    </div>
+
+    <div
+        class="instruction"
+        id="instruction">
+        Build the AFFIRMATIVE sentence.
+    </div>
+
+    <!-- WORDS -->
+
+    <div class="words-area">
+
+        <div class="words-title">
+            WORDS
+        </div>
+
+        <div
+            class="words"
+            id="words">
+        </div>
+
+    </div>
+
+    <!-- SENTENCE -->
+
+    <div class="sentence-area">
+
+        <div class="sentence-title">
+            YOUR SENTENCE
+        </div>
+
+        <div
+            class="sentence"
+            id="sentence">
+        </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+
+    <div class="buttons">
+
+        <button
+            type="button"
+            class="action"
+            id="clearButton">
+            CLEAR
+        </button>
+
+        <button
+            type="button"
+            class="action skip"
+            id="skipButton">
+            SKIP
+        </button>
+
+        <button
+            type="button"
+            class="action check"
+            id="checkButton">
+            CHECK ANSWER
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- POPUP -->
+
+<div
+    class="popup"
+    id="popup">
+
+    <div class="popup-content">
+
+        <h2 id="popupTitle"></h2>
+
+        <p id="popupText"></p>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =====================================================
+   100 PRESENT CONTINUOUS SENTENCES
+===================================================== */
+
+const affirmativeQuestions = [
+
+"I am studying English",
+"She is reading a book",
+"He is playing soccer",
+"They are watching television",
+"We are learning English",
+"You are listening to music",
+"The dog is sleeping",
+"My mother is cooking dinner",
+"My father is working",
+"The students are studying",
+"She is writing an email",
+"He is drinking water",
+"They are playing basketball",
+"We are watching a movie",
+"I am doing my homework",
+"You are speaking English",
+"The baby is crying",
+"The teacher is explaining the lesson",
+"She is washing the dishes",
+"He is cleaning his room",
+"They are running in the park",
+"We are waiting for the bus",
+"I am wearing a new shirt",
+"She is talking to her friend",
+"He is driving a car",
+"They are eating lunch",
+"We are having a great time",
+"The children are playing outside",
+"I am listening to the teacher",
+"She is taking a picture",
+"He is using his computer",
+"They are studying for the test"
+];
+
+const negativeQuestions = [
+
+"I am not sleeping",
+"She is not working today",
+"He is not watching television",
+"They are not studying",
+"We are not playing soccer",
+"You are not listening",
+"The dog is not eating",
+"My mother is not cooking",
+"My father is not working",
+"The students are not talking",
+"She is not reading a book",
+"He is not drinking coffee",
+"They are not playing basketball",
+"We are not watching a movie",
+"I am not using my phone",
+"You are not speaking English",
+"The baby is not sleeping",
+"The teacher is not writing",
+"She is not washing the car",
+"He is not cleaning his room",
+"They are not running",
+"We are not waiting for the bus",
+"I am not wearing a jacket",
+"She is not talking to me",
+"He is not driving today",
+"They are not eating dinner",
+"We are not studying now",
+"The children are not playing outside",
+"I am not watching television",
+"She is not taking pictures",
+"He is not using the computer",
+"They are not listening to music",
+"We are not going home"
+];
+
+const interrogativeQuestions = [
+
+"Am I speaking English",
+"Is she reading a book",
+"Is he playing soccer",
+"Are they watching television",
+"Are we learning English",
+"Are you listening to music",
+"Is the dog sleeping",
+"Is my mother cooking dinner",
+"Is my father working",
+"Are the students studying",
+"Is she writing an email",
+"Is he drinking water",
+"Are they playing basketball",
+"Are we watching a movie",
+"Am I doing my homework",
+"Are you speaking English",
+"Is the baby crying",
+"Is the teacher explaining the lesson",
+"Is she washing the dishes",
+"Is he cleaning his room",
+"Are they running in the park",
+"Are we waiting for the bus",
+"Am I wearing a new shirt",
+"Is she talking to her friend",
+"Is he driving a car",
+"Are they eating lunch",
+"Are we having a great time",
+"Are the children playing outside",
+"Am I listening to the teacher",
+"Is she taking a picture",
+"Is he using his computer",
+"Are they studying for the test",
+"Are we going home",
+"Is she watching a movie"
+];
+
+/*
+   Total:
+   32 affirmative
+   33 negative
+   34 interrogative
+   = 99
+
+   Extra sentence below makes 100.
+*/
+
+affirmativeQuestions.push(
+    "The teacher is speaking English"
+);
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let currentMode = "affirmative";
+
+let questions = [];
+
+let currentIndex = 0;
+
+let score = 0;
+
+let selectedWords = [];
+
+let locked = false;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const wordsBox =
+    document.getElementById("words");
+
+const sentenceBox =
+    document.getElementById("sentence");
+
+const modeBox =
+    document.getElementById("mode");
+
+const instructionBox =
+    document.getElementById("instruction");
+
+const scoreBox =
+    document.getElementById("score");
+
+const questionBox =
+    document.getElementById("question");
+
+const popup =
+    document.getElementById("popup");
+
+const popupTitle =
+    document.getElementById("popupTitle");
+
+const popupText =
+    document.getElementById("popupText");
+
+const affirmativeTab =
+    document.getElementById("affirmativeTab");
+
+const negativeTab =
+    document.getElementById("negativeTab");
+
+const interrogativeTab =
+    document.getElementById("interrogativeTab");
+
+const mixedTab =
+    document.getElementById("mixedTab");
+
+const clearButton =
+    document.getElementById("clearButton");
+
+const skipButton =
+    document.getElementById("skipButton");
+
+const checkButton =
+    document.getElementById("checkButton");
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffle(array) {
+
+    const copy = [...array];
+
+    for (
+        let i = copy.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
+
+        [
+            copy[i],
+            copy[j]
+        ] =
+        [
+            copy[j],
+            copy[i]
+        ];
+
+    }
+
+    return copy;
+}
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+affirmativeTab.addEventListener(
+    "click",
+    () => startMode("affirmative")
+);
+
+negativeTab.addEventListener(
+    "click",
+    () => startMode("negative")
+);
+
+interrogativeTab.addEventListener(
+    "click",
+    () => startMode("interrogative")
+);
+
+mixedTab.addEventListener(
+    "click",
+    () => startMode("mixed")
+);
+
+
+/* =====================================================
+   START MODE
+===================================================== */
+
+function startMode(mode) {
+
+    currentMode = mode;
+
+    currentIndex = 0;
+
+    score = 0;
+
+    scoreBox.innerText = "0";
+
+    locked = false;
+
+    checkButton.style.display =
+        "inline-block";
+
+    clearButton.innerText =
+        "CLEAR";
+
+
+    affirmativeTab.classList.remove("active");
+    negativeTab.classList.remove("active");
+    interrogativeTab.classList.remove("active");
+    mixedTab.classList.remove("active");
+
+
+    if (mode === "affirmative") {
+
+        affirmativeTab.classList.add("active");
+
+        questions =
+            shuffle(affirmativeQuestions);
+
+    }
+
+    else if (mode === "negative") {
+
+        negativeTab.classList.add("active");
+
+        questions =
+            shuffle(negativeQuestions);
+
+    }
+
+    else if (mode === "interrogative") {
+
+        interrogativeTab.classList.add("active");
+
+        questions =
+            shuffle(interrogativeQuestions);
+
+    }
+
+    else {
+
+        mixedTab.classList.add("active");
+
+        questions =
+            shuffle([
+
+                ...affirmativeQuestions,
+
+                ...negativeQuestions,
+
+                ...interrogativeQuestions
+
+            ]);
+
+    }
+
+
+    loadQuestion();
+
+}
+
+
+/* =====================================================
+   DETECT TYPE
+===================================================== */
+
+function getSentenceType(answer) {
+
+    const first =
+        answer.split(" ")[0];
+
+
+    if (
+        first === "Is" ||
+        first === "Are" ||
+        first === "Am"
+    ) {
+
+        return "interrogative";
+
+    }
+
+
+    if (
+        answer.includes(" not ")
+    ) {
+
+        return "negative";
+
+    }
+
+
+    return "affirmative";
+
+}
+
+
+/* =====================================================
+   LOAD QUESTION
+===================================================== */
+
+function loadQuestion() {
+
+    locked = false;
+
+    selectedWords = [];
+
+    wordsBox.innerHTML = "";
+
+    sentenceBox.innerHTML = "";
+
+
+    const answer =
+        questions[currentIndex];
+
+
+    const type =
+        getSentenceType(answer);
+
+
+    if (type === "affirmative") {
+
+        modeBox.innerText =
+            "AFFIRMATIVE";
+
+        instructionBox.innerText =
+            "Build the AFFIRMATIVE sentence.";
+
+    }
+
+    else if (type === "negative") {
+
+        modeBox.innerText =
+            "NEGATIVE";
+
+        instructionBox.innerText =
+            "Build the NEGATIVE sentence.";
+
+    }
+
+    else {
+
+        modeBox.innerText =
+            "INTERROGATIVE";
+
+        instructionBox.innerText =
+            "Build the INTERROGATIVE sentence.";
+
+    }
+
+
+    questionBox.innerText =
+        currentIndex + 1;
+
+
+    const originalWords =
+        answer.split(" ");
+
+
+    let shuffledWords;
+
+
+    do {
+
+        shuffledWords =
+            shuffle(originalWords);
+
+    }
+
+    while (
+        shuffledWords.join(" ") ===
+        originalWords.join(" ")
+    );
+
+
+    shuffledWords.forEach(
+        (word) => {
+
+            const button =
+                document.createElement("button");
+
+
+            button.type = "button";
+
+            button.className = "word";
+
+            button.innerText = word;
+
+            button.dataset.word = word;
+
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    chooseWord(
+                        button,
+                        word
+                    );
+
+                }
+            );
+
+
+            wordsBox.appendChild(button);
+
+        }
+    );
+
+
+    showPlaceholder();
+
+}
+
+
+/* =====================================================
+   CHOOSE WORD
+===================================================== */
+
+function chooseWord(
+    button,
+    word
+) {
+
+    if (locked) {
+        return;
+    }
+
+
+    if (
+        button.classList.contains("selected")
+    ) {
+
+        return;
+
+    }
+
+
+    button.classList.add("selected");
+
+
+    selectedWords.push({
+
+        text: word,
+
+        element: button
+
+    });
+
+
+    renderSentence();
+
+}
+
+
+/* =====================================================
+   RENDER SENTENCE
+===================================================== */
+
+function renderSentence() {
+
+    sentenceBox.innerHTML = "";
+
+
+    if (
+        selectedWords.length === 0
+    ) {
+
+        showPlaceholder();
+
+        return;
+
+    }
+
+
+    selectedWords.forEach(
+        (item, index) => {
+
+            const button =
+                document.createElement("button");
+
+
+            button.type = "button";
+
+            button.className =
+                "selected-word";
+
+            button.innerText =
+                item.text;
+
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    removeWord(index);
+
+                }
+            );
+
+
+            sentenceBox.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   PLACEHOLDER
+===================================================== */
+
+function showPlaceholder() {
+
+    sentenceBox.innerHTML = `
+
+        <div class="placeholder">
+
+            Click the words above
+            to build the sentence.
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   REMOVE WORD
+===================================================== */
+
+function removeWord(index) {
+
+    if (locked) {
+        return;
+    }
+
+
+    const item =
+        selectedWords[index];
+
+
+    item.element.classList.remove(
+        "selected"
+    );
+
+
+    selectedWords.splice(
+        index,
+        1
+    );
+
+
+    renderSentence();
+
+}
+
+
+/* =====================================================
+   CLEAR
+===================================================== */
+
+clearButton.addEventListener(
+    "click",
+    function () {
+
+        if (locked) {
+            return;
+        }
+
+
+        selectedWords.forEach(
+            item => {
+
+                item.element.classList.remove(
+                    "selected"
+                );
+
+            }
+        );
+
+
+        selectedWords = [];
+
+        renderSentence();
+
+    }
+);
+
+
+/* =====================================================
+   SKIP
+===================================================== */
+
+skipButton.addEventListener(
+    "click",
+    function () {
+
+        if (locked) {
+            return;
+        }
+
+
+        currentIndex++;
+
+
+        if (
+            currentIndex >=
+            questions.length
+        ) {
+
+            finishGame();
+
+            return;
+
+        }
+
+
+        loadQuestion();
+
+    }
+);
+
+
+/* =====================================================
+   CHECK ANSWER
+===================================================== */
+
+checkButton.addEventListener(
+    "click",
+    checkAnswer
+);
+
+
+function checkAnswer() {
+
+    if (locked) {
+        return;
+    }
+
+
+    if (
+        selectedWords.length === 0
+    ) {
+
+        showPopup(
+            "⚠️",
+            "Select the words first!"
+        );
+
+        setTimeout(
+            closePopup,
+            800
+        );
+
+        return;
+
+    }
+
+
+    const userWords =
+        selectedWords.map(
+            item => item.text
+        );
+
+
+    const correctWords =
+        questions[currentIndex]
+            .split(" ");
+
+
+    let correct = true;
+
+
+    if (
+        userWords.length !==
+        correctWords.length
+    ) {
+
+        correct = false;
+
+    }
+
+    else {
+
+        for (
+            let i = 0;
+            i < correctWords.length;
+            i++
+        ) {
+
+            if (
+                userWords[i].toLowerCase() !==
+                correctWords[i].toLowerCase()
+            ) {
+
+                correct = false;
+
+                break;
+
+            }
+
+        }
+
+    }
+
+
+    /* CORRECT */
+
+    if (correct) {
+
+        locked = true;
+
+        score++;
+
+        scoreBox.innerText =
+            score;
+
+
+        showPopup(
+            "🎉 CORRECT!",
+            "Great job!"
+        );
+
+
+        setTimeout(
+            function () {
+
+                closePopup();
+
+                nextQuestion();
+
+            },
+            900
+        );
+
+    }
+
+    /* WRONG */
+
+    else {
+
+        showPopup(
+            "❌ TRY AGAIN!",
+            "The word order is not correct."
+        );
+
+
+        setTimeout(
+            closePopup,
+            900
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   NEXT QUESTION
+===================================================== */
+
+function nextQuestion() {
+
+    currentIndex++;
+
+
+    if (
+        currentIndex >=
+        questions.length
+    ) {
+
+        finishGame();
+
+        return;
+
+    }
+
+
+    loadQuestion();
+
+}
+
+
+/* =====================================================
+   POPUP
+===================================================== */
+
+function showPopup(
+    title,
+    text
+) {
+
+    popupTitle.innerText =
+        title;
+
+    popupText.innerText =
+        text;
+
+    popup.classList.add(
+        "show"
+    );
+
+}
+
+
+function closePopup() {
+
+    popup.classList.remove(
+        "show"
+    );
+
+}
+
+
+/* =====================================================
+   FINISH GAME
+===================================================== */
+
+function finishGame() {
+
+    locked = true;
+
+    wordsBox.innerHTML = "";
+
+    sentenceBox.innerHTML = `
+
+        <div style="
+            font-size:24px;
+            font-weight:900;
+            padding:20px;
+        ">
+
+            🎯 GAME COMPLETE!
+
+        </div>
+
+    `;
+
+
+    modeBox.innerText =
+        "FINISHED";
+
+
+    instructionBox.innerText =
+        "Final score: " +
+        score +
+        " / " +
+        questions.length;
+
+
+    checkButton.style.display =
+        "none";
+
+
+    clearButton.innerText =
+        "PLAY AGAIN";
+
+
+    clearButton.onclick =
+        function () {
+
+            checkButton.style.display =
+                "inline-block";
+
+            clearButton.innerText =
+                "CLEAR";
+
+            startMode(
+                currentMode
+            );
+
+        };
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+startMode("affirmative");
+
+</script>
+
+</body>
+</html>
