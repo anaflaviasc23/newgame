@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>3 Clues - Present Continuous</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 22px;
+
+    font-family: Arial, sans-serif;
+
+    background: #f4f4f2;
+    color: #111;
+
+    display: flex;
+    justify-content: center;
+}
+
+.game {
+    width: min(1000px, 100%);
+}
+
+/* HEADER */
+
+header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+h1 {
+    margin: 0 0 6px;
+
+    font-size: clamp(30px, 6vw, 52px);
+}
+
+.subtitle {
+    margin: 0;
+    color: #555;
+}
+
+/* TOP BAR */
+
+.topbar {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    justify-content: center;
+
+    margin: 18px 0;
+}
+
+button {
+    border: 2px solid #111;
+
+    background: #fff;
+    color: #111;
+
+    border-radius: 10px;
+
+    padding: 12px 20px;
+
+    font-size: 15px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: .15s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #111;
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+button:disabled {
+    opacity: .45;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+.primary {
+    background: #111;
+    color: #fff;
+}
+
+/* COUNTER */
+
+.counter {
+    text-align: center;
+
+    font-weight: 800;
+
+    margin: 10px 0 20px;
+}
+
+.counter span {
+    background: #fff;
+
+    border: 2px solid #111;
+
+    border-radius: 999px;
+
+    padding: 7px 16px;
+}
+
+/* GAME AREA */
+
+.deck-area {
+    display: flex;
+    justify-content: center;
+
+    min-height: 520px;
+}
+
+/* CARD */
+
+.card {
+    width: min(650px, 94vw);
+
+    min-height: 490px;
+
+    background: #fff;
+
+    border: 3px solid #111;
+
+    border-radius: 18px;
+
+    box-shadow: 7px 7px 0 #111;
+
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    animation: appear .25s ease;
+}
+
+@keyframes appear {
+
+    from {
+        opacity: 0;
+        transform: scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+}
+
+/* CARD HEADER */
+
+.card-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-weight: 800;
+
+    font-size: 18px;
+
+    padding-bottom: 12px;
+
+    border-bottom: 3px solid #111;
+}
+
+.card-number {
+    font-size: 13px;
+    color: #666;
+}
+
+/* CLUES */
+
+.clues {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.clue {
+    border: 2px solid #111;
+
+    border-radius: 12px;
+
+    padding: 16px;
+
+    background: #f7f7f7;
+
+    font-size: 18px;
+
+    line-height: 1.4;
+}
+
+.clue-title {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    margin-bottom: 5px;
+
+    color: #555;
+}
+
+/* HIDDEN CLUES */
+
+.hidden {
+    display: none;
+}
+
+/* ACTION BUTTONS */
+
+.actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+/* ANSWER */
+
+.answer-box {
+    display: none;
+
+    margin-top: 18px;
+
+    padding: 18px;
+
+    border: 3px solid #111;
+
+    border-radius: 14px;
+
+    text-align: center;
+
+    background: #e8e8e8;
+}
+
+.answer-title {
+    font-size: 13px;
+
+    font-weight: 900;
+
+    color: #555;
+
+    margin-bottom: 10px;
+}
+
+.answer-input {
+    width: 100%;
+
+    max-width: 450px;
+
+    padding: 14px;
+
+    border: 2px solid #111;
+
+    border-radius: 10px;
+
+    background: #fff;
+
+    color: #111;
+
+    text-align: center;
+
+    font-size: clamp(25px, 6vw, 42px);
+
+    font-weight: 900;
+
+    outline: none;
+}
+
+/* NEXT */
+
+.next-area {
+    display: none;
+
+    justify-content: center;
+
+    margin-top: 15px;
+}
+
+.next-area button {
+    width: 100%;
+
+    max-width: 300px;
+}
+
+/* EMPTY */
+
+.empty {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    width: min(650px, 94vw);
+
+    min-height: 490px;
+
+    background: #fff;
+
+    border: 3px dashed #111;
+
+    border-radius: 18px;
+
+    padding: 30px;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 12px;
+    }
+
+    .card {
+        min-height: auto;
+
+        padding: 15px;
+
+        box-shadow: 5px 5px 0 #111;
+    }
+
+    .deck-area {
+        min-height: 430px;
+    }
+
+    .card-top {
+        font-size: 15px;
+    }
+
+    .clue {
+        font-size: 16px;
+        padding: 14px;
+    }
+
+    .topbar button {
+        flex: 1 1 120px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<main class="game">
+
+<header>
+
+<h1>3 CLUES</h1>
+
+<p class="subtitle">
+Guess the action in the Present Continuous!
+</p>
+
+</header>
+
+
+<!-- TOP BUTTONS -->
+
+<div class="topbar">
+
+<button
+    id="startBtn"
+    class="primary">
+
+    🎴 START CARD
+
+</button>
+
+
+<button
+    id="skipBtn"
+    disabled>
+
+    ⏭ SKIP
+
+</button>
+
+
+<button
+    id="showAnswerBtn"
+    disabled>
+
+    👁 SHOW ANSWER
+
+</button>
+
+
+<button id="shuffleBtn">
+
+    🔀 SHUFFLE
+
+</button>
+
+
+<button id="resetBtn">
+
+    ↺ RESET
+
+</button>
+
+</div>
+
+
+<!-- COUNTER -->
+
+<div class="counter">
+
+<span>
+
+Cards left:
+<b id="remaining">0</b>
+
+</span>
+
+</div>
+
+
+<!-- GAME -->
+
+<section
+    id="deckArea"
+    class="deck-area">
+
+<div class="empty">
+
+<div>
+
+<h2>🎭 Ready?</h2>
+
+<p>
+Click <b>START CARD</b> to begin.
+</p>
+
+<p>
+Guess the action using the clues.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   CARD DATA
+===================================================== */
+
+const originalCards = [
+
+{
+    answer: "RUNNING",
+    clues: [
+        "The person is moving very fast.",
+        "They are using their legs.",
+        "They could be in a race."
+    ]
+},
+
+{
+    answer: "WALKING",
+    clues: [
+        "The person is moving.",
+        "They are using their legs.",
+        "They are not running."
+    ]
+},
+
+{
+    answer: "JUMPING",
+    clues: [
+        "The person is moving upward.",
+        "Their feet are leaving the ground.",
+        "They can do this over something."
+    ]
+},
+
+{
+    answer: "SWIMMING",
+    clues: [
+        "The person is in water.",
+        "They are using their arms and legs.",
+        "They could be in a pool."
+    ]
+},
+
+{
+    answer: "CLIMBING",
+    clues: [
+        "The person is moving upward.",
+        "They are using their hands and feet.",
+        "They could be climbing a mountain."
+    ]
+},
+
+{
+    answer: "CRAWLING",
+    clues: [
+        "The person is very close to the ground.",
+        "They are using their hands and knees.",
+        "Babies often do this."
+    ]
+},
+
+{
+    answer: "SITTING",
+    clues: [
+        "The person is not standing.",
+        "They could be on a chair.",
+        "Their body is in a resting position."
+    ]
+},
+
+{
+    answer: "STANDING",
+    clues: [
+        "The person is on their feet.",
+        "They are not sitting.",
+        "They can do this in a classroom."
+    ]
+},
+
+{
+    answer: "SLEEPING",
+    clues: [
+        "The person is resting.",
+        "They are probably in bed.",
+        "They are not awake."
+    ]
+},
+
+{
+    answer: "EATING",
+    clues: [
+        "The person has food.",
+        "They are using their mouth.",
+        "They could be having lunch."
+    ]
+},
+
+{
+    answer: "DRINKING",
+    clues: [
+        "The person has a drink.",
+        "They are using their mouth.",
+        "They could be drinking water."
+    ]
+},
+
+{
+    answer: "COOKING",
+    clues: [
+        "The person is in the kitchen.",
+        "They are preparing food.",
+        "They could be using a stove."
+    ]
+},
+
+{
+    answer: "WASHING",
+    clues: [
+        "The person is using water.",
+        "They could be using soap.",
+        "They are making something clean."
+    ]
+},
+
+{
+    answer: "CLEANING",
+    clues: [
+        "The person is removing dirt.",
+        "They could be cleaning a room.",
+        "They are making something look better."
+    ]
+},
+
+{
+    answer: "BRUSHING",
+    clues: [
+        "The person is in the bathroom.",
+        "They are using a toothbrush.",
+        "They are taking care of their teeth."
+    ]
+},
+
+{
+    answer: "READING",
+    clues: [
+        "The person has a book.",
+        "They are using their eyes.",
+        "They could be in a library."
+    ]
+},
+
+{
+    answer: "WRITING",
+    clues: [
+        "The person has a pen or pencil.",
+        "They are putting words on paper.",
+        "Students often do this in class."
+    ]
+},
+
+{
+    answer: "SPEAKING",
+    clues: [
+        "The person is using their voice.",
+        "They could be using another language.",
+        "Someone might be listening to them."
+    ]
+},
+
+{
+    answer: "LISTENING",
+    clues: [
+        "The person is using their ears.",
+        "They could be listening to music.",
+        "They are paying attention to a sound."
+    ]
+},
+
+{
+    answer: "SINGING",
+    clues: [
+        "The person is using their voice.",
+        "There could be music.",
+        "They could be on a stage."
+    ]
+},
+
+{
+    answer: "DANCING",
+    clues: [
+        "The person is moving their body.",
+        "There could be music.",
+        "They could be at a party."
+    ]
+},
+
+{
+    answer: "PLAYING",
+    clues: [
+        "The person is having fun.",
+        "They could be using a ball.",
+        "Children often do this."
+    ]
+},
+
+{
+    answer: "WATCHING",
+    clues: [
+        "The person is using their eyes.",
+        "They could be looking at a movie.",
+        "They could be watching television."
+    ]
+},
+
+{
+    answer: "LOOKING",
+    clues: [
+        "The person is using their eyes.",
+        "They are paying attention to something.",
+        "They could be looking at a picture."
+    ]
+},
+
+{
+    answer: "OPENING",
+    clues: [
+        "The person is using their hands.",
+        "They could be opening a door.",
+        "The opposite action is closing."
+    ]
+},
+
+{
+    answer: "CLOSING",
+    clues: [
+        "The person is using their hands.",
+        "They could be closing a door.",
+        "The opposite action is opening."
+    ]
+},
+
+{
+    answer: "GIVING",
+    clues: [
+        "The person is holding something.",
+        "They are offering it to someone.",
+        "It could be a present."
+    ]
+},
+
+{
+    answer: "TAKING",
+    clues: [
+        "The person is getting something.",
+        "They could be picking up an object.",
+        "The opposite action can be giving."
+    ]
+},
+
+{
+    answer: "BUYING",
+    clues: [
+        "The person is in a store.",
+        "They are getting something.",
+        "They are probably paying for it."
+    ]
+},
+
+{
+    answer: "PAYING",
+    clues: [
+        "The person is buying something.",
+        "They could be using a card.",
+        "They are giving money."
+    ]
+},
+
+{
+    answer: "HELPING",
+    clues: [
+        "The person is assisting someone.",
+        "Someone needs support.",
+        "They are doing something useful for another person."
+    ]
+},
+
+{
+    answer: "CALLING",
+    clues: [
+        "The person has a phone.",
+        "They are communicating with someone.",
+        "They could be talking to a friend."
+    ]
+},
+
+{
+    answer: "TEXTING",
+    clues: [
+        "The person has a phone.",
+        "They are typing a message.",
+        "They are communicating digitally."
+    ]
+},
+
+{
+    answer: "WAITING",
+    clues: [
+        "The person is staying in one place.",
+        "Something has not happened yet.",
+        "They could be waiting for a bus."
+    ]
+},
+
+{
+    answer: "STARTING",
+    clues: [
+        "Something is beginning.",
+        "The person is beginning an action.",
+        "The opposite action is finishing."
+    ]
+},
+
+{
+    answer: "STOPPING",
+    clues: [
+        "The person is ending an action.",
+        "They are no longer continuing.",
+        "The opposite action is starting."
+    ]
+},
+
+{
+    answer: "DRIVING",
+    clues: [
+        "The person is inside a vehicle.",
+        "They are using a steering wheel.",
+        "They are traveling on a road."
+    ]
+},
+
+{
+    answer: "RIDING",
+    clues: [
+        "The person is on a bicycle.",
+        "They are moving using wheels.",
+        "They could be wearing a helmet."
+    ]
+},
+
+{
+    answer: "FLYING",
+    clues: [
+        "The person is traveling through the air.",
+        "They could be inside a plane.",
+        "They are not on the ground."
+    ]
+},
+
+{
+    answer: "TRAVELING",
+    clues: [
+        "The person is going to another place.",
+        "They could be on vacation.",
+        "They could be using a plane or car."
+    ]
+},
+
+{
+    answer: "CARRYING",
+    clues: [
+        "The person is holding something.",
+        "They are moving with it.",
+        "It could be a backpack or bag."
+    ]
+},
+
+{
+    answer: "THROWING",
+    clues: [
+        "The person is using their arm.",
+        "An object is moving through the air.",
+        "It could be a ball."
+    ]
+},
+
+{
+    answer: "CATCHING",
+    clues: [
+        "Something is coming toward the person.",
+        "They are using their hands.",
+        "It could be a ball."
+    ]
+},
+
+{
+    answer: "KICKING",
+    clues: [
+        "The person is using their foot.",
+        "They could be playing football.",
+        "They are hitting something with their foot."
+    ]
+},
+
+{
+    answer: "PUSHING",
+    clues: [
+        "The person is using their hands.",
+        "Something is moving away from them.",
+        "The opposite action is pulling."
+    ]
+},
+
+{
+    answer: "PULLING",
+    clues: [
+        "The person is using their hands.",
+        "Something is moving toward them.",
+        "The opposite action is pushing."
+    ]
+},
+
+{
+    answer: "BUILDING",
+    clues: [
+        "The person is creating something.",
+        "They could be using tools.",
+        "Construction workers often do this."
+    ]
+},
+
+{
+    answer: "CUTTING",
+    clues: [
+        "The person is using scissors or a knife.",
+        "They are separating something.",
+        "They could be cutting paper."
+    ]
+},
+
+{
+    answer: "DRAWING",
+    clues: [
+        "The person is creating a picture.",
+        "They could be using a pencil.",
+        "Artists often do this."
+    ]
+},
+
+{
+    answer: "PAINTING",
+    clues: [
+        "The person is using colors.",
+        "They could be using a brush.",
+        "They are creating art."
+    ]
+},
+
+{
+    answer: "SMILING",
+    clues: [
+        "The person's face is showing happiness.",
+        "Their mouth is changing shape.",
+        "People often do this for photographs."
+    ]
+},
+
+{
+    answer: "LAUGHING",
+    clues: [
+        "The person thinks something is funny.",
+        "They are making a sound.",
+        "They could be with friends."
+    ]
+},
+
+{
+    answer: "CRYING",
+    clues: [
+        "The person is showing a strong emotion.",
+        "There may be tears.",
+        "They could be feeling sad."
+    ]
+},
+
+{
+    answer: "KISSING",
+    clues: [
+        "The person is using their lips.",
+        "They could be showing affection.",
+        "They could be kissing someone's cheek."
+    ]
+},
+
+{
+    answer: "HUGGING",
+    clues: [
+        "The person is using their arms.",
+        "They are holding another person.",
+        "It can show affection."
+    ]
+},
+
+{
+    answer: "WAVING",
+    clues: [
+        "The person is using their hand.",
+        "They could be saying hello.",
+        "They could be saying goodbye."
+    ]
+},
+
+{
+    answer: "POINTING",
+    clues: [
+        "The person is using one finger.",
+        "They are showing something.",
+        "They could be pointing at a place."
+    ]
+},
+
+{
+    answer: "THINKING",
+    clues: [
+        "The person is using their mind.",
+        "They could be solving a problem.",
+        "They may be trying to find an answer."
+    ]
+},
+
+{
+    answer: "LEARNING",
+    clues: [
+        "The person is gaining knowledge.",
+        "They could be in a classroom.",
+        "Students do this every day."
+    ]
+},
+
+{
+    answer: "STUDYING",
+    clues: [
+        "The person is preparing for a test.",
+        "They could be using a book.",
+        "Students often do this at home."
+    ]
+},
+
+{
+    answer: "PRACTICING",
+    clues: [
+        "The person is repeating something.",
+        "They are trying to improve.",
+        "Musicians and athletes often do this."
+    ]
+},
+
+{
+    answer: "ANSWERING",
+    clues: [
+        "Someone asked a question.",
+        "The person is giving information.",
+        "Students can do this in class."
+    ]
+},
+
+{
+    answer: "ASKING",
+    clues: [
+        "The person has a question.",
+        "They want information.",
+        "They could be talking to a teacher."
+    ]
+},
+
+{
+    answer: "EXPLAINING",
+    clues: [
+        "The person is making something clear.",
+        "A teacher could be doing this.",
+        "They are giving information."
+    ]
+},
+
+{
+    answer: "SEARCHING",
+    clues: [
+        "The person is looking for something.",
+        "They could be using the internet.",
+        "They want to find information."
+    ]
+},
+
+{
+    answer: "FINDING",
+    clues: [
+        "The person discovers something.",
+        "They were probably looking for it.",
+        "The opposite action is losing."
+    ]
+},
+
+{
+    answer: "WINNING",
+    clues: [
+        "The person is succeeding in a competition.",
+        "They are doing better than their opponent.",
+        "The opposite action is losing."
+    ]
+},
+
+{
+    answer: "LOSING",
+    clues: [
+        "The person is not winning.",
+        "They are doing badly in a competition.",
+        "The opposite action is winning."
+    ]
+},
+
+{
+    answer: "COMPETING",
+    clues: [
+        "The person is taking part in a competition.",
+        "They are trying to win.",
+        "Sports players often do this."
+    ]
+},
+
+{
+    answer: "TYPING",
+    clues: [
+        "The person is using their fingers.",
+        "They are probably using a keyboard.",
+        "They are writing something digitally."
+    ]
+},
+
+{
+    answer: "SHOPPING",
+    clues: [
+        "The person is probably in a store.",
+        "They are looking at things to buy.",
+        "They may be carrying a shopping bag."
+    ]
+},
+
+{
+    answer: "WHISPERING",
+    clues: [
+        "The person is speaking very quietly.",
+        "They do not want everyone to hear.",
+        "They may be in a library."
+    ]
+},
+
+{
+    answer: "SHOUTING",
+    clues: [
+        "The person is using a very loud voice.",
+        "People far away can hear them.",
+        "They are not speaking quietly."
+    ]
+}
+
+];
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let deck = [];
+
+let currentCard = null;
+
+let cardsPlayed = 0;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const deckArea = document.getElementById("deckArea");
+
+const remaining = document.getElementById("remaining");
+
+const startBtn = document.getElementById("startBtn");
+
+const skipBtn = document.getElementById("skipBtn");
+
+const showAnswerBtn = document.getElementById("showAnswerBtn");
+
+const shuffleBtn = document.getElementById("shuffleBtn");
+
+const resetBtn = document.getElementById("resetBtn");
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffle(array) {
+
+    const result = [...array];
+
+    for (let i = result.length - 1; i > 0; i--) {
+
+        const j =
+            Math.floor(Math.random() * (i + 1));
+
+        const temp = result[i];
+
+        result[i] = result[j];
+
+        result[j] = temp;
+    }
+
+    return result;
+}
+
+
+/* =====================================================
+   COUNTER
+===================================================== */
+
+function updateCounter() {
+
+    remaining.textContent = deck.length;
+
+}
+
+
+/* =====================================================
+   READY
+===================================================== */
+
+function showReady() {
+
+    deckArea.innerHTML = `
+
+        <div class="empty">
+
+            <div>
+
+                <h2>🎭 Ready?</h2>
+
+                <p>
+                    Click <b>START CARD</b> to begin.
+                </p>
+
+                <p>
+                    ${deck.length} cards remaining.
+                </p>
+
+                <p>
+                    Guess the action in
+                    <b>Present Continuous</b>.
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+    startBtn.disabled = false;
+
+    skipBtn.disabled = true;
+
+    showAnswerBtn.disabled = true;
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+function startCard() {
+
+    if (deck.length === 0) {
+
+        showComplete();
+
+        return;
+    }
+
+    currentCard = deck.shift();
+
+    cardsPlayed++;
+
+    renderCard();
+
+    updateCounter();
+
+    startBtn.disabled = true;
+
+    skipBtn.disabled = false;
+
+    showAnswerBtn.disabled = false;
+}
+
+
+/* =====================================================
+   RENDER CARD
+===================================================== */
+
+function renderCard() {
+
+    deckArea.innerHTML = `
+
+        <article class="card">
+
+            <div class="card-top">
+
+                <span>
+                    🎯 PRESENT CONTINUOUS
+                </span>
+
+                <span class="card-number">
+                    CARD #${cardsPlayed}
+                </span>
+
+            </div>
+
+
+            <div class="clues">
+
+
+                <div class="clue">
+
+                    <span class="clue-title">
+                        CLUE 1
+                    </span>
+
+                    ${currentCard.clues[0]}
+
+                </div>
+
+
+                <div
+                    id="clue2"
+                    class="clue hidden">
+
+                    <span class="clue-title">
+                        CLUE 2
+                    </span>
+
+                    ${currentCard.clues[1]}
+
+                </div>
+
+
+                <div
+                    id="clue3"
+                    class="clue hidden">
+
+                    <span class="clue-title">
+                        CLUE 3
+                    </span>
+
+                    ${currentCard.clues[2]}
+
+                </div>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button id="clue2Btn">
+
+                    🔎 REVEAL CLUE 2
+
+                </button>
+
+
+                <button
+                    id="clue3Btn"
+                    disabled>
+
+                    🔎 REVEAL CLUE 3
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="answerBox"
+                class="answer-box">
+
+                <div class="answer-title">
+
+                    CORRECT ANSWER
+
+                </div>
+
+
+                <input
+                    id="answerInput"
+                    class="answer-input"
+                    type="text"
+                    readonly
+                    value="${currentCard.answer}"
+                >
+
+
+                <div class="answer-buttons">
+
+                    <button id="hideAnswerBtn">
+
+                        🙈 HIDE ANSWER
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="nextArea"
+                class="next-area">
+
+                <button
+                    id="nextBtn"
+                    class="primary">
+
+                    ➡️ NEXT CARD
+
+                </button>
+
+            </div>
+
+        </article>
+
+    `;
+
+
+    /* CLUE 2 */
+
+    document
+        .getElementById("clue2Btn")
+        .addEventListener(
+            "click",
+            revealClue2
+        );
+
+
+    /* CLUE 3 */
+
+    document
+        .getElementById("clue3Btn")
+        .addEventListener(
+            "click",
+            revealClue3
+        );
+
+
+    /* HIDE ANSWER */
+
+    document
+        .getElementById("hideAnswerBtn")
+        .addEventListener(
+            "click",
+            hideAnswer
+        );
+
+
+    /* NEXT */
+
+    document
+        .getElementById("nextBtn")
+        .addEventListener(
+            "click",
+            startCard
+        );
+
+}
+
+
+/* =====================================================
+   CLUE 2
+===================================================== */
+
+function revealClue2() {
+
+    const clue2 =
+        document.getElementById("clue2");
+
+    const clue2Btn =
+        document.getElementById("clue2Btn");
+
+    const clue3Btn =
+        document.getElementById("clue3Btn");
+
+
+    clue2.classList.remove("hidden");
+
+    clue2Btn.disabled = true;
+
+    clue3Btn.disabled = false;
+}
+
+
+/* =====================================================
+   CLUE 3
+===================================================== */
+
+function revealClue3() {
+
+    const clue3 =
+        document.getElementById("clue3");
+
+    const clue3Btn =
+        document.getElementById("clue3Btn");
+
+
+    clue3.classList.remove("hidden");
+
+    clue3Btn.disabled = true;
+}
+
+
+/* =====================================================
+   SHOW ANSWER
+===================================================== */
+
+function showAnswer() {
+
+    if (!currentCard) {
+        return;
+    }
+
+
+    const answerBox =
+        document.getElementById("answerBox");
+
+    const nextArea =
+        document.getElementById("nextArea");
+
+
+    if (!answerBox) {
+        return;
+    }
+
+
+    answerBox.style.display = "block";
+
+    nextArea.style.display = "flex";
+}
+
+
+/* =====================================================
+   HIDE ANSWER
+===================================================== */
+
+function hideAnswer() {
+
+    const answerBox =
+        document.getElementById("answerBox");
+
+
+    if (!answerBox) {
+        return;
+    }
+
+
+    answerBox.style.display = "none";
+}
+
+
+/* =====================================================
+   SKIP
+===================================================== */
+
+function skipCard() {
+
+    if (!currentCard) {
+        return;
+    }
+
+
+    currentCard = null;
+
+
+    if (deck.length === 0) {
+
+        updateCounter();
+
+        showComplete();
+
+        return;
+    }
+
+
+    updateCounter();
+
+    showReady();
+}
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffleDeck() {
+
+    deck = shuffle(deck);
+
+    updateCounter();
+
+
+    if (deck.length > 0) {
+
+        showReady();
+
+    } else {
+
+        showComplete();
+
+    }
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function resetGame() {
+
+    deck = shuffle(originalCards);
+
+    currentCard = null;
+
+    cardsPlayed = 0;
+
+    updateCounter();
+
+    showReady();
+}
+
+
+/* =====================================================
+   COMPLETE
+===================================================== */
+
+function showComplete() {
+
+    currentCard = null;
+
+    startBtn.disabled = true;
+
+    skipBtn.disabled = true;
+
+    showAnswerBtn.disabled = true;
+
+
+    deckArea.innerHTML = `
+
+        <div class="empty">
+
+            <div>
+
+                <h2>🎉 DECK COMPLETE!</h2>
+
+                <p>
+                    You played
+                    <b>${cardsPlayed}</b>
+                    cards.
+                </p>
+
+                <p>
+                    No card was repeated.
+                </p>
+
+
+                <button
+                    id="playAgainBtn"
+                    class="primary">
+
+                    ↺ PLAY AGAIN
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("playAgainBtn")
+        .addEventListener(
+            "click",
+            resetGame
+        );
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+startBtn.addEventListener(
+    "click",
+    startCard
+);
+
+
+skipBtn.addEventListener(
+    "click",
+    skipCard
+);
+
+
+showAnswerBtn.addEventListener(
+    "click",
+    showAnswer
+);
+
+
+shuffleBtn.addEventListener(
+    "click",
+    shuffleDeck
+);
+
+
+resetBtn.addEventListener(
+    "click",
+    resetGame
+);
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+resetGame();
+
+</script>
+
+</body>
+</html>
