@@ -1,124 +1,632 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>English Games</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #f5f5f5;
-            padding: 50px 20px;
-        }
-
-        h1 {
-            margin-bottom: 40px;
-        }
-
-        .games {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 400px;
-            margin: auto;
-        }
-
-        button {
-            width: 100%;
-            padding: 18px;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            background: #222;
-            color: white;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            transform: scale(1.03);
-            opacity: 0.9;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Games</title>
+<style>
+/* ==========================================
+   RESET
+========================================== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+/* ==========================================
+   BODY
+========================================== */
+body{
+    min-height:100vh;
+    background:#f4f4f2;
+    color:#111;
+    padding:30px 18px 50px;
+}
+/* ==========================================
+   MAIN
+========================================== */
+.container{
+    width:min(1100px, 100%);
+    margin:auto;
+}
+/* ==========================================
+   HEADER
+========================================== */
+header{
+    text-align:center;
+    margin-bottom:35px;
+}
+.logo{
+    display:inline-block;
+    background:#111;
+    color:white;
+    padding:8px 15px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:2px;
+    margin-bottom:14px;
+}
+h1{
+    font-size:clamp(38px, 7vw, 64px);
+    font-weight:900;
+    letter-spacing:-3px;
+    line-height:.95;
+    margin-bottom:12px;
+}
+.subtitle{
+    color:#666;
+    font-size:16px;
+    max-width:600px;
+    margin:auto;
+    line-height:1.5;
+}
+.game-count{
+    display:inline-block;
+    margin-top:18px;
+    padding:8px 14px;
+    background:white;
+    border:2px solid #111;
+    border-radius:10px;
+    font-size:13px;
+    font-weight:900;
+}
+/* ==========================================
+   GAMES GRID
+========================================== */
+.games{
+    display:grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap:18px;
+}
+/* ==========================================
+   GAME CARD
+========================================== */
+.game-card{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    min-height:125px;
+    padding:20px;
+    background:white;
+    border:3px solid #111;
+    border-radius:17px;
+    color:#111;
+    text-decoration:none;
+    box-shadow:6px 6px 0 #111;
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+    cursor:pointer;
+}
+.game-card:hover{
+    transform:
+        translate(-3px,-3px);
+    box-shadow:
+        10px 10px 0 #111;
+}
+.game-card:active{
+    transform:
+        translate(2px,2px);
+    box-shadow:
+        2px 2px 0 #111;
+}
+/* ==========================================
+   NUMBER
+========================================== */
+.game-number{
+    flex-shrink:0;
+    width:55px;
+    height:55px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f4f4f2;
+    border:2px solid #111;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:900;
+}
+/* ==========================================
+   ICON
+========================================== */
+.game-icon{
+    flex-shrink:0;
+    width:52px;
+    height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#111;
+    color:white;
+    border-radius:12px;
+    font-size:25px;
+}
+/* ==========================================
+   CONTENT
+========================================== */
+.game-info{
+    min-width:0;
+    flex:1;
+}
+.game-title{
+    font-size:19px;
+    font-weight:900;
+    margin-bottom:5px;
+}
+.game-description{
+    color:#777;
+    font-size:13px;
+    line-height:1.35;
+}
+/* ==========================================
+   ARROW
+========================================== */
+.arrow{
+    font-size:24px;
+    font-weight:900;
+    transition:.15s ease;
+}
+.game-card:hover .arrow{
+    transform:translateX(5px);
+}
+/* ==========================================
+   FOOTER
+========================================== */
+footer{
+    text-align:center;
+    margin-top:40px;
+    color:#888;
+    font-size:12px;
+    font-weight:bold;
+}
+/* ==========================================
+   MOBILE
+========================================== */
+@media(max-width:700px){
+    body{
+        padding:
+            25px
+            14px
+            40px;
+    }
+    .games{
+        grid-template-columns:1fr;
+        gap:14px;
+    }
+    .game-card{
+        min-height:105px;
+        padding:15px;
+        box-shadow:5px 5px 0 #111;
+    }
+    .game-card:hover{
+        transform:
+            translate(-2px,-2px);
+        box-shadow:
+            7px 7px 0 #111;
+    }
+    .game-number{
+        width:45px;
+        height:45px;
+        font-size:13px;
+    }
+    .game-icon{
+        width:45px;
+        height:45px;
+        font-size:21px;
+    }
+    .game-title{
+        font-size:17px;
+    }
+    .game-description{
+        font-size:12px;
+    }
+    .arrow{
+        font-size:20px;
+    }
+}
+/* ==========================================
+   VERY SMALL SCREENS
+========================================== */
+@media(max-width:420px){
+    .game-card{
+        gap:10px;
+    }
+    .game-number{
+        display:none;
+    }
+    .game-title{
+        font-size:16px;
+    }
+}
+</style>
 </head>
-
 <body>
-
-    <h1>🎮 ENGLISH GAMES</h1>
-
-    <div class="games">
-
-        <button onclick="window.location.href='jogodaforca.html'">
-            GAME 1 - Hangman
-        </button>
-
-        <button onclick="window.location.href='natandcountry.html'">
-            GAME 2 - Nationality
-        </button>
-
-        <button onclick="window.location.href='gameplural.html'">
-            GAME 3 - Plural
-        </button>
-
-        <button onclick="window.location.href='gamenumber.html'">
-            GAME 4 - Numbers
-        </button>
-
-        <button onclick="window.location.href='cardsmimica.html'">
-            GAME 5 - Pictionary
-        </button>
-
-        <button onclick="window.location.href='cardsgame.html'">
-            GAME 6 - Don't say it!
-        </button>
-
-      <button onclick="window.location.href='jogo_am_is_are_ingles.html'">
-            GAME 7 - What's the verb be?
-        </button>
-
-      <button onclick="window.location.href='tapplegame.html'">
-            GAME 8 - Tapple Game
-        </button>
-
-      <button onclick="window.location.href='jogo_questions.html'">
-            GAME 9 - Sentences Simple Present
-        </button>
-     
-    <button onclick="window.location.href='pcgame.html'">
-            GAME 10 - Sentences Present Continuos
-        </button>
-    
-    <button onclick="window.location.href='clockgame.html'">
-            GAME 11 - What's time is it?
-        </button>
-
-    <button onclick="window.location.href='gameprepo.html'">
-            GAME 12 - Prepositions game
-        </button>
-    
-    <button onclick="window.location.href='prepogame.html'">
-            GAME 13 - Prepositions game 2
-        </button>
-
-    <button onclick="window.location.href='thatgame.html'">
-            GAME 14 - Demonstratives
-        </button>
-
-    <button onclick="window.location.href='mimicagame2.html'">
-            GAME 15 - Pictionary 2.0
-        </button>
-
-    <button onclick="window.location.href='cluegame.html'">
-            GAME 16 - 3 Clues
-        </button>
-
-
-
-    </div>
-
+<div class="container">
+    <!-- ==================================
+         HEADER
+    ================================== -->
+    <header>
+        <div class="logo">
+            ENGLISH CLASS
+        </div>
+        <h1>
+            🎮 ENGLISH GAMES
+        </h1>
+        <p class="subtitle">
+            Learn English through interactive
+            games, challenges and classroom activities.
+        </p>
+        <div class="game-count">
+            🎯 16 GAMES AVAILABLE
+        </div>
+    </header>
+    <!-- ==================================
+         GAMES
+    ================================== -->
+    <main class="games">
+        <!-- GAME 1 -->
+        <a
+            class="game-card"
+            href="jogodaforca.html">
+            <div class="game-number">
+                01
+            </div>
+            <div class="game-icon">
+                💀
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Hangman
+                </div>
+                <div class="game-description">
+                    Guess the hidden English word.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 2 -->
+        <a
+            class="game-card"
+            href="natandcountry.html">
+            <div class="game-number">
+                02
+            </div>
+            <div class="game-icon">
+                🌎
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Nationality
+                </div>
+                <div class="game-description">
+                    Match countries with nationalities.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 3 -->
+        <a
+            class="game-card"
+            href="gameplural.html">
+            <div class="game-number">
+                03
+            </div>
+            <div class="game-icon">
+                🔤
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Plural
+                </div>
+                <div class="game-description">
+                    Practice singular and plural nouns.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 4 -->
+        <a
+            class="game-card"
+            href="gamenumber.html">
+            <div class="game-number">
+                04
+            </div>
+            <div class="game-icon">
+                🔢
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Numbers
+                </div>
+                <div class="game-description">
+                    Practice numbers in English.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 5 -->
+        <a
+            class="game-card"
+            href="cardsmimica.html">
+            <div class="game-number">
+                05
+            </div>
+            <div class="game-icon">
+                🎨
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Pictionary
+                </div>
+                <div class="game-description">
+                    Draw and guess English vocabulary.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 6 -->
+        <a
+            class="game-card"
+            href="cardsgame.html">
+            <div class="game-number">
+                06
+            </div>
+            <div class="game-icon">
+                🤫
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Don't Say It!
+                </div>
+                <div class="game-description">
+                    Describe the word without saying it.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 7 -->
+        <a
+            class="game-card"
+            href="jogo_am_is_are_ingles.html">
+            <div class="game-number">
+                07
+            </div>
+            <div class="game-icon">
+                ✏️
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    What's the Verb Be?
+                </div>
+                <div class="game-description">
+                    Practice AM, IS and ARE.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 8 -->
+        <a
+            class="game-card"
+            href="tapplegame.html">
+            <div class="game-number">
+                08
+            </div>
+            <div class="game-icon">
+                ⏱️
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Tapple Game
+                </div>
+                <div class="game-description">
+                    Think fast and find words.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 9 -->
+        <a
+            class="game-card"
+            href="jogo_questions.html">
+            <div class="game-number">
+                09
+            </div>
+            <div class="game-icon">
+                ❓
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Simple Present
+                </div>
+                <div class="game-description">
+                    Build and complete sentences.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 10 -->
+        <a
+            class="game-card"
+            href="pcgame.html">
+            <div class="game-number">
+                10
+            </div>
+            <div class="game-icon">
+                🏃
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Present Continuous
+                </div>
+                <div class="game-description">
+                    Practice actions happening now.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 11 -->
+        <a
+            class="game-card"
+            href="clockgame.html">
+            <div class="game-number">
+                11
+            </div>
+            <div class="game-icon">
+                🕐
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    What's the Time?
+                </div>
+                <div class="game-description">
+                    Read and tell the time in English.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 12 -->
+        <a
+            class="game-card"
+            href="gameprepo.html">
+            <div class="game-number">
+                12
+            </div>
+            <div class="game-icon">
+                📍
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Prepositions
+                </div>
+                <div class="game-description">
+                    Practice prepositions of place.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 13 -->
+        <a
+            class="game-card"
+            href="prepogame.html">
+            <div class="game-number">
+                13
+            </div>
+            <div class="game-icon">
+                🧩
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Prepositions 2
+                </div>
+                <div class="game-description">
+                    Another challenge with prepositions.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 14 -->
+        <a
+            class="game-card"
+            href="thatgame.html">
+            <div class="game-number">
+                14
+            </div>
+            <div class="game-icon">
+                👉
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Demonstratives
+                </div>
+                <div class="game-description">
+                    This, that, these and those.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 15 -->
+        <a
+            class="game-card"
+            href="mimicagame2.html">
+            <div class="game-number">
+                15
+            </div>
+            <div class="game-icon">
+                🎭
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    Pictionary 2.0
+                </div>
+                <div class="game-description">
+                    A new version of the drawing challenge.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+        <!-- GAME 16 -->
+        <a
+            class="game-card"
+            href="cluegame.html">
+            <div class="game-number">
+                16
+            </div>
+            <div class="game-icon">
+                💡
+            </div>
+            <div class="game-info">
+                <div class="game-title">
+                    3 Clues
+                </div>
+                <div class="game-description">
+                    Discover the answer using three clues.
+                </div>
+            </div>
+            <div class="arrow">
+                →
+            </div>
+        </a>
+    </main>
+    <!-- ==================================
+         FOOTER
+    ================================== -->
+    <footer>
+        ENGLISH CLASS • LEARN • PLAY • SPEAK
+    </footer>
+</div>
 </body>
 </html>
