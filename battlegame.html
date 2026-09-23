@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Present Continuous Battleship</title>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f4f2;
+    color: #111;
+}
+
+/* =====================================================
+   GAME
+===================================================== */
+
+.game {
+    width: min(850px, 96%);
+    margin: 0 auto;
+    padding: 25px 0 40px;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(30px, 6vw, 52px);
+    font-weight: 900;
+}
+
+header p {
+    margin: 8px 0 0;
+    font-size: 16px;
+}
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+
+.topbar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: 2px solid #000;
+    background: #fff;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+/* =====================================================
+   INFO
+===================================================== */
+
+.info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.info-box {
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+}
+
+.info-box span {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.info-box strong {
+    font-size: 18px;
+}
+
+/* =====================================================
+   INSTRUCTIONS
+===================================================== */
+
+.instructions {
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 18px;
+}
+
+.instructions h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+.instructions p {
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+/* =====================================================
+   SETUP
+===================================================== */
+
+.setup {
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.setup h2 {
+    margin: 0 0 8px;
+}
+
+.setup p {
+    margin: 6px 0;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.primary {
+    background: #111;
+    color: #fff;
+}
+
+.pink {
+    background: #e91e63;
+    color: #fff;
+}
+
+.blue {
+    background: #2196f3;
+    color: #fff;
+}
+
+.green {
+    background: #2e7d32;
+    color: #fff;
+}
+
+/* =====================================================
+   BOARD WRAPPER
+===================================================== */
+
+.board-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 15px;
+    padding-bottom: 5px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: 105px repeat(5, minmax(100px, 1fr));
+    min-width: 605px;
+    border: 2px solid #000;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+}
+
+/* =====================================================
+   BOARD HEADER
+===================================================== */
+
+.board-header {
+    background: #111;
+    color: #fff;
+    min-height: 58px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 900;
+    border-right: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+}
+
+/* =====================================================
+   SUBJECT CELL
+===================================================== */
+
+.subject-cell {
+    min-height: 64px;
+    background: #e9e3dc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 900;
+    border-right: 2px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+/* =====================================================
+   PLAY CELL
+===================================================== */
+
+.play-cell {
+    min-height: 64px;
+    background: #fff;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 6px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.15s;
+}
+
+.play-cell:hover {
+    background: #f2f2f2;
+}
+
+/* =====================================================
+   SHIPS
+===================================================== */
+
+.play-cell.ship {
+    background: #333;
+    color: #333;
+}
+
+/* =====================================================
+   HIT
+===================================================== */
+
+.play-cell.hit {
+    background: #ffb3c7;
+    color: #111;
+    cursor: default;
+    font-size: 22px;
+}
+
+/* =====================================================
+   MISS
+===================================================== */
+
+.play-cell.miss {
+    background: #d9ecff;
+    color: #111;
+    cursor: default;
+    font-size: 22px;
+}
+
+/* =====================================================
+   MOVE BOX
+===================================================== */
+
+.move-box {
+    margin-top: 18px;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+}
+
+.move-box h2 {
+    margin: 0 0 10px;
+}
+
+.selected {
+    font-size: 24px;
+    font-weight: 900;
+    margin: 10px 0;
+}
+
+/* =====================================================
+   ACTION
+===================================================== */
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+/* =====================================================
+   QUESTION
+===================================================== */
+
+.question-box {
+    margin-top: 15px;
+    background: #fdf4f7;
+    border: 2px solid #e91e63;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.question-box p {
+    margin: 5px 0;
+}
+
+.question-prompt {
+    font-size: 20px;
+    font-weight: 900;
+}
+
+/* =====================================================
+   GRAMMAR ANSWER
+===================================================== */
+
+.grammar-answer {
+    margin-top: 12px;
+    padding: 12px;
+    background: #fff;
+    border: 2px dashed #000;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =====================================================
+   RESULT
+===================================================== */
+
+.result {
+    margin-top: 18px;
+    padding: 20px;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.result h2 {
+    margin: 0 0 10px;
+    font-size: 28px;
+}
+
+/* =====================================================
+   PASS DEVICE OVERLAY
+===================================================== */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 20px;
+}
+
+.overlay-card {
+    width: min(450px, 100%);
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+}
+
+.overlay-card h2 {
+    margin: 0 0 12px;
+    font-size: 30px;
+}
+
+.overlay-card p {
+    line-height: 1.5;
+}
+
+/* =====================================================
+   START SCREEN
+===================================================== */
+
+.start-screen {
+    position: fixed;
+    inset: 0;
+    background: #f4f4f2;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.start-card {
+    width: min(500px, 100%);
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 20px;
+    padding: 35px;
+    text-align: center;
+}
+
+.start-card h1 {
+    font-size: clamp(32px, 7vw, 55px);
+    margin: 0 0 10px;
+}
+
+.start-card p {
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .game {
+        width: 96%;
+        padding-top: 18px;
+    }
+
+    .info {
+        grid-template-columns: 1fr;
+    }
+
+    .instructions {
+        font-size: 14px;
+    }
+
+    .board-wrapper {
+        overflow-x: auto;
+    }
+
+    .board {
+        min-width: 605px;
+    }
+
+    .selected {
+        font-size: 20px;
+    }
+
+    .question-prompt {
+        font-size: 18px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="start-screen" id="startScreen">
+
+    <div class="start-card">
+
+        <h1>🚢 Battleship</h1>
+
+        <p>
+            <strong>Present Continuous</strong><br>
+            Build the correct questions and find your opponent's ships!
+        </p>
+
+        <button
+            class="primary"
+            onclick="startGame()">
+            START GAME
+        </button>
+
+    </div>
+
+</div>
+
+
+<div
+    class="overlay hidden"
+    id="passOverlay">
+
+    <div class="overlay-card">
+
+        <h2>📱 Pass the Device</h2>
+
+        <p id="passMessage">
+            Pass the device to the next player.
+        </p>
+
+        <button
+            class="primary"
+            onclick="continueAfterPass()">
+            I'M READY
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="game">
+
+    <header>
+
+        <h1>🚢 Present Continuous Battleship</h1>
+
+        <p>
+            Find all 5 hidden ships!
+        </p>
+
+    </header>
+
+
+    <div class="topbar">
+
+        <button
+            class="primary"
+            onclick="resetGame()">
+            RESET
+        </button>
+
+        <button
+            class="pink"
+            id="showAnswerButton"
+            onclick="showAnswer()">
+            SHOW ANSWER
+        </button>
+
+    </div>
+
+
+    <div class="info">
+
+        <div class="info-box">
+
+            <span>PHASE</span>
+
+            <strong id="phaseText">
+                Setup
+            </strong>
+
+        </div>
+
+        <div class="info-box">
+
+            <span>CURRENT PLAYER</span>
+
+            <strong id="playerText">
+                Player 1
+            </strong>
+
+        </div>
+
+        <div class="info-box">
+
+            <span>SHIPS FOUND</span>
+
+            <strong id="scoreText">
+                0 / 5
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="instructions">
+
+        <h2>How to Play</h2>
+
+        <p>
+            <strong>Setup:</strong>
+            Each player secretly chooses 5 cells for their ships.
+        </p>
+
+        <p>
+            <strong>Battle:</strong>
+            Choose a cell and create the complete Present Continuous question.
+        </p>
+
+        <p>
+            Example:
+            <strong>I + WATCH TV</strong>
+            →
+            <strong>Am I watching TV?</strong>
+        </p>
+
+        <p>
+            Use <strong>SHOW ANSWER</strong> to check the sentence.
+        </p>
+
+    </div>
+
+
+    <div
+        class="setup"
+        id="setupBox">
+
+        <h2 id="setupTitle">
+            Player 1 — Place Your Ships
+        </h2>
+
+        <p id="setupText">
+            Choose exactly 5 cells.
+        </p>
+
+        <p>
+            Ships placed:
+            <strong>
+                <span id="placementCount">0</span> / 5
+            </strong>
+        </p>
+
+        <button
+            class="primary"
+            onclick="finishPlacement()">
+            FINISH PLACEMENT
+        </button>
+
+    </div>
+
+
+    <div class="board-wrapper">
+
+        <div
+            class="board"
+            id="board">
+        </div>
+
+    </div>
+
+
+    <div
+        class="move-box hidden"
+        id="moveBox">
+
+        <h2>
+            Your Turn
+        </h2>
+
+        <div
+            class="selected"
+            id="selectedText">
+        </div>
+
+        <div class="question-box">
+
+            <p>
+                Build the complete question:
+            </p>
+
+            <div
+                class="question-prompt"
+                id="questionPrompt">
+            </div>
+
+            <div class="action-buttons">
+
+                <button
+                    class="pink"
+                    onclick="showAnswer()">
+                    SHOW ANSWER
+                </button>
+
+                <button
+                    class="green"
+                    onclick="registerHit()">
+                    HIT 🚢
+                </button>
+
+                <button
+                    class="blue"
+                    onclick="registerMiss()">
+                    MISS 🌊
+                </button>
+
+            </div>
+
+            <div
+                class="grammar-answer hidden"
+                id="grammarAnswer">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="result hidden"
+        id="resultBox">
+
+        <h2 id="resultTitle">
+            🎉 Game Over!
+        </h2>
+
+        <p id="resultMessage"></p>
+
+        <button
+            class="primary"
+            onclick="resetGame()">
+            PLAY AGAIN
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const subjects = [
+    "I",
+    "You",
+    "He",
+    "She",
+    "It",
+    "We",
+    "They"
+];
+
+const actions = [
+    {
+        base: "Watch TV",
+        ing: "watching TV"
+    },
+    {
+        base: "Play soccer",
+        ing: "playing soccer"
+    },
+    {
+        base: "Read a book",
+        ing: "reading a book"
+    },
+    {
+        base: "Eat pizza",
+        ing: "eating pizza"
+    },
+    {
+        base: "Listen to music",
+        ing: "listening to music"
+    }
+];
+
+let currentPlayer = 1;
+let phase = "setup";
+let placementCount = 0;
+let selectedCell = null;
+let selectedSubject = null;
+let selectedAction = null;
+
+let ships = {
+    1: [],
+    2: []
+};
+
+let hits = {
+    1: 0,
+    2: 0
+};
+
+let attacks = {
+    1: [],
+    2: []
+};
+
+
+function startGame() {
+
+    document
+        .getElementById("startScreen")
+        .classList.add("hidden");
+
+    resetGame();
+
+}
+
+
+function resetGame() {
+
+    currentPlayer = 1;
+    phase = "setup";
+    placementCount = 0;
+
+    selectedCell = null;
+    selectedSubject = null;
+    selectedAction = null;
+
+    ships = {
+        1: [],
+        2: []
+    };
+
+    hits = {
+        1: 0,
+        2: 0
+    };
+
+    attacks = {
+        1: [],
+        2: []
+    };
+
+    document
+        .getElementById("setupBox")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("moveBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("resultBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("grammarAnswer")
+        .classList.add("hidden");
+
+    updateInfo();
+    updateSetup();
+    createBoard();
+
+}
+
+
+function updateInfo() {
+
+    document
+        .getElementById("phaseText")
+        .textContent =
+        phase === "setup"
+            ? "Setup"
+            : "Battle";
+
+    document
+        .getElementById("playerText")
+        .textContent =
+        "Player " + currentPlayer;
+
+    document
+        .getElementById("scoreText")
+        .textContent =
+        hits[currentPlayer] + " / 5";
+
+}
+
+
+function updateSetup() {
+
+    document
+        .getElementById("setupTitle")
+        .textContent =
+        "Player " +
+        currentPlayer +
+        " — Place Your Ships";
+
+    document
+        .getElementById("placementCount")
+        .textContent =
+        placementCount;
+
+}
+
+
+function createBoard() {
+
+    const board =
+        document.getElementById("board");
+
+    board.innerHTML = "";
+
+
+    const emptyHeader =
+        document.createElement("div");
+
+    emptyHeader.className =
+        "board-header";
+
+    emptyHeader.textContent =
+        "SUBJECT";
+
+    board.appendChild(emptyHeader);
+
+
+    actions.forEach(function(action) {
+
+        const header =
+            document.createElement("div");
+
+        header.className =
+            "board-header";
+
+        header.textContent =
+            action.base.toUpperCase();
+
+        board.appendChild(header);
+
+    });
+
+
+    subjects.forEach(function(subject, rowIndex) {
+
+        const subjectCell =
+            document.createElement("div");
+
+        subjectCell.className =
+            "subject-cell";
+
+        subjectCell.textContent =
+            subject;
+
+        board.appendChild(subjectCell);
+
+
+        actions.forEach(function(action, colIndex) {
+
+            const cell =
+                document.createElement("div");
+
+            cell.className =
+                "play-cell";
+
+            const key =
+                rowIndex + "-" + colIndex;
+
+            cell.dataset.key = key;
+            cell.dataset.subject = subject;
+            cell.dataset.action = colIndex;
+
+
+            if (phase === "setup") {
+
+                if (
+                    ships[currentPlayer].includes(key)
+                ) {
+
+                    cell.classList.add("ship");
+
+                }
+
+                cell.addEventListener(
+                    "click",
+                    function() {
+
+                        selectShipCell(
+                            key,
+                            cell
+                        );
+
+                    }
+                );
+
+            } else {
+
+                cell.addEventListener(
+                    "click",
+                    function() {
+
+                        handleCellClick(
+                            key,
+                            subject,
+                            colIndex,
+                            cell
+                        );
+
+                    }
+                );
+
+
+                if (
+                    attacks[currentPlayer].includes(key)
+                ) {
+
+                    const opponent =
+                        currentPlayer === 1
+                            ? 2
+                            : 1;
+
+                    if (
+                        ships[opponent].includes(key)
+                    ) {
+
+                        cell.classList.add("hit");
+                        cell.textContent = "🚢";
+
+                    } else {
+
+                        cell.classList.add("miss");
+                        cell.textContent = "🌊";
+
+                    }
+
+                }
+
+            }
+
+            board.appendChild(cell);
+
+        });
+
+    });
+
+}
+
+
+function selectShipCell(
+    key,
+    cell
+) {
+
+    if (
+        ships[currentPlayer].includes(key)
+    ) {
+
+        ships[currentPlayer] =
+            ships[currentPlayer].filter(
+                function(item) {
+                    return item !== key;
+                }
+            );
+
+        cell.classList.remove("ship");
+
+        placementCount--;
+
+    } else {
+
+        if (placementCount >= 5) {
+            return;
+        }
+
+        ships[currentPlayer].push(key);
+
+        cell.classList.add("ship");
+
+        placementCount++;
+
+    }
+
+    updateSetup();
+
+}
+
+
+function finishPlacement() {
+
+    if (placementCount !== 5) {
+
+        alert(
+            "You must place exactly 5 ships."
+        );
+
+        return;
+
+    }
+
+
+    if (currentPlayer === 1) {
+
+        hideShips();
+
+        currentPlayer = 2;
+        placementCount = 0;
+
+        updateInfo();
+        updateSetup();
+        createBoard();
+
+        showPassOverlay(
+            "Player 1 has finished placing the ships.\n\nPass the device to Player 2."
+        );
+
+        return;
+
+    }
+
+
+    hideShips();
+
+    phase = "battle";
+    currentPlayer = 1;
+    placementCount = 0;
+
+    updateInfo();
+
+    document
+        .getElementById("setupBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("moveBox")
+        .classList.remove("hidden");
+
+    createBoard();
+
+    showPassOverlay(
+        "Both players have placed their ships.\n\nPlayer 1 starts the battle!"
+    );
+
+}
+
+
+function hideShips() {
+
+    document
+        .querySelectorAll(".play-cell.ship")
+        .forEach(function(cell) {
+
+            cell.classList.remove("ship");
+
+        });
+
+}
+
+
+function showPassOverlay(message) {
+
+    document
+        .getElementById("passMessage")
+        .textContent = message;
+
+    document
+        .getElementById("passOverlay")
+        .classList.remove("hidden");
+
+}
+
+
+function continueAfterPass() {
+
+    document
+        .getElementById("passOverlay")
+        .classList.add("hidden");
+
+}
+
+
+function handleCellClick(
+    key,
+    subject,
+    actionIndex,
+    cell
+) {
+
+    if (
+        attacks[currentPlayer].includes(key)
+    ) {
+
+        return;
+
+    }
+
+    selectedCell = key;
+    selectedSubject = subject;
+    selectedAction = actions[actionIndex];
+
+    document
+        .getElementById("selectedText")
+        .textContent =
+        subject.toUpperCase() +
+        " + " +
+        selectedAction.base.toUpperCase();
+
+    document
+        .getElementById("questionPrompt")
+        .textContent =
+        subject.toUpperCase() +
+        " + " +
+        selectedAction.base.toUpperCase();
+
+    document
+        .getElementById("grammarAnswer")
+        .classList.add("hidden");
+
+    document
+        .querySelectorAll(".play-cell")
+        .forEach(function(item) {
+
+            item.style.outline = "";
+
+        });
+
+    cell.style.outline =
+        "4px solid #e91e63";
+
+}
+
+
+function getAuxiliary(subject) {
+
+    if (subject === "I") {
+        return "Am";
+    }
+
+    if (
+        subject === "He" ||
+        subject === "She" ||
+        subject === "It"
+    ) {
+        return "Is";
+    }
+
+    return "Are";
+
+}
+
+
+function createSentence(
+    subject,
+    action
+) {
+
+    const auxiliary =
+        getAuxiliary(subject);
+
+    return (
+        auxiliary +
+        " " +
+        subject.toLowerCase() +
+        " " +
+        action.ing +
+        "?"
+    );
+
+}
+
+
+function showAnswer() {
+
+    if (
+        !selectedSubject ||
+        !selectedAction
+    ) {
+
+        return;
+
+    }
+
+    const answer =
+        createSentence(
+            selectedSubject,
+            selectedAction
+        );
+
+    const answerBox =
+        document.getElementById(
+            "grammarAnswer"
+        );
+
+    answerBox.textContent = answer;
+
+    answerBox.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+function registerHit() {
+
+    if (!selectedCell) {
+
+        alert("Choose a cell first.");
+
+        return;
+
+    }
+
+    if (
+        attacks[currentPlayer].includes(
+            selectedCell
+        )
+    ) {
+
+        return;
+
+    }
+
+    const opponent =
+        currentPlayer === 1
+            ? 2
+            : 1;
+
+    attacks[currentPlayer].push(
+        selectedCell
+    );
+
+    const hit =
+        ships[opponent].includes(
+            selectedCell
+        );
+
+    if (hit) {
+
+        hits[currentPlayer]++;
+
+        markSelectedCell("hit");
+
+        if (
+            hits[currentPlayer] >= 5
+        ) {
+
+            endGame(currentPlayer);
+
+            return;
+
+        }
+
+    } else {
+
+        markSelectedCell("miss");
+
+    }
+
+    nextTurn();
+
+}
+
+
+function registerMiss() {
+
+    if (!selectedCell) {
+
+        alert("Choose a cell first.");
+
+        return;
+
+    }
+
+    if (
+        attacks[currentPlayer].includes(
+            selectedCell
+        )
+    ) {
+
+        return;
+
+    }
+
+    const opponent =
+        currentPlayer === 1
+            ? 2
+            : 1;
+
+    attacks[currentPlayer].push(
+        selectedCell
+    );
+
+    const actuallyHit =
+        ships[opponent].includes(
+            selectedCell
+        );
+
+    if (actuallyHit) {
+
+        hits[currentPlayer]++;
+
+        markSelectedCell("hit");
+
+        if (
+            hits[currentPlayer] >= 5
+        ) {
+
+            endGame(currentPlayer);
+
+            return;
+
+        }
+
+    } else {
+
+        markSelectedCell("miss");
+
+    }
+
+    nextTurn();
+
+}
+
+
+function markSelectedCell(type) {
+
+    const cell =
+        document.querySelector(
+            '.play-cell[data-key="' +
+            selectedCell +
+            '"]'
+        );
+
+    if (!cell) {
+        return;
+    }
+
+    cell.style.outline = "";
+
+    if (type === "hit") {
+
+        cell.classList.add("hit");
+        cell.textContent = "🚢";
+
+    } else {
+
+        cell.classList.add("miss");
+        cell.textContent = "🌊";
+
+    }
+
+    cell.style.pointerEvents = "none";
+
+}
+
+
+function nextTurn() {
+
+    selectedCell = null;
+    selectedSubject = null;
+    selectedAction = null;
+
+    currentPlayer =
+        currentPlayer === 1
+            ? 2
+            : 1;
+
+    updateInfo();
+    createBoard();
+
+    showPassOverlay(
+        "Pass the device to Player " +
+        currentPlayer +
+        "."
+    );
+
+}
+
+
+function endGame(winner) {
+
+    phase = "finished";
+
+    updateInfo();
+
+    document
+        .getElementById("moveBox")
+        .classList.add("hidden");
+
+    document
+        .getElementById("resultBox")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("resultTitle")
+        .textContent =
+        "🎉 Player " +
+        winner +
+        " Wins!";
+
+    document
+        .getElementById("resultMessage")
+        .textContent =
+        "Player " +
+        winner +
+        " found all 5 hidden ships!";
+
+    createBoard();
+
+}
+
+
+resetGame();
+
+</script>
+
+</body>
+
+</html>
