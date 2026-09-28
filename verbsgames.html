@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,initial-scale=1">
+
+<title>Past Simple - English Game</title>
+
+<style>
+
+*{
+    box-sizing:border-box
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    padding:22px;
+    font-family:Arial,sans-serif;
+    background:#f4f4f2;
+    color:#111;
+    display:flex;
+    justify-content:center
+}
+
+.game{
+    width:min(1000px,100%)
+}
+
+header{
+    text-align:center;
+    margin-bottom:18px
+}
+
+h1{
+    margin:0 0 6px;
+    font-size:clamp(30px,6vw,52px)
+}
+
+.subtitle{
+    margin:0;
+    color:#555
+}
+
+.topbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin:18px 0
+}
+
+button{
+    border:2px solid #111;
+    background:#fff;
+    color:#111;
+    border-radius:10px;
+    padding:12px 20px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.15s
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 4px 0 #111
+}
+
+button:active{
+    transform:translateY(1px);
+    box-shadow:none
+}
+
+.primary{
+    background:#111;
+    color:#fff
+}
+
+.counter{
+    text-align:center;
+    font-weight:800;
+    margin:10px 0 20px
+}
+
+.counter span{
+    background:#fff;
+    border:2px solid #111;
+    border-radius:999px;
+    padding:7px 16px
+}
+
+.deck-area{
+    display:flex;
+    justify-content:center;
+    min-height:520px
+}
+
+.card{
+    width:min(650px,94vw);
+    min-height:490px;
+    background:#fff;
+    border:3px solid #111;
+    border-radius:18px;
+    box-shadow:7px 7px 0 #111;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    animation:appear .25s ease
+}
+
+@keyframes appear{
+    from{
+        opacity:0;
+        transform:scale(.96) rotateY(-8deg)
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1) rotateY(0)
+    }
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-weight:800;
+    font-size:18px;
+    padding-bottom:12px;
+    border-bottom:3px solid #111
+}
+
+.card-number{
+    font-size:13px;
+    color:#666
+}
+
+.word{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:clamp(42px,9vw,78px);
+    font-weight:900;
+    letter-spacing:-2px;
+    text-transform:uppercase
+}
+
+.draw-note{
+    background:#e8e8e8;
+    border-radius:13px;
+    padding:16px;
+    text-align:center;
+    font-size:15px;
+    font-weight:700
+}
+
+.draw-note small{
+    display:block;
+    margin-top:6px;
+    color:#555;
+    font-weight:400
+}
+
+.empty{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    width:min(650px,94vw);
+    min-height:490px;
+    background:#fff;
+    border:3px dashed #111;
+    border-radius:18px;
+    padding:30px
+}
+
+.answer{
+    margin-top:12px;
+    font-size:clamp(25px,6vw,45px);
+    font-weight:900;
+    text-align:center;
+    text-transform:uppercase
+}
+
+.answer-label{
+    font-size:12px;
+    color:#666;
+    letter-spacing:1px;
+    font-weight:800
+}
+
+@media(max-width:600px){
+
+    body{
+        padding:12px
+    }
+
+    .card{
+        min-height:440px;
+        padding:15px;
+        box-shadow:5px 5px 0 #111
+    }
+
+    .deck-area{
+        min-height:445px
+    }
+
+    .word{
+        font-size:46px
+    }
+
+    .topbar button{
+        flex:1 1 120px
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<main class="game">
+
+<header>
+
+<h1>PAST SIMPLE</h1>
+
+<p class="subtitle">
+Say the Past Simple form of the verb!
+</p>
+
+</header>
+
+
+<div class="topbar">
+
+<button
+    class="primary"
+    id="drawBtn">
+
+    🎴 DRAW CARD
+
+</button>
+
+
+<button
+    id="skipBtn">
+
+    ⏭ SKIP CARD
+
+</button>
+
+
+<button
+    id="shuffleBtn">
+
+    🔀 SHUFFLE DECK
+
+</button>
+
+
+<button
+    id="answerBtn">
+
+    👀 SHOW ANSWER
+
+</button>
+
+
+<button
+    id="resetBtn">
+
+    ↺ RESET
+
+</button>
+
+</div>
+
+
+<div class="counter">
+
+<span>
+
+Cards left:
+<b id="remaining">220</b>
+
+</span>
+
+</div>
+
+
+<section
+    class="deck-area"
+    id="deckArea">
+
+<div class="empty">
+
+<div>
+
+<h2>⏱️ Ready?</h2>
+
+<p>
+Click <b>DRAW CARD</b> to reveal the verb.
+</p>
+
+<p>
+Say the correct <b>Past Simple</b> form!
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   VERBS
+===================================================== */
+
+const originalCards=[
+
+/* =========================
+   IRREGULAR VERBS
+========================= */
+
+{base:"BE",past:"WAS / WERE",type:"IRREGULAR"},
+{base:"BECOME",past:"BECAME",type:"IRREGULAR"},
+{base:"BEGIN",past:"BEGAN",type:"IRREGULAR"},
+{base:"BITE",past:"BIT",type:"IRREGULAR"},
+{base:"BLOW",past:"BLEW",type:"IRREGULAR"},
+{base:"BREAK",past:"BROKE",type:"IRREGULAR"},
+{base:"BRING",past:"BROUGHT",type:"IRREGULAR"},
+{base:"BUILD",past:"BUILT",type:"IRREGULAR"},
+{base:"BUY",past:"BOUGHT",type:"IRREGULAR"},
+{base:"CATCH",past:"CAUGHT",type:"IRREGULAR"},
+{base:"CHOOSE",past:"CHOSE",type:"IRREGULAR"},
+{base:"COME",past:"CAME",type:"IRREGULAR"},
+{base:"COST",past:"COST",type:"IRREGULAR"},
+{base:"CUT",past:"CUT",type:"IRREGULAR"},
+{base:"DO",past:"DID",type:"IRREGULAR"},
+{base:"DRAW",past:"DREW",type:"IRREGULAR"},
+{base:"DRINK",past:"DRANK",type:"IRREGULAR"},
+{base:"DRIVE",past:"DROVE",type:"IRREGULAR"},
+{base:"EAT",past:"ATE",type:"IRREGULAR"},
+{base:"FALL",past:"FELL",type:"IRREGULAR"},
+{base:"FEEL",past:"FELT",type:"IRREGULAR"},
+{base:"FIGHT",past:"FOUGHT",type:"IRREGULAR"},
+{base:"FIND",past:"FOUND",type:"IRREGULAR"},
+{base:"FLY",past:"FLEW",type:"IRREGULAR"},
+{base:"FORGET",past:"FORGOT",type:"IRREGULAR"},
+{base:"FORGIVE",past:"FORGAVE",type:"IRREGULAR"},
+{base:"FREEZE",past:"FROZE",type:"IRREGULAR"},
+{base:"GET",past:"GOT",type:"IRREGULAR"},
+{base:"GIVE",past:"GAVE",type:"IRREGULAR"},
+{base:"GO",past:"WENT",type:"IRREGULAR"},
+{base:"GROW",past:"GREW",type:"IRREGULAR"},
+{base:"HAVE",past:"HAD",type:"IRREGULAR"},
+{base:"HEAR",past:"HEARD",type:"IRREGULAR"},
+{base:"HIDE",past:"HID",type:"IRREGULAR"},
+{base:"HIT",past:"HIT",type:"IRREGULAR"},
+{base:"HOLD",past:"HELD",type:"IRREGULAR"},
+{base:"HURT",past:"HURT",type:"IRREGULAR"},
+{base:"KEEP",past:"KEPT",type:"IRREGULAR"},
+{base:"KNOW",past:"KNEW",type:"IRREGULAR"},
+{base:"LEAVE",past:"LEFT",type:"IRREGULAR"},
+{base:"LEND",past:"LENT",type:"IRREGULAR"},
+{base:"LET",past:"LET",type:"IRREGULAR"},
+{base:"LOSE",past:"LOST",type:"IRREGULAR"},
+{base:"MAKE",past:"MADE",type:"IRREGULAR"},
+{base:"MEAN",past:"MEANT",type:"IRREGULAR"},
+{base:"MEET",past:"MET",type:"IRREGULAR"},
+{base:"PAY",past:"PAID",type:"IRREGULAR"},
+{base:"PUT",past:"PUT",type:"IRREGULAR"},
+{base:"READ",past:"READ",type:"IRREGULAR"},
+{base:"RIDE",past:"RODE",type:"IRREGULAR"},
+{base:"RING",past:"RANG",type:"IRREGULAR"},
+{base:"RISE",past:"ROSE",type:"IRREGULAR"},
+{base:"RUN",past:"RAN",type:"IRREGULAR"},
+{base:"SAY",past:"SAID",type:"IRREGULAR"},
+{base:"SEE",past:"SAW",type:"IRREGULAR"},
+{base:"SELL",past:"SOLD",type:"IRREGULAR"},
+{base:"SEND",past:"SENT",type:"IRREGULAR"},
+{base:"SET",past:"SET",type:"IRREGULAR"},
+{base:"SHAKE",past:"SHOOK",type:"IRREGULAR"},
+{base:"SHOOT",past:"SHOT",type:"IRREGULAR"},
+{base:"SING",past:"SANG",type:"IRREGULAR"},
+{base:"SIT",past:"SAT",type:"IRREGULAR"},
+{base:"SLEEP",past:"SLEPT",type:"IRREGULAR"},
+{base:"SPEAK",past:"SPOKE",type:"IRREGULAR"},
+{base:"SPEND",past:"SPENT",type:"IRREGULAR"},
+{base:"STAND",past:"STOOD",type:"IRREGULAR"},
+{base:"STEAL",past:"STOLE",type:"IRREGULAR"},
+{base:"SWIM",past:"SWAM",type:"IRREGULAR"},
+{base:"TAKE",past:"TOOK",type:"IRREGULAR"},
+{base:"TEACH",past:"TAUGHT",type:"IRREGULAR"},
+{base:"TELL",past:"TOLD",type:"IRREGULAR"},
+{base:"THINK",past:"THOUGHT",type:"IRREGULAR"},
+{base:"THROW",past:"THREW",type:"IRREGULAR"},
+{base:"UNDERSTAND",past:"UNDERSTOOD",type:"IRREGULAR"},
+{base:"WAKE",past:"WOKE",type:"IRREGULAR"},
+{base:"WEAR",past:"WORE",type:"IRREGULAR"},
+{base:"WIN",past:"WON",type:"IRREGULAR"},
+{base:"WRITE",past:"WROTE",type:"IRREGULAR"},
+{base:"BURN",past:"BURNED / BURNT",type:"IRREGULAR"},
+{base:"DEAL",past:"DEALT",type:"IRREGULAR"},
+{base:"DIG",past:"DUG",type:"IRREGULAR"},
+{base:"FEED",past:"FED",type:"IRREGULAR"},
+{base:"HANG",past:"HUNG",type:"IRREGULAR"},
+{base:"LEAD",past:"LED",type:"IRREGULAR"},
+{base:"LIE",past:"LAY",type:"IRREGULAR"},
+{base:"LIGHT",past:"LIT",type:"IRREGULAR"},
+{base:"SHUT",past:"SHUT",type:"IRREGULAR"},
+{base:"SMELL",past:"SMELLED / SMELT",type:"IRREGULAR"},
+{base:"SPEED",past:"SPED / SPEED",type:"IRREGULAR"},
+{base:"SPELL",past:"SPELLED / SPELT",type:"IRREGULAR"},
+{base:"SPOIL",past:"SPOILED / SPOILT",type:"IRREGULAR"},
+{base:"STICK",past:"STUCK",type:"IRREGULAR"},
+{base:"STRIKE",past:"STRUCK",type:"IRREGULAR"},
+{base:"SWEAR",past:"SWORE",type:"IRREGULAR"},
+{base:"SWEEP",past:"SWEPT",type:"IRREGULAR"},
+{base:"TEAR",past:"TORE",type:"IRREGULAR"},
+{base:"THROW",past:"THREW",type:"IRREGULAR"},
+{base:"WEAP",past:"WEPT",type:"IRREGULAR"},
+{base:"WITHDRAW",past:"WITHDREW",type:"IRREGULAR"},
+
+/* =========================
+   REGULAR VERBS
+========================= */
+
+{base:"ACCEPT",past:"ACCEPTED",type:"REGULAR"},
+{base:"ADD",past:"ADDED",type:"REGULAR"},
+{base:"ADMIT",past:"ADMITTED",type:"REGULAR"},
+{base:"AGREE",past:"AGREED",type:"REGULAR"},
+{base:"ANSWER",past:"ANSWERED",type:"REGULAR"},
+{base:"ARRIVE",past:"ARRIVED",type:"REGULAR"},
+{base:"ASK",past:"ASKED",type:"REGULAR"},
+{base:"BAKE",past:"BAKED",type:"REGULAR"},
+{base:"BELIEVE",past:"BELIEVED",type:"REGULAR"},
+{base:"BELONG",past:"BELONGED",type:"REGULAR"},
+{base:"BORROW",past:"BORROWED",type:"REGULAR"},
+{base:"CALL",past:"CALLED",type:"REGULAR"},
+{base:"CARRY",past:"CARRIED",type:"REGULAR"},
+{base:"CHANGE",past:"CHANGED",type:"REGULAR"},
+{base:"CHECK",past:"CHECKED",type:"REGULAR"},
+{base:"CLEAN",past:"CLEANED",type:"REGULAR"},
+{base:"CLIMB",past:"CLIMBED",type:"REGULAR"},
+{base:"CLOSE",past:"CLOSED",type:"REGULAR"},
+{base:"COLLECT",past:"COLLECTED",type:"REGULAR"},
+{base:"COMPARE",past:"COMPARED",type:"REGULAR"},
+{base:"COMPLETE",past:"COMPLETED",type:"REGULAR"},
+{base:"CONTINUE",past:"CONTINUED",type:"REGULAR"},
+{base:"COOK",past:"COOKED",type:"REGULAR"},
+{base:"COPY",past:"COPIED",type:"REGULAR"},
+{base:"CORRECT",past:"CORRECTED",type:"REGULAR"},
+{base:"COUNT",past:"COUNTED",type:"REGULAR"},
+{base:"COVER",past:"COVERED",type:"REGULAR"},
+{base:"CRY",past:"CRIED",type:"REGULAR"},
+{base:"DANCE",past:"DANCED",type:"REGULAR"},
+{base:"DECIDE",past:"DECIDED",type:"REGULAR"},
+{base:"DELIVER",past:"DELIVERED",type:"REGULAR"},
+{base:"DESCRIBE",past:"DESCRIBED",type:"REGULAR"},
+{base:"DESTROY",past:"DESTROYED",type:"REGULAR"},
+{base:"DISCOVER",past:"DISCOVERED",type:"REGULAR"},
+{base:"DIVIDE",past:"DIVIDED",type:"REGULAR"},
+{base:"DRESS",past:"DRESSED",type:"REGULAR"},
+{base:"DRY",past:"DRIED",type:"REGULAR"},
+{base:"EARN",past:"EARNED",type:"REGULAR"},
+{base:"END",past:"ENDED",type:"REGULAR"},
+{base:"ENJOY",past:"ENJOYED",type:"REGULAR"},
+{base:"ENTER",past:"ENTERED",type:"REGULAR"},
+{base:"EXPLAIN",past:"EXPLAINED",type:"REGULAR"},
+{base:"FINISH",past:"FINISHED",type:"REGULAR"},
+{base:"FIX",past:"FIXED",type:"REGULAR"},
+{base:"FOLLOW",past:"FOLLOWED",type:"REGULAR"},
+{base:"GUESS",past:"GUESSED",type:"REGULAR"},
+{base:"HAPPEN",past:"HAPPENED",type:"REGULAR"},
+{base:"HELP",past:"HELPED",type:"REGULAR"},
+{base:"HOPE",past:"HOPED",type:"REGULAR"},
+{base:"IMAGINE",past:"IMAGINED",type:"REGULAR"},
+{base:"IMPROVE",past:"IMPROVED",type:"REGULAR"},
+{base:"INCLUDE",past:"INCLUDED",type:"REGULAR"},
+{base:"INVITE",past:"INVITED",type:"REGULAR"},
+{base:"JOIN",past:"JOINED",type:"REGULAR"},
+{base:"JUMP",past:"JUMPED",type:"REGULAR"},
+{base:"KICK",past:"KICKED",type:"REGULAR"},
+{base:"KISS",past:"KISSED",type:"REGULAR"},
+{base:"KNOCK",past:"KNOCKED",type:"REGULAR"},
+{base:"LAUGH",past:"LAUGHED",type:"REGULAR"},
+{base:"LEARN",past:"LEARNED",type:"REGULAR"},
+{base:"LIKE",past:"LIKED",type:"REGULAR"},
+{base:"LISTEN",past:"LISTENED",type:"REGULAR"},
+{base:"LIVE",past:"LIVED",type:"REGULAR"},
+{base:"LOOK",past:"LOOKED",type:"REGULAR"},
+{base:"LOVE",past:"LOVED",type:"REGULAR"},
+{base:"MANAGE",past:"MANAGED",type:"REGULAR"},
+{base:"MARRY",past:"MARRIED",type:"REGULAR"},
+{base:"MISS",past:"MISSED",type:"REGULAR"},
+{base:"MOVE",past:"MOVED",type:"REGULAR"},
+{base:"NEED",past:"NEEDED",type:"REGULAR"},
+{base:"NOTICE",past:"NOTICED",type:"REGULAR"},
+{base:"OFFER",past:"OFFERED",type:"REGULAR"},
+{base:"OPEN",past:"OPENED",type:"REGULAR"},
+{base:"ORDER",past:"ORDERED",type:"REGULAR"},
+{base:"PAINT",past:"PAINTED",type:"REGULAR"},
+{base:"PARK",past:"PARKED",type:"REGULAR"},
+{base:"PASS",past:"PASSED",type:"REGULAR"},
+{base:"PHONE",past:"PHONED",type:"REGULAR"},
+{base:"PLAN",past:"PLANNED",type:"REGULAR"},
+{base:"PLAY",past:"PLAYED",type:"REGULAR"},
+{base:"PRACTICE",past:"PRACTICED",type:"REGULAR"},
+{base:"PREFER",past:"PREFERRED",type:"REGULAR"},
+{base:"PREPARE",past:"PREPARED",type:"REGULAR"},
+{base:"PROMISE",past:"PROMISED",type:"REGULAR"},
+{base:"PROTECT",past:"PROTECTED",type:"REGULAR"},
+{base:"PULL",past:"PULLED",type:"REGULAR"},
+{base:"PUSH",past:"PUSHED",type:"REGULAR"},
+{base:"RAIN",past:"RAINED",type:"REGULAR"},
+{base:"RECEIVE",past:"RECEIVED",type:"REGULAR"},
+{base:"REMEMBER",past:"REMEMBERED",type:"REGULAR"},
+{base:"REPEAT",past:"REPEATED",type:"REGULAR"},
+{base:"RETURN",past:"RETURNED",type:"REGULAR"},
+{base:"SAVE",past:"SAVED",type:"REGULAR"},
+{base:"SEARCH",past:"SEARCHED",type:"REGULAR"},
+{base:"SEEM",past:"SEEMED",type:"REGULAR"},
+{base:"SHARE",past:"SHARED",type:"REGULAR"},
+{base:"SHOP",past:"SHOPPED",type:"REGULAR"},
+{base:"SMILE",past:"SMILED",type:"REGULAR"},
+{base:"START",past:"STARTED",type:"REGULAR"},
+{base:"STAY",past:"STAYED",type:"REGULAR"},
+{base:"STUDY",past:"STUDIED",type:"REGULAR"},
+{base:"SUGGEST",past:"SUGGESTED",type:"REGULAR"},
+{base:"TALK",past:"TALKED",type:"REGULAR"},
+{base:"TASTE",past:"TASTED",type:"REGULAR"},
+{base:"THANK",past:"THANKED",type:"REGULAR"},
+{base:"TOUCH",past:"TOUCHED",type:"REGULAR"},
+{base:"TRAIN",past:"TRAINED",type:"REGULAR"},
+{base:"TRAVEL",past:"TRAVELED",type:"REGULAR"},
+{base:"TRY",past:"TRIED",type:"REGULAR"},
+{base:"TURN",past:"TURNED",type:"REGULAR"},
+{base:"USE",past:"USED",type:"REGULAR"},
+{base:"VISIT",past:"VISITED",type:"REGULAR"},
+{base:"WAIT",past:"WAITED",type:"REGULAR"},
+{base:"WALK",past:"WALKED",type:"REGULAR"},
+{base:"WANT",past:"WANTED",type:"REGULAR"},
+{base:"WASH",past:"WASHED",type:"REGULAR"},
+{base:"WATCH",past:"WATCHED",type:"REGULAR"},
+{base:"WORK",past:"WORKED",type:"REGULAR"},
+{base:"WORRY",past:"WORRIED",type:"REGULAR"},
+{base:"YELL",past:"YELLED",type:"REGULAR"},
+{base:"ACT",past:"ACTED",type:"REGULAR"},
+{base:"BRUSH",past:"BRUSHED",type:"REGULAR"},
+{base:"CANCEL",past:"CANCELED",type:"REGULAR"},
+{base:"CELEBRATE",past:"CELEBRATED",type:"REGULAR"},
+{base:"CHAT",past:"CHATTED",type:"REGULAR"},
+{base:"CLAP",past:"CLAPPED",type:"REGULAR"},
+{base:"CROSS",past:"CROSSED",type:"REGULAR"},
+{base:"DEPEND",past:"DEPENDED",type:"REGULAR"},
+{base:"DOWNLOAD",past:"DOWNLOADED",type:"REGULAR"},
+{base:"EMAIL",past:"EMAILED",type:"REGULAR"},
+{base:"EXERCISE",past:"EXERCISED",type:"REGULAR"},
+{base:"FILL",past:"FILLED",type:"REGULAR"},
+{base:"HURRY",past:"HURRIED",type:"REGULAR"},
+{base:"INTRODUCE",past:"INTRODUCED",type:"REGULAR"},
+{base:"LOCK",past:"LOCKED",type:"REGULAR"},
+{base:"MENTION",past:"MENTIONED",type:"REGULAR"},
+{base:"PRINT",past:"PRINTED",type:"REGULAR"},
+{base:"REPAIR",past:"REPAIRED",type:"REGULAR"},
+{base:"RESERVE",past:"RESERVED",type:"REGULAR"},
+{base:"SNOW",past:"SNOWED",type:"REGULAR"},
+{base:"SOUND",past:"SOUNDED",type:"REGULAR"},
+{base:"SUPPORT",past:"SUPPORTED",type:"REGULAR"},
+{base:"TEXT",past:"TEXTED",type:"REGULAR"},
+{base:"TRANSLATE",past:"TRANSLATED",type:"REGULAR"},
+{base:"UNLOCK",past:"UNLOCKED",type:"REGULAR"},
+{base:"UPLOAD",past:"UPLOADED",type:"REGULAR"},
+{base:"WELCOME",past:"WELCOMED",type:"REGULAR"},
+{base:"WHISTLE",past:"WHISTLED",type:"REGULAR"},
+{base:"DREAM",past:"DREAMED / DREAMT",type:"REGULAR"},
+{base:"FASTEN",past:"FASTENED",type:"REGULAR"},
+{base:"GUARD",past:"GUARDED",type:"REGULAR"},
+{base:"HEAT",past:"HEATED",type:"REGULAR"},
+{base:"IDENTIFY",past:"IDENTIFIED",type:"REGULAR"},
+{base:"INVESTIGATE",past:"INVESTIGATED",type:"REGULAR"},
+{base:"LAND",past:"LANDED",type:"REGULAR"},
+{base:"LIMIT",past:"LIMITED",type:"REGULAR"},
+{base:"LOAD",past:"LOADED",type:"REGULAR"},
+{base:"MIX",past:"MIXED",type:"REGULAR"},
+{base:"PACK",past:"PACKED",type:"REGULAR"},
+{base:"PERMIT",past:"PERMITTED",type:"REGULAR"},
+{base:"PLAN",past:"PLANNED",type:"REGULAR"},
+{base:"POST",past:"POSTED",type:"REGULAR"},
+{base:"PRESS",past:"PRESSED",type:"REGULAR"},
+{base:"PRODUCE",past:"PRODUCED",type:"REGULAR"},
+{base:"RELAX",past:"RELAXED",type:"REGULAR"},
+{base:"REPORT",past:"REPORTED",type:"REGULAR"},
+{base:"RESCUE",past:"RESCUED",type:"REGULAR"},
+{base:"REST",past:"RESTED",type:"REGULAR"},
+{base:"SIGN",past:"SIGNED",type:"REGULAR"},
+{base:"SKIP",past:"SKIPPED",type:"REGULAR"},
+{base:"SNOW",past:"SNOWED",type:"REGULAR"},
+{base:"SPELL",past:"SPELLED",type:"REGULAR"},
+{base:"STOP",past:"STOPPED",type:"REGULAR"},
+{base:"SUPPLY",past:"SUPPLIED",type:"REGULAR"},
+{base:"SURPRISE",past:"SURPRISED",type:"REGULAR"},
+{base:"TOUCH",past:"TOUCHED",type:"REGULAR"},
+{base:"TREAT",past:"TREATED",type:"REGULAR"},
+{base:"TRUST",past:"TRUSTED",type:"REGULAR"},
+{base:"TYPE",past:"TYPED",type:"REGULAR"},
+{base:"UNPACK",past:"UNPACKED",type:"REGULAR"},
+{base:"UPDATE",past:"UPDATED",type:"REGULAR"},
+{base:"VOLUNTEER",past:"VOLUNTEERED",type:"REGULAR"},
+{base:"WAVE",past:"WAVED",type:"REGULAR"},
+{base:"WHISPER",past:"WHISPERED",type:"REGULAR"},
+{base:"WISH",past:"WISHED",type:"REGULAR"},
+{base:"YAWN",past:"YAWNED",type:"REGULAR"}
+
+];
+
+
+/* =====================================================
+   GAME
+===================================================== */
+
+let deck=[];
+
+let currentCard=null;
+
+const area=
+document.getElementById("deckArea");
+
+const remaining=
+document.getElementById("remaining");
+
+const answerBtn=
+document.getElementById("answerBtn");
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffle(a){
+
+    let x=[...a];
+
+    for(
+        let i=x.length-1;
+        i>0;
+        i--
+    ){
+
+        let j=
+        Math.floor(
+            Math.random()*(i+1)
+        );
+
+        [
+            x[i],
+            x[j]
+        ]=[
+            x[j],
+            x[i]
+        ];
+
+    }
+
+    return x;
+}
+
+
+/* =====================================================
+   UPDATE
+===================================================== */
+
+function update(){
+
+    remaining.textContent=
+        deck.length;
+
+}
+
+
+/* =====================================================
+   READY
+===================================================== */
+
+function ready(){
+
+    area.innerHTML=`
+
+        <div class="empty">
+
+            <div>
+
+                <h2>⏱️ Ready?</h2>
+
+                <p>
+                    Click <b>DRAW CARD</b>
+                    to reveal the verb.
+                </p>
+
+                <p>
+                    Say the correct
+                    <b>Past Simple</b>
+                    form!
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   SHOW CARD
+===================================================== */
+
+function show(card,skipped=false){
+
+    currentCard=card;
+
+    answerBtn.disabled=false;
+
+    area.innerHTML=`
+
+        <article class="card">
+
+            <div class="card-top">
+
+                <span>
+                    🗣️ SAY THE PAST!
+                </span>
+
+                <span class="card-number">
+
+                    ${originalCards.length-deck.length}
+                    /
+                    ${originalCards.length}
+
+                </span>
+
+            </div>
+
+
+            <div class="word">
+
+                ${card.base}
+
+            </div>
+
+
+            <div class="answer-label">
+
+                PAST SIMPLE
+
+            </div>
+
+
+            <div
+                class="answer"
+                id="answer">
+
+                ???
+
+            </div>
+
+
+            <div class="draw-note">
+
+                ${skipped
+                    ? "⏭ CARD SKIPPED"
+                    : "🗣️ SAY IT OUT LOUD!"
+                }
+
+                <small>
+
+                    Say the correct Past Simple
+                    form of the verb.
+
+                </small>
+
+            </div>
+
+        </article>
+
+    `;
+
+}
+
+
+/* =====================================================
+   DRAW
+===================================================== */
+
+function draw(){
+
+    if(!deck.length){
+
+        area.innerHTML=`
+
+            <div class="empty">
+
+                <div>
+
+                    <h2>🎉 Deck complete!</h2>
+
+                    <p>
+                        You used all the verbs.
+                    </p>
+
+                    <p>
+                        Click <b>RESET</b>
+                        to play again.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+        answerBtn.disabled=true;
+
+        return;
+
+    }
+
+
+    let i=
+        Math.floor(
+            Math.random()*deck.length
+        );
+
+
+    let card=
+        deck.splice(i,1)[0];
+
+
+    show(card);
+
+    update();
+
+}
+
+
+/* =====================================================
+   SKIP
+===================================================== */
+
+function skip(){
+
+    if(!deck.length){
+
+        return;
+
+    }
+
+
+    let i=
+        Math.floor(
+            Math.random()*deck.length
+        );
+
+
+    let card=
+        deck.splice(i,1)[0];
+
+
+    show(card,true);
+
+    update();
+
+}
+
+
+/* =====================================================
+   SHOW ANSWER
+===================================================== */
+
+function showAnswer(){
+
+    if(!currentCard){
+
+        return;
+
+    }
+
+
+    const answer=
+        document.getElementById("answer");
+
+
+    if(answer){
+
+        answer.textContent=
+            currentCard.past;
+
+    }
+
+}
+
+
+/* =====================================================
+   SHUFFLE DECK
+===================================================== */
+
+document.getElementById(
+    "shuffleBtn"
+).onclick=()=>{
+
+    deck=
+        shuffle(
+            deck.length
+            ? deck
+            : originalCards
+        );
+
+    ready();
+
+    update();
+
+    answerBtn.disabled=true;
+
+    currentCard=null;
+
+};
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+document.getElementById(
+    "drawBtn"
+).onclick=draw;
+
+
+document.getElementById(
+    "skipBtn"
+).onclick=skip;
+
+
+answerBtn.onclick=
+    showAnswer;
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+document.getElementById(
+    "resetBtn"
+).onclick=()=>{
+
+    deck=
+        shuffle(originalCards);
+
+    currentCard=null;
+
+    answerBtn.disabled=true;
+
+    ready();
+
+    update();
+
+};
+
+
+/* =====================================================
+   START
+===================================================== */
+
+deck=
+    shuffle(originalCards);
+
+update();
+
+</script>
+
+</body>
+</html>
