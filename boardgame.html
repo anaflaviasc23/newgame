@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Board Game - Desafios de Inglês</title>
+    <title>English Board Game - Multiplayer</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,72 +13,69 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            background: linear-gradient(135deg, #0f172a, #1e1b4b);
             color: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         header h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: #38bdf8;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         header p {
             color: #94a3b8;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
-        .game-container {
+        .game-layout {
             display: flex;
             gap: 20px;
-            max-width: 1200px;
+            max-width: 1250px;
             width: 100%;
             flex-wrap: wrap;
             justify-content: center;
+            align-items: flex-start;
         }
 
-        /* Tabuleiro em Grid (Trilha Periférica) */
+        /* Tabuleiro em Grid 9x9 */
         .board {
             display: grid;
-            grid-template-columns: repeat(7, 80px);
-            grid-template-rows: repeat(7, 80px);
-            gap: 6px;
-            background: #0f172a;
-            padding: 15px;
+            grid-template-columns: repeat(9, 70px);
+            grid-template-rows: repeat(9, 70px);
+            gap: 5px;
+            background: #090d16;
+            padding: 12px;
             border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             position: relative;
         }
 
         .tile {
             background: #334155;
-            border-radius: 8px;
+            border-radius: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 5px;
+            padding: 4px;
             text-align: center;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: bold;
             color: #f8fafc;
             position: relative;
             box-shadow: inset 0 2px 4px rgba(255,255,255,0.1);
             transition: transform 0.2s;
-        }
-
-        .tile:hover {
-            transform: scale(1.03);
         }
 
         /* Cores das categorias */
@@ -88,135 +85,76 @@
         .cat-past { background: #dc2626; }
         .cat-pastcont { background: #7c3aed; }
         .cat-vocab { background: #db2777; }
-        .cat-start { background: #0d9488; font-size: 0.9rem; }
-        .cat-finish { background: #4f46e5; font-size: 0.9rem; }
+        .cat-start { background: #0d9488; font-size: 0.8rem; }
+        .cat-finish { background: #4f46e5; font-size: 0.8rem; }
 
         .tile-number {
             position: absolute;
-            top: 3px;
-            left: 5px;
-            font-size: 0.6rem;
+            top: 2px;
+            left: 4px;
+            font-size: 0.55rem;
             opacity: 0.8;
         }
 
-        /* Painel Central do Tabuleiro */
+        /* Painel Central do Tabuleiro (Área de Desafios no Meio) */
         .center-panel {
-            grid-column: 2 / 7;
-            grid-row: 2 / 7;
-            background: rgba(15, 23, 42, 0.85);
-            border: 2px dashed #38bdf8;
+            grid-column: 2 / 9;
+            grid-row: 2 / 9;
+            background: rgba(15, 23, 42, 0.92);
+            border: 2px solid #38bdf8;
             border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-            z-index: 10;
-        }
-
-        .center-panel h2 {
-            font-size: 1.8rem;
-            color: #f43f5e;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* Painel Lateral de Controle */
-        .sidebar {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 16px;
-            width: 320px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .dice-section {
-            text-align: center;
-            background: #0f172a;
-            padding: 15px;
-            border-radius: 12px;
-        }
-
-        .dice {
-            width: 70px;
-            height: 70px;
-            background: #fff;
-            color: #0f172a;
-            font-size: 2rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.1s;
-        }
-
-        .dice:active {
-            transform: scale(0.9);
-        }
-
-        .btn {
-            background: #0284c7;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-        }
-
-        .btn:hover {
-            background: #0369a1;
-        }
-
-        /* Caixa de Desafio / Pergunta */
-        .challenge-box {
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 15px;
-            border-left: 5px solid #38bdf8;
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            padding: 20px;
+            z-index: 10;
+            box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.2);
         }
 
-        .challenge-box h3 {
+        .center-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+
+        .center-header h2 {
+            font-size: 1.2rem;
             color: #38bdf8;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
         }
 
-        .challenge-box p {
-            font-size: 0.95rem;
-            margin-bottom: 10px;
+        .challenge-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .challenge-content h3 {
+            color: #f43f5e;
+            font-size: 1rem;
+        }
+
+        .challenge-content p {
+            font-size: 0.9rem;
             line-height: 1.4;
+            color: #e2e8f0;
         }
 
         .options-list {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 6px;
-            margin-bottom: 10px;
         }
 
         .option-btn {
             background: #334155;
             border: none;
             color: white;
-            padding: 8px;
+            padding: 8px 12px;
             border-radius: 6px;
             text-align: left;
             cursor: pointer;
@@ -224,7 +162,7 @@
             transition: background 0.2s;
         }
 
-        .option-btn:hover {
+        .option-btn:hover:not(:disabled) {
             background: #475569;
         }
 
@@ -236,77 +174,245 @@
             background: #dc2626 !important;
         }
 
-        /* Peão */
-        .pawn {
-            width: 32px;
-            height: 32px;
-            background: #facc15;
+        /* Painel Lateral de Controle */
+        .sidebar {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 16px;
+            width: 280px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section-box {
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .section-box h3 {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+        }
+
+        /* Seleção de Peões */
+        .pawns-select {
+            display: flex;
+            justify-content: space-around;
+            gap: 5px;
+        }
+
+        .pawn-option {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.75rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .pawn-option.selected {
+            border-color: #fff;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px rgba(255,255,255,0.6);
+        }
+
+        /* Cores dos Peões */
+        .p-blue { background: #3b82f6; color: #1e3a8a; }
+        .p-yellow { background: #eab308; color: #713f12; }
+        .p-red { background: #ef4444; color: #7f1d1d; }
+        .p-green { background: #22c55e; color: #064e3b; }
+
+        /* Estilo do Dado */
+        .dice {
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            color: #0f172a;
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 8px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #0369a1;
+        }
+
+        /* Peões físicos no tabuleiro */
+        .pawn-marker {
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             position: absolute;
-            border: 3px solid #ca8a04;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
             z-index: 20;
             transition: all 0.4s ease-in-out;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
-            color: #713f12;
         }
 
-        .status-text {
-            font-size: 0.9rem;
-            color: #cbd5e1;
+        .scoreboard {
+            font-size: 0.85rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 6px;
+            background: #1e293b;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>English Board Game</h1>
-        <p>Jogue o dado, avance no tabuleiro e responda aos desafios de inglês!</p>
+        <h1>English Board Game - Multijogador</h1>
+        <p>Escolha seu peão, role o dado e vença os desafios de inglês no centro do tabuleiro!</p>
     </header>
 
-    <div class="game-container">
-        <!-- Tabuleiro -->
+    <div class="game-layout">
+        <!-- Tabuleiro 9x9 com Trilha Serpentheada -->
         <div class="board" id="board">
-            <!-- O centro decorativo do tabuleiro -->
+            <!-- Área de Desafio Centralizada -->
             <div class="center-panel">
-                <h2>English Challenge</h2>
-                <p class="status-text" id="board-status">Role o dado para começar o jogo!</p>
+                <div class="center-header">
+                    <h2>Área de Desafio</h2>
+                    <span id="active-turn-label" style="font-size: 0.85rem; color: #38bdf8;">Vez de: Azul</span>
+                </div>
+                <div class="challenge-content">
+                    <h3 id="category-title">Pronto para jogar?</h3>
+                    <p id="question-text">Selecione seu peão ao lado, role o dado e comece a avançar pelas casas do tabuleiro!</p>
+                    <div class="options-list" id="options-list"></div>
+                </div>
+                <p id="feedback-text" style="font-weight: bold; font-size: 0.85rem; text-align: center;"></p>
             </div>
         </div>
 
         <!-- Painel Lateral -->
         <div class="sidebar">
-            <div class="dice-section">
-                <h3>Dado</h3>
-                <div class="dice" id="dice" onclick="rollDice()">🎲</div>
-                <p id="dice-result">Clique no dado para jogar</p>
-                <button class="btn" onclick="rollDice()" style="margin-top: 10px;">Girar Dado</button>
+            <!-- Seleção de Jogador/Peão -->
+            <div class="section-box">
+                <h3>Escolher Peão</h3>
+                <div class="pawns-select">
+                    <div class="pawn-option p-blue selected" onclick="selectPlayer(0)">Az</div>
+                    <div class="pawn-option p-yellow" onclick="selectPlayer(1)">Am</div>
+                    <div class="pawn-option p-red" onclick="selectPlayer(2)">Vm</div>
+                    <div class="pawn-option p-green" onclick="selectPlayer(3)">Vd</div>
+                </div>
             </div>
 
-            <div class="challenge-box" id="challenge-container">
-                <h3>Área de Desafio</h3>
-                <p id="question-text">O desafio aparecerá aqui quando você parar em uma casinha.</p>
-                <div class="options-list" id="options-list"></div>
-                <p id="feedback-text" style="font-weight: bold; font-size: 0.9rem;"></p>
+            <!-- Dado -->
+            <div class="section-box">
+                <h3>Dado</h3>
+                <div class="dice" id="dice" onclick="rollDice()">🎲</div>
+                <p id="dice-result" style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px;">Clique para girar</p>
+                <button class="btn" onclick="rollDice()">Girar Dado</button>
+            </div>
+
+            <!-- Posições / Placar -->
+            <div class="section-box">
+                <h3>Posição dos Peões</h3>
+                <div class="scoreboard" id="scoreboard">
+                    <!-- Gerado via JS -->
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Configuração das 24 casinhas do tabuleiro em formato de anel (perímetro 7x7)
-        // Coordenadas (row, col) baseadas em grid 7x7 (1 a 7)
+        // Caminho em zigue-zague/curvas por um Grid 9x9 (total de 32 casinhas)
         const tileCoords = [
-            {r: 7, c: 1}, {r: 7, c: 2}, {r: 7, c: 3}, {r: 7, c: 4}, {r: 7, c: 5}, {r: 7, c: 6}, {r: 7, c: 7}, // Baixo (E->D) -> 0 a 6
-            {r: 6, c: 7}, {r: 5, c: 7}, {r: 4, c: 7}, {r: 3, c: 7}, {r: 2, c: 7}, {r: 1, c: 7},          // Direita (B->T) -> 7 a 12
-            {r: 1, c: 6}, {r: 1, c: 5}, {r: 1, c: 4}, {r: 1, c: 3}, {r: 1, c: 2}, {r: 1, c: 1},          // Topo (D->E) -> 13 a 18
-            {r: 2, c: 1}, {r: 3, c: 1}, {r: 4, c: 1}, {r: 5, c: 1}, {r: 6, c: 1}                           // Esquerda (T->B) -> 19 a 23
+            {r: 9, c: 1}, {r: 9, c: 2}, {r: 9, c: 3}, {r: 9, c: 4}, {r: 9, c: 5}, {r: 9, c: 6}, {r: 9, c: 7}, {r: 9, c: 8}, {r: 9, c: 9}, // Baixo (E->D) -> 0 a 8
+            {r: 8, c: 9}, {r: 7, c: 9}, {r: 6, c: 9}, {r: 5, c: 9}, {r: 4, c: 9}, {r: 3, c: 9}, {r: 2, c: 9}, {r: 1, c: 9},          // Direita (B->T) -> 9 a 16
+            {r: 1, c: 8}, {r: 1, c: 7}, {r: 1, c: 6}, {r: 1, c: 5}, {r: 1, c: 4}, {r: 1, c: 3}, {r: 1, c: 2}, {r: 1, c: 1},          // Topo (D->E) -> 17 a 24
+            {r: 2, c: 1}, {r: 3, c: 1}, {r: 4, c: 1}, {r: 5, c: 1}, {r: 6, c: 1}, {r: 7, c: 1}, {r: 8, c: 1}                           // Esquerda (T->B) -> 25 a 31
         ];
 
-        // Banco de dados de perguntas por categoria
+        const tileTypesDef = [
+            { name: "START", cat: "start", label: "START" },
+            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
+            { name: "Simple Present", cat: "present", label: "Present" },
+            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
+            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
+            { name: "Simple Past", cat: "past", label: "Past" },
+            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
+            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
+            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
+            { name: "Simple Present", cat: "present", label: "Present" },
+            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
+            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
+            { name: "Simple Past", cat: "past", label: "Past" },
+            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
+            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
+            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
+            { name: "Simple Present", cat: "present", label: "Present" },
+            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
+            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
+            { name: "Simple Past", cat: "past", label: "Past" },
+            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
+            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
+            { name: "Simple Present", cat: "present", label: "Present" },
+            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
+            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
+            { name: "Simple Past", cat: "past", label: "Past" },
+            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
+            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
+            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
+            { name: "Simple Present", cat: "present", label: "Present" },
+            { name: "Safe Zone", cat: "start", label: "Safe Zone" },
+            { name: "FINISH", cat: "finish", label: "FINISH" }
+        ];
+
+        // Definição dos Jogadores
+        let players = [
+            { id: 0, name: "Azul", class: "p-blue", pos: 0, symbol: "Az" },
+            { id: 1, name: "Amarelo", class: "p-yellow", pos: 0, symbol: "Am" },
+            { id: 2, name: "Vermelho", class: "p-red", pos: 0, symbol: "Vm" },
+            { id: 3, name: "Verde", class: "p-green", pos: 0, symbol: "Vd" }
+        ];
+
+        let selectedPlayerIndex = 0;
+        let pawnElements = [];
+
+        // Perguntas por Categoria
         const challenges = {
             tobe: [
                 { q: "Qual a forma correta para: 'He ___ a doctor.'", options: ["am", "is", "are"], correct: 1 },
@@ -336,142 +442,145 @@
             vocab: [
                 { q: "O que significa a palavra 'Library'?", options: ["Livraria", "Biblioteca", "Laboratório"], correct: 1 },
                 { q: "Qual o significado de 'Expensive'?", options: ["Extensivo", "Barato", "Caro"], correct: 2 },
-                { q: "Como se diz 'Acelerar / Em frente' ou 'Prédio' em inglês? (Building)", options: ["Construção / Prédio", "Chuva", "Ponte"], correct: 0 }
+                { q: "O que significa 'Building'?", options: ["Construção / Prédio", "Chuva", "Ponte"], correct: 0 }
             ]
         };
 
-        const tileTypes = [
-            { name: "START", cat: "start", label: "START" },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Simple Present", cat: "present", label: "Present" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
-            { name: "Simple Past", cat: "past", label: "Past" },
-            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Simple Present", cat: "present", label: "Present" },
-            { name: "Safe Zone", cat: "start", label: "Safe Zone" },
-            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
-            { name: "Simple Past", cat: "past", label: "Past" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Simple Present", cat: "present", label: "Present" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
-            { name: "Simple Past", cat: "past", label: "Past" },
-            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "FINISH", cat: "finish", label: "FINISH" }
-        ];
-
-        let currentPosition = 0;
-        let pawnElement;
-
-        // Inicializar o Tabuleiro
         function createBoard() {
             const board = document.getElementById('board');
             
-            tileTypes.forEach((tile, index) => {
+            // Criar as casinhas
+            tileCoords.forEach((coord, index) => {
+                const tileData = tileTypesDef[index];
                 const tileDiv = document.createElement('div');
-                tileDiv.className = `tile cat-${tile.cat}`;
-                tileDiv.style.gridRow = tileCoords[index].r;
-                tileDiv.style.gridColumn = tileCoords[index].c;
+                tileDiv.className = `tile cat-${tileData.cat}`;
+                tileDiv.style.gridRow = coord.r;
+                tileDiv.style.gridColumn = coord.c;
                 tileDiv.id = `tile-${index}`;
 
                 tileDiv.innerHTML = `
                     <span class="tile-number">${index + 1}</span>
-                    <span>${tile.label}</span>
+                    <span>${tileData.label}</span>
                 `;
                 board.appendChild(tileDiv);
             });
 
-            // Criar o peão
-            pawnElement = document.createElement('div');
-            pawnElement.className = 'pawn';
-            pawnElement.id = 'pawn';
-            pawnElement.innerText = 'P1';
-            board.appendChild(pawnElement);
+            // Criar os marcadores dos peões
+            players.forEach((p, idx) => {
+                const pawn = document.createElement('div');
+                pawn.className = `pawn-marker ${p.class}`;
+                pawn.innerText = p.symbol;
+                pawn.id = `pawn-${idx}`;
+                board.appendChild(pawn);
+            });
 
-            updatePawnPosition();
+            updateAllPawns();
+            updateScoreboard();
         }
 
-        function updatePawnPosition() {
-            const targetTile = document.getElementById(`tile-${currentPosition}`);
-            if (targetTile) {
-                // Posicionar o peão exatamente em cima da casinha correspondente
-                pawnElement.style.top = (targetTile.offsetTop + 15) + 'px';
-                pawnElement.style.left = (targetTile.offsetLeft + 15) + 'px';
-            }
+        function selectPlayer(index) {
+            selectedPlayerIndex = index;
+            const options = document.querySelectorAll('.pawn-option');
+            options.forEach((opt, idx) => {
+                if (idx === index) opt.classList.add('selected');
+                else opt.classList.remove('selected');
+            });
+            document.getElementById('active-turn-label').innerText = `Vez de: ${players[index].name}`;
         }
 
-        // Função para rolar o dado
+        function updateAllPawns() {
+            players.forEach((p, idx) => {
+                const pawnEl = document.getElementById(`pawn-${idx}`);
+                const tileEl = document.getElementById(`tile-${p.pos}`);
+                if (tileEl && pawnEl) {
+                    // Offset leve para os peões não ficarem colados exatamente no mesmo pixel se estiverem na mesma casa
+                    const offsetX = (idx % 2) * 12 + 4;
+                    const offsetY = Math.floor(idx / 2) * 12 + 4;
+                    pawnEl.style.top = (tileEl.offsetTop + offsetY) + 'px';
+                    pawnEl.style.left = (tileEl.offsetLeft + offsetX) + 'px';
+                }
+            });
+        }
+
+        function updateScoreboard() {
+            const sb = document.getElementById('scoreboard');
+            sb.innerHTML = '';
+            players.forEach(p => {
+                const row = document.createElement('div');
+                row.className = 'score-row';
+                row.innerHTML = `<span>${p.name}:</span> <span>Casa ${p.pos + 1}</span>`;
+                sb.appendChild(row);
+            });
+        }
+
         function rollDice() {
             const diceEl = document.getElementById('dice');
             const resultText = document.getElementById('dice-result');
             
-            // Efeito visual de rolagem rápida
             let rolls = 0;
             const rollInterval = setInterval(() => {
-                const randomTemp = Math.floor(Math.random() * 6) + 1;
-                diceEl.innerText = randomTemp;
+                const tempNum = Math.floor(Math.random() * 6) + 1;
+                diceEl.innerText = tempNum;
                 rolls++;
                 if (rolls > 10) {
                     clearInterval(rollInterval);
                     const finalRoll = Math.floor(Math.random() * 6) + 1;
                     diceEl.innerText = finalRoll;
-                    resultText.innerText = `Você tirou o número: ${finalRoll}`;
+                    resultText.innerText = `Tirou: ${finalRoll}`;
                     
-                    movePawn(finalRoll);
+                    moveCurrentPlayer(finalRoll);
                 }
-            }, 50);
+            }, 40);
         }
 
-        // Mover o peão
-        function movePawn(steps) {
-            currentPosition += steps;
-            if (currentPosition >= tileTypes.length) {
-                currentPosition = tileTypes.length - 1;
-                document.getElementById('board-status').innerText = "Parabéns! Você chegou ao FINISH!";
+        function moveCurrentPlayer(steps) {
+            let player = players[selectedPlayerIndex];
+            player.pos += steps;
+            
+            if (player.pos >= tileTypesDef.length - 1) {
+                player.pos = tileTypesDef.length - 1;
+                document.getElementById('question-text').innerText = `🏆 O jogador ${player.name} chegou ao FINISH e venceu o jogo! Parabéns!`;
+                document.getElementById('category-title').innerText = "FIM DE JOGO!";
+                document.getElementById('options-list').innerHTML = '';
             } else {
-                document.getElementById('board-status').innerText = `Peão moveu para a casinha ${currentPosition + 1}`;
+                triggerChallenge(player.pos, player);
             }
-            updatePawnPosition();
-            triggerChallenge(currentPosition);
+
+            updateAllPawns();
+            updateScoreboard();
         }
 
-        // Disparar o desafio da casinha
-        function triggerChallenge(pos) {
-            const tile = tileTypes[pos];
+        function triggerChallenge(pos, player) {
+            const tileData = tileTypesDef[pos];
+            const catTitle = document.getElementById('category-title');
             const qText = document.getElementById('question-text');
             const optionsList = document.getElementById('options-list');
             const feedbackText = document.getElementById('feedback-text');
-            
+
             optionsList.innerHTML = '';
             feedbackText.innerText = '';
 
-            if (tile.cat === 'start' || tile.cat === 'finish') {
-                qText.innerText = `Você parou na casinha de ${tile.name}! Relaxe e aproveite a rodada.`;
+            if (tileData.cat === 'start' || tileData.cat === 'finish') {
+                catTitle.innerText = `${player.name} - ${tileData.name}`;
+                qText.innerText = `Você parou em uma zona segura (${tileData.name}). Aguarde a próxima rodada!`;
                 return;
             }
 
-            const categoryPool = challenges[tile.cat];
-            const randomChallenge = categoryPool[Math.floor(Math.random() * categoryPool.length)];
+            catTitle.innerText = `${player.name} - Desafio: ${tileData.name}`;
+            const pool = challenges[tileData.cat];
+            const challenge = pool[Math.floor(Math.random() * pool.length)];
 
-            qText.innerText = `[${tile.name}] ${randomChallenge.q}`;
+            qText.innerText = challenge.q;
 
-            randomChallenge.options.forEach((opt, idx) => {
+            challenge.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = opt;
-                btn.onclick = () => checkAnswer(btn, idx, randomChallenge.correct);
+                btn.onclick = () => checkAnswer(btn, idx, challenge.correct);
                 optionsList.appendChild(btn);
             });
         }
 
-        // Checar resposta
         function checkAnswer(btn, selected, correct) {
             const options = document.querySelectorAll('.option-btn');
             options.forEach((b, idx) => {
@@ -483,16 +592,15 @@
             const feedbackText = document.getElementById('feedback-text');
             if (selected === correct) {
                 feedbackText.style.color = '#4ade80';
-                feedbackText.innerText = 'Correto! Muito bem!';
+                feedbackText.innerText = '✨ Resposta Correta! Excelente!';
             } else {
                 feedbackText.style.color = '#f87171';
-                feedbackText.innerText = 'Incorreto! Tente novamente na próxima rodada.';
+                feedbackText.innerText = '❌ Resposta Incorreta! Continue tentando na próxima vez.';
             }
         }
 
-        // Inicializar ao carregar a página
         window.onload = createBoard;
-        window.onresize = updatePawnPosition;
+        window.onresize = updateAllPawns;
     </script>
 </body>
 </html>
