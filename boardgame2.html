@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Board Game - Parte 1 de 3</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #111827, #1e1b4b);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #38bdf8;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .game-layout {
+            display: flex;
+            gap: 15px;
+            max-width: 1300px;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(11, 62px);
+            grid-template-rows: repeat(11, 62px);
+            gap: 4px;
+            background: #090d16;
+            padding: 10px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            position: relative;
+        }
+
+        .tile {
+            background: #334155;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+            text-align: center;
+            font-size: 0.5rem;
+            font-weight: bold;
+            color: #f8fafc;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.1);
+        }
+
+        .cat-tobe { background: #0284c7; }
+        .cat-present { background: #16a34a; }
+        .cat-continuous { background: #d97706; }
+        .cat-past { background: #dc2626; }
+        .cat-pastcont { background: #7c3aed; }
+        .cat-vocab { background: #db2777; }
+        .cat-start { background: #0d9488; font-size: 0.7rem; }
+        .cat-finish { background: #4f46e5; font-size: 0.7rem; }
+        .cat-trap { background: #991b1b; border: 2px dashed #fca5a5; }
+        .cat-luck { background: #15803d; border: 2px dashed #86efac; }
+        .cat-skip { background: #b45309; border: 2px dashed #fde047; }
+        .cat-bonus { background: #ca8a04; border: 2px solid #fef08a; }
+        .cat-fun { background: #ec4899; border: 2px solid #fbcfe8; }
+
+        .tile-number {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            font-size: 0.45rem;
+            opacity: 0.8;
+        }
+
+        .center-panel {
+            grid-column: 4 / 9;
+            grid-row: 4 / 9;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid #38bdf8;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            z-index: 10;
+            box-shadow: inset 0 0 20px rgba(56, 189, 248, 0.25);
+        }
+
+        .center-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 6px;
+        }
+
+        .center-header h2 {
+            font-size: 1.1rem;
+            color: #38bdf8;
+        }
+
+        .challenge-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+
+        .challenge-content h3 {
+            color: #f43f5e;
+            font-size: 1.05rem;
+        }
+
+        .challenge-content p {
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: #f8fafc;
+            font-weight: 600;
+        }
+
+        .options-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .option-btn {
+            background: #334155;
+            border: none;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #475569;
+        }
+
+        .option-btn.correct { background: #16a34a !important; }
+        .option-btn.wrong { background: #dc2626 !important; }
+
+        .sidebar {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 16px;
+            width: 270px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section-box {
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .section-box h3 {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+        }
+
+        .pawns-select {
+            display: flex;
+            justify-content: space-around;
+            gap: 4px;
+        }
+
+        .pawn-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .pawn-option.selected {
+            border-color: #fff;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px rgba(255,255,255,0.6);
+        }
+
+        .p-blue { background: #3b82f6; color: #1e3a8a; }
+        .p-yellow { background: #eab308; color: #713f12; }
+        .p-red { background: #ef4444; color: #7f1d1d; }
+        .p-green { background: #22c55e; color: #064e3b; }
+
+        .dice {
+            width: 55px;
+            height: 55px;
+            background: #fff;
+            color: #0f172a;
+            font-size: 1.6rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 6px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover { background: #0369a1; }
+
+        .pawn-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            z-index: 20;
+            transition: all 0.4s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .scoreboard {
+            font-size: 0.8rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 6px;
+            background: #1e293b;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>English Board Game - Parte 2 de 3</h1>
+        <p>Estrutura do corpo do jogo e base de dados de desafios e perguntas.</p>
+    </header>
+
+    <div class="game-layout">
+        <div class="board" id="board">
+            <div class="center-panel">
+                <div class="center-header">
+                    <h2>Central de Ações</h2>
+                    <span id="active-turn-label" style="font-size: 0.8rem; color: #38bdf8;">Vez de: Azul</span>
+                </div>
+                <div class="challenge-content">
+                    <h3 id="category-title">Pronto para jogar?</h3>
+                    <p id="question-text">Escolha seu peão e role o dado para iniciar!</p>
+                    <div class="options-list" id="options-list"></div>
+                </div>
+                <p id="feedback-text" style="font-weight: bold; font-size: 0.9rem; text-align: center;"></p>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="section-box">
+                <h3>Escolher Peão</h3>
+                <div class="pawns-select">
+                    <div class="pawn-option p-blue selected" onclick="selectPlayer(0)">Az</div>
+                    <div class="pawn-option p-yellow" onclick="selectPlayer(1)">Am</div>
+                    <div class="pawn-option p-red" onclick="selectPlayer(2)">Vm</div>
+                    <div class="pawn-option p-green" onclick="selectPlayer(3)">Vd</div>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <h3>Dado</h3>
+                <div class="dice" id="dice" onclick="rollDice()">🎲</div>
+                <p id="dice-result" style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px;">Clique para girar</p>
+                <button class="btn" onclick="rollDice()">Girar Dado</button>
+            </div>
+
+            <div class="section-box">
+                <h3>Placar e Posições</h3>
+                <div class="scoreboard" id="scoreboard"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tileCoords = [
+            {r: 11, c: 1}, {r: 11, c: 2}, {r: 11, c: 3}, {r: 11, c: 4}, {r: 11, c: 5}, {r: 11, c: 6}, {r: 11, c: 7}, {r: 11, c: 8}, {r: 11, c: 9}, {r: 11, c: 10}, {r: 11, c: 11},
+            {r: 10, c: 11}, {r: 9, c: 11}, {r: 8, c: 11}, {r: 7, c: 11}, {r: 6, c: 11}, {r: 5, c: 11}, {r: 4, c: 11}, {r: 3, c: 11}, {r: 2, c: 11}, {r: 1, c: 11},
+            {r: 1, c: 10}, {r: 1, c: 9}, {r: 1, c: 8}, {r: 1, c: 7}, {r: 1, c: 6}, {r: 1, c: 5}, {r: 1, c: 4}, {r: 1, c: 3}, {r: 1, c: 2}, {r: 1, c: 1},
+            {r: 2, c: 1}, {r: 3, c: 1}, {r: 4, c: 1}, {r: 5, c: 1}, {r: 6, c: 1}, {r: 7, c: 1}, {r: 8, c: 1}, {r: 9, c: 1}, {r: 10, c: 1},
+            {r: 10, c: 2}, {r: 10, c: 3}, {r: 10, c: 4}, {r: 10, c: 5}
+        ];
+
+        const rawTypes = [
+            'start', 'tobe', 'present', 'bonus_pts', 'continuous', 'fun_action', 'vocab', 'luck_forward1', 'tobe', 'present', 'skip_turn', 'continuous', 'bonus_pts', 'pastcont', 'trap_start', 'vocab', 'fun_action', 'vocab', 'continuous', 'past', 'trap_back2', 'vocab', 'tobe', 'bonus_pts', 'luck_forward1', 'continuous', 'past', 'fun_action', 'vocab', 'tobe', 'skip_turn', 'vocab', 'continuous', 'trap_back2', 'pastcont', 'bonus_pts', 'tobe', 'present', 'vocab', 'continuous', 'fun_action', 'pastcont', 'vocab', 'finish'
+        ];
+
+        const tileTypesDef = tileCoords.map((coord, index) => {
+            let type = rawTypes[index] || 'vocab';
+            let label = "";
+            let cat = type;
+
+            if (type === 'start') { label = "START"; cat = "start"; }
+            else if (type === 'finish') { label = "FINISH"; cat = "finish"; }
+            else if (type === 'tobe') { label = "To Be"; cat = "tobe"; }
+            else if (type === 'present') { label = "Present"; cat = "present"; }
+            else if (type === 'continuous') { label = "Continuous"; cat = "continuous"; }
+            else if (type === 'past') { label = "Past"; cat = "past"; }
+            else if (type === 'pastcont') { label = "Past Cont."; cat = "pastcont"; }
+            else if (type === 'vocab') { label = "Vocab"; cat = "vocab"; }
+            else if (type === 'trap_back2') { label = "Cilada (-2)"; cat = "trap"; }
+            else if (type === 'luck_forward1') { label = "Sorte (+1)"; cat = "luck"; }
+            else if (type === 'skip_turn') { label = "Bloqueio"; cat = "skip"; }
+            else if (type === 'trap_start') { label = "Volta Início"; cat = "trap"; }
+            else if (type === 'bonus_pts') { label = "Bônus (+2pts)"; cat = "bonus"; }
+            else if (type === 'fun_action') { label = "Desafio 🎤"; cat = "fun"; }
+
+            return { name: label, cat: cat, actionType: type, label: label };
+        });
+
+        let players = [
+            { id: 0, name: "Azul", class: "p-blue", pos: 0, symbol: "Az", points: 0, doublePoints: false, skipNext: false },
+            { id: 1, name: "Amarelo", class: "p-yellow", pos: 0, symbol: "Am", points: 0, doublePoints: false, skipNext: false },
+            { id: 2, name: "Vermelho", class: "p-red", pos: 0, symbol: "Vm", points: 0, doublePoints: false, skipNext: false },
+            { id: 3, name: "Verde", class: "p-green", pos: 0, symbol: "Vd", points: 0, doublePoints: false, skipNext: false }
+        ];
+
+        let selectedPlayerIndex = 0;
+
+        const challenges = {
+            tobe: [
+                { q: "Qual a forma correta para: 'He ___ a doctor.'", options: ["am", "is", "are"], correct: 1 },
+                { q: "Complete a frase negativa: 'They ___ not happy.'", options: ["is", "am", "are"], correct: 2 },
+                { q: "Forma interrogativa correta para: 'You are ready.'", options: ["Are you ready?", "Is you ready?", "Am you ready?"], correct: 0 }
+            ],
+            present: [
+                { q: "Complete: 'She ___ English every day.'", options: ["study", "studies", "studying"], correct: 1 },
+                { q: "Forma negativa de 'I like coffee':", options: ["I not like coffee", "I don't like coffee", "I doesn't like coffee"], correct: 1 },
+                { q: "Complete: 'He ___ soccer on weekends.'", options: ["play", "plays", "playing"], correct: 1 }
+            ],
+            continuous: [
+                { q: "Complete: 'They are ___ TV right now.'", options: ["watch", "watches", "watching"], correct: 2 },
+                { q: "Qual frase está no Present Continuous?", options: ["I go to school.", "I am going to school.", "I went to school."], correct: 1 },
+                { q: "Complete: 'She is ___ a book.'", options: ["read", "reading", "reads"], correct: 1 }
+            ],
+            past: [
+                { q: "Qual o Simple Past do verbo 'go'?", options: ["goed", "gone", "went"], correct: 2 },
+                { q: "Complete: 'I ___ a movie yesterday.'", options: ["watch", "watched", "watching"], correct: 1 },
+                { q: "Forma negativa no passado: 'He ___ work yesterday.'", options: ["didn't", "don't", "wasn't"], correct: 0 }
+            ],
+            pastcont: [
+                { q: "Complete: 'I ___ sleeping when you called.'", options: ["was", "were", "is"], correct: 0 },
+                { q: "Complete: 'They ___ playing soccer at 8 PM.'", options: ["was", "were", "are"], correct: 1 },
+                { q: "Tradução de 'We were eating':", options: ["Nós comemos", "Nós estávamos comendo", "Nós comeremos"], correct: 1 }
+            ],
+            vocab: [
+                { q: "O que significa a palavra 'Library'?", options: ["Livraria", "Biblioteca", "Laboratório"], correct: 1 },
+                { q: "Qual o significado de 'Expensive'?", options: ["Extensivo", "Barato", "Caro"], correct: 2 },
+                { q: "O que significa 'Building'?", options: ["Construção / Prédio", "Chuva", "Ponte"], correct: 0 }
+            ]
+        };
+
+        const funActionsList = [
+            "🎤 Cante o refrão de uma música em inglês por 10 segundos!",
+            "💃 Dance o seu melhor passinho por 5 segundos sem rir!",
+            "🗣️ Fale um trava-línguas em inglês (ex: 'Red leather, yellow leather') bem rápido 3 vezes!",
+            "🎭 Faça uma mímica de uma profissão em inglês para os outros adivinharem!",
+            "🐶 Imite o som de 3 animais diferentes em inglês (Dog, Cat, Duck)!"
+        ];
+
+            function createBoard() {
+            const board = document.getElementById('board');
+            
+            tileCoords.forEach((coord, index) => {
+                const tileData = tileTypesDef[index];
+                const tileDiv = document.createElement('div');
+                tileDiv.className = `tile cat-${tileData.cat}`;
+                tileDiv.style.gridRow = coord.r;
+                tileDiv.style.gridColumn = coord.c;
+                tileDiv.id = `tile-${index}`;
+
+                tileDiv.innerHTML = `
+                    <span class="tile-number">${index + 1}</span>
+                    <span>${tileData.label}</span>
+                `;
+                board.appendChild(tileDiv);
+            });
+
+            players.forEach((p, idx) => {
+                const pawn = document.createElement('div');
+                pawn.className = `pawn-marker ${p.class}`;
+                pawn.innerText = p.symbol;
+                pawn.id = `pawn-${idx}`;
+                board.appendChild(pawn);
+            });
+
+            updateAllPawns();
+            updateScoreboard();
+        }
+
+        function selectPlayer(index) {
+            selectedPlayerIndex = index;
+            const options = document.querySelectorAll('.pawn-option');
+            options.forEach((opt, idx) => {
+                if (idx === index) opt.classList.add('selected');
+                else opt.classList.remove('selected');
+            });
+            document.getElementById('active-turn-label').innerText = `Vez de: ${players[index].name}`;
+        }
+
+        function updateAllPawns() {
+            players.forEach((p, idx) => {
+                const pawnEl = document.getElementById(`pawn-${idx}`);
+                const tileEl = document.getElementById(`tile-${p.pos}`);
+                if (tileEl && pawnEl) {
+                    const offsetX = (idx % 2) * 12 + 2;
+                    const offsetY = Math.floor(idx / 2) * 12 + 2;
+                    pawnEl.style.top = (tileEl.offsetTop + offsetY) + 'px';
+                    pawnEl.style.left = (tileEl.offsetLeft + offsetX) + 'px';
+                }
+            });
+        }
+
+        function updateScoreboard() {
+            const sb = document.getElementById('scoreboard');
+            sb.innerHTML = '';
+            players.forEach(p => {
+                const row = document.createElement('div');
+                row.className = 'score-row';
+                row.innerHTML = `<span>${p.name} (Casa ${p.pos + 1}):</span> <span><b>${p.points} pts</b></span>`;
+                sb.appendChild(row);
+            });
+        }
+
+        function rollDice() {
+            let player = players[selectedPlayerIndex];
+
+            if (player.skipNext) {
+                player.skipNext = false;
+                document.getElementById('question-text').innerText = `${player.name} perdeu esta rodada por estar bloqueado!`;
+                document.getElementById('category-title').innerText = "Bloqueado!";
+                document.getElementById('options-list').innerHTML = '';
+                document.getElementById('feedback-text').innerText = '';
+                return;
+            }
+
+            const diceEl = document.getElementById('dice');
+            const resultText = document.getElementById('dice-result');
+            
+            let rolls = 0;
+            const rollInterval = setInterval(() => {
+                const tempNum = Math.floor(Math.random() * 6) + 1;
+                diceEl.innerText = tempNum;
+                rolls++;
+                if (rolls > 10) {
+                    clearInterval(rollInterval);
+                    const finalRoll = Math.floor(Math.random() * 6) + 1;
+                    diceEl.innerText = finalRoll;
+                    resultText.innerText = `Tirou: ${finalRoll}`;
+                    
+                    moveCurrentPlayer(finalRoll);
+                }
+            }, 40);
+        }
+
+        function moveCurrentPlayer(steps) {
+            let player = players[selectedPlayerIndex];
+            player.pos += steps;
+            
+            if (player.pos >= tileTypesDef.length - 1) {
+                player.pos = tileTypesDef.length - 1;
+                document.getElementById('question-text').innerText = `🏆 O jogador ${player.name} chegou ao FINISH com ${player.points} pontos e venceu o jogo!`;
+                document.getElementById('category-title').innerText = "FIM DE JOGO!";
+                document.getElementById('options-list').innerHTML = '';
+            } else {
+                handleTileAction(player);
+            }
+
+            updateAllPawns();
+            updateScoreboard();
+        }
+
+        function handleTileAction(player) {
+            const tileData = tileTypesDef[player.pos];
+            const catTitle = document.getElementById('category-title');
+            const qText = document.getElementById('question-text');
+            const optionsList = document.getElementById('options-list');
+            const feedbackText = document.getElementById('feedback-text');
+
+            optionsList.innerHTML = '';
+            feedbackText.innerText = '';
+
+            if (tileData.actionType === 'bonus_pts') {
+                catTitle.innerText = `${player.name} - Casinha Bônus! ⭐`;
+                qText.innerText = `🌟 Maravilha! Esta casa te concede BÔNUS: a próxima resposta certa valerá 2 pontos! Responda o desafio abaixo:`;
+                player.doublePoints = true;
+                setTimeout(() => triggerEnglishQuestion(player, true), 1500);
+                return;
+            }
+
+            if (tileData.actionType === 'fun_action') {
+                catTitle.innerText = `${player.name} - Desafio Dinâmico 🎤`;
+                const randomAction = funActionsList[Math.floor(Math.random() * funActionsList.length)];
+                qText.innerText = `🎉 Hora da diversão! Cumpra o desafio:\n\n"${randomAction}"\n\nDepois clique no botão abaixo para continuar.`;
+                
+                const okBtn = document.createElement('button');
+                okBtn.className = 'option-btn';
+                okBtn.style.textAlign = 'center';
+                okBtn.style.background = '#db2777';
+                okBtn.innerText = 'Desafio Cumprido! Continuar Jogo';
+                okBtn.onclick = () => {
+                    optionsList.innerHTML = '';
+                    qText.innerText = 'Aguarde o próximo turno!';
+                    catTitle.innerText = 'Desafio Concluído';
+                };
+                optionsList.appendChild(okBtn);
+                return;
+            }
+
+            if (tileData.actionType === 'trap_back2') {
+                catTitle.innerText = `${player.name} - Cilada!`;
+                qText.innerText = `💥 Oh não! Você caiu numa cilada e vai voltar 2 casas!`;
+                player.pos = Math.max(0, player.pos - 2);
+                setTimeout(() => { updateAllPawns(); updateScoreboard(); }, 1500);
+                return;
+            }
+
+            if (tileData.actionType === 'luck_forward1') {
+                catTitle.innerText = `${player.name} - Sorte!`;
+                qText.innerText = `🍀 Sorte! Você ganhou um impulso e avança mais 1 casa!`;
+                player.pos = Math.min(tileTypesDef.length - 1, player.pos + 1);
+                setTimeout(() => { updateAllPawns(); updateScoreboard(); }, 1500);
+                return;
+            }
+
+            if (tileData.actionType === 'skip_turn') {
+                catTitle.innerText = `${player.name} - Bloqueado!`;
+                qText.innerText = `⏳ Você caiu em uma zona de pausa e ficará 1 rodada sem jogar!`;
+                player.skipNext = true;
+                return;
+            }
+
+            if (tileData.actionType === 'trap_start') {
+                catTitle.innerText = `${player.name} - Azar Total!`;
+                qText.innerText = `🚨 Azar! Você caiu na pior cilada e tem que voltar direto para o START!`;
+                player.pos = 0;
+                setTimeout(() => { updateAllPawns(); updateScoreboard(); }, 1500);
+                return;
+            }
+
+            if (tileData.cat === 'start' || tileData.cat === 'finish') {
+                catTitle.innerText = `${player.name} - ${tileData.name}`;
+                qText.innerText = `Você parou em (${tileData.name}). Aguarde o próximo turno!`;
+                return;
+            }
+
+            triggerEnglishQuestion(player, false);
+        }
+
+        function triggerEnglishQuestion(player, isBonusActive) {
+            const tileData = tileTypesDef[player.pos];
+            const catTitle = document.getElementById('category-title');
+            const qText = document.getElementById('question-text');
+            const optionsList = document.getElementById('options-list');
+            const feedbackText = document.getElementById('feedback-text');
+
+            optionsList.innerHTML = '';
+            feedbackText.innerText = '';
+
+            const prefix = isBonusActive ? "⭐ [BÔNUS x2] " : "";
+            catTitle.innerText = `${player.name} - Desafio: ${tileData.name}`;
+            
+            const pool = challenges[tileData.cat] || challenges['vocab'];
+            const challenge = pool[Math.floor(Math.random() * pool.length)];
+
+            qText.innerText = prefix + challenge.q;
+
+            challenge.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(btn, idx, challenge.correct, player);
+                optionsList.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, selected, correct, player) {
+            const options = document.querySelectorAll('.option-btn');
+            options.forEach((b, idx) => {
+                b.disabled = true;
+                if (idx === correct) b.classList.add('correct');
+                else if (idx === selected) b.classList.add('wrong');
+            });
+
+            const feedbackText = document.getElementById('feedback-text');
+            if (selected === correct) {
+                feedbackText.style.color = '#4ade80';
+                const pointsEarned = player.doublePoints ? 2 : 1;
+                player.points += pointsEarned;
+                if (player.doublePoints) {
+                    feedbackText.innerText = `✨ Resposta Correta! Você ganhou 2 PONTOS de bônus!`;
+                    player.doublePoints = false;
+                } else {
+                    feedbackText.innerText = `✨ Resposta Correta! +1 Ponto!`;
+                }
+            } else {
+                feedbackText.style.color = '#f87171';
+                player.doublePoints = false;
+                if (player.pos > 0) {
+                    player.pos -= 1;
+                    feedbackText.innerText = '❌ Resposta Incorreta! Você errou e voltou 1 casa!';
+                } else {
+                    feedbackText.innerText = '❌ Resposta Incorreta!';
+                }
+            }
+            updateAllPawns();
+            updateScoreboard();
+        }
+
+        window.onload = createBoard;
+        window.onresize = updateAllPawns;
+    </script>
+</body>
+</html>
