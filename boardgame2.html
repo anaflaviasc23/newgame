@@ -256,6 +256,8 @@
             transition: background 0.2s;
             width: 100%;
         }
+        
+        
 
         .btn:hover { background: #0369a1; }
 
@@ -274,6 +276,8 @@
             font-size: 8px;
             font-weight: bold;
         }
+        
+        
 
         .scoreboard {
             font-size: 0.8rem;
@@ -290,12 +294,21 @@
             background: #1e293b;
             border-radius: 4px;
         }
+        
+        .btn-reset {
+        background: #dc2626;
+        margin-top: 8px;
+        width: 100%;
+        }
+        .btn-reset:hover {
+        background: #b91c1c;
+        }
+        
     </style>
 </head>
 <body>
     <header>
-        <h1>English Board Game - Parte 2 de 3</h1>
-        <p>Estrutura do corpo do jogo e base de dados de desafios e perguntas.</p>
+        <h1>English Board Game</h1>
     </header>
 
     <div class="game-layout">
@@ -316,26 +329,30 @@
 
         <div class="sidebar">
             <div class="section-box">
-                <h3>Escolher Peão</h3>
+                <h3>Choose your pawn</h3>
                 <div class="pawns-select">
-                    <div class="pawn-option p-blue selected" onclick="selectPlayer(0)">Az</div>
-                    <div class="pawn-option p-yellow" onclick="selectPlayer(1)">Am</div>
-                    <div class="pawn-option p-red" onclick="selectPlayer(2)">Vm</div>
-                    <div class="pawn-option p-green" onclick="selectPlayer(3)">Vd</div>
+                    <div class="pawn-option p-blue selected" onclick="selectPlayer(0)">1</div>
+                    <div class="pawn-option p-yellow" onclick="selectPlayer(1)">2</div>
+                    <div class="pawn-option p-red" onclick="selectPlayer(2)">3</div>
+                    <div class="pawn-option p-green" onclick="selectPlayer(3)">4</div>
                 </div>
             </div>
 
             <div class="section-box">
-                <h3>Dado</h3>
+                <h3>Dice</h3>
                 <div class="dice" id="dice" onclick="rollDice()">🎲</div>
-                <p id="dice-result" style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px;">Clique para girar</p>
-                <button class="btn" onclick="rollDice()">Girar Dado</button>
+                <p id="dice-result" style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px;">Roll the dice</p>
+                <button class="btn" onclick="rollDice()">Roll the Dice</button>
             </div>
 
             <div class="section-box">
-                <h3>Placar e Posições</h3>
+                <h3>Score & positions</h3>
                 <div class="scoreboard" id="scoreboard"></div>
             </div>
+            
+            <button class="btn btn-reset" onclick="resetGame()">🔄 Reset Game</button>
+
+            
         </div>
     </div>
 
@@ -676,6 +693,31 @@
 
         window.onload = createBoard;
         window.onresize = updateAllPawns;
+        
+        function resetGame() {
+    if (confirm("Tem certeza que deseja reiniciar o jogo? Todos os pontos e posições serão resetados.")) {
+        players.forEach(p => {
+            p.pos = 0;
+            p.points = 0;
+            p.doublePoints = false;
+            p.skipNext = false;
+        });
+        selectedPlayerIndex = 0;
+        selectPlayer(0);
+        
+        document.getElementById('dice').innerText = '🎲';
+        document.getElementById('dice-result').innerText = 'Clique para girar';
+        document.getElementById('category-title').innerText = 'Pronto para jogar?';
+        document.getElementById('question-text').innerText = 'Escolha seu peão e role o dado para iniciar!';
+        document.getElementById('options-list').innerHTML = '';
+        document.getElementById('feedback-text').innerText = '';
+
+        updateAllPawns();
+        updateScoreboard();
+    }
+}
+
+        
     </script>
 </body>
 </html>
