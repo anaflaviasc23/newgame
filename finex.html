@@ -5,631 +5,660 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Finanças em Jogo — Tabuleiro</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-    :root {
-        --navy: #1f2a5c;
-        --navy-soft: #3c4670;
-        --pink: #e6197a;
-        --pink-light: #ff4fa3;
-        --pink-deep: #b10f5c;
-        --teal: #087d83;
-        --line: #e3e7f3;
-        --tile-gap: clamp(7px, .9vw, 13px);
-    }
+:root {
+    --navy:#1f2a5c;
+    --pink:#e6197a;
+    --pink-light:#ff4fa3;
+    --pink-dark:#b10f5c;
+    --teal:#087d83;
+    --line:#e3e7f3;
+    --tile-gap:clamp(5px,.75vw,11px);
+}
 
-    * { box-sizing: border-box; }
+* {box-sizing:border-box}
 
-    body {
-        margin: 0;
-        min-height: 100vh;
-        color: var(--navy);
-        font-family: "Nunito", "Segoe UI", Arial, sans-serif;
-        background:
-            radial-gradient(circle at 12% 0%, #ffe6f2 0%, transparent 45%),
-            radial-gradient(circle at 88% 100%, #e2ecff 0%, transparent 48%),
-            linear-gradient(160deg, #fdf8fb, #f2f5fd);
-    }
+body {
+    margin:0;
+    min-height:100vh;
+    font-family:"Nunito",sans-serif;
+    color:var(--navy);
+    background:
+        radial-gradient(circle at 10% 0%,#ffe6f2,transparent 42%),
+        radial-gradient(circle at 90% 100%,#e2ecff,transparent 45%),
+        linear-gradient(150deg,#fdf8fb,#f2f5fd);
+}
 
-    button, select { font: inherit; }
+button,select {font:inherit}
 
-    .app {
-        min-height: 100vh;
-        padding: 18px clamp(14px, 2.4vw, 34px) 26px;
-    }
+.app {
+    min-height:100vh;
+    padding:20px clamp(10px,2vw,30px);
+}
 
-    .topbar {
-        max-width: 1640px;
-        margin: 0 auto 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-    }
+.topbar {
+    max-width:1650px;
+    margin:0 auto 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
 
-    .brand h1 {
-        margin: 0;
-        font-size: clamp(1.4rem, 2.1vw, 2.05rem);
-        line-height: 1.1;
-        font-weight: 900;
-        color: var(--navy);
-    }
+.brand h1 {
+    margin:0;
+    font-size:clamp(1.5rem,2.5vw,2.2rem);
+    font-weight:900;
+    line-height:1.1;
+}
 
-    .brand h1 span { color: var(--pink); }
+.brand h1 span {color:var(--pink)}
 
-    .brand p {
-        margin: 5px 0 0;
-        color: #6b7391;
-        font-size: .9rem;
-        font-weight: 800;
-    }
+.brand p {
+    margin:5px 0 0;
+    color:#727b98;
+    font-weight:800;
+    font-size:.85rem;
+}
 
-    .top-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 9px 16px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: #fff;
-        color: var(--navy);
-        font-size: .78rem;
-        font-weight: 900;
-        white-space: nowrap;
-        box-shadow: 0 6px 16px rgba(31, 42, 92, .07);
-    }
+.top-badge {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 17px;
+    border:1px solid var(--line);
+    border-radius:30px;
+    background:#fff;
+    font-size:.8rem;
+    font-weight:900;
+    box-shadow:0 5px 15px #1f2a5c12;
+}
 
-    .top-badge i { color: var(--pink); }
+.top-badge i {color:var(--pink)}
 
-    .game-layout {
-        width: 100%;
-        max-width: 1640px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(300px, 366px);
-        align-items: stretch;
-        gap: clamp(14px, 1.8vw, 26px);
-    }
+.game-layout {
+    max-width:1650px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 350px;
+    gap:20px;
+}
 
-    .board-column {
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-    }
+.board-column {min-width:0}
 
-    .board-shell {
-        flex: 1;
-        padding: clamp(14px, 1.8vw, 24px);
-        border: 2px solid var(--line);
-        border-radius: 26px;
-        background: #ffffff;
-        box-shadow: 0 18px 42px rgba(31, 42, 92, .1);
-    }
+.board-shell {
+    padding:clamp(10px,1.5vw,22px);
+    background:#fff;
+    border:2px solid var(--line);
+    border-radius:25px;
+    box-shadow:0 15px 40px #1f2a5c12;
+}
 
+.board {
+    --cell-width:100%;
+    position:relative;
+    width:100%;
+    height:clamp(520px,75vh,800px);
+    display:grid;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    grid-template-rows:repeat(8,minmax(0,1fr));
+    gap:var(--tile-gap);
+    isolation:isolate;
+}
+
+.tile {
+    position:relative;
+    z-index:1;
+    min-width:0;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:5px;
+    padding:5px;
+    border:2px solid #1f2a5c18;
+    border-radius:13px;
+    text-align:center;
+    box-shadow:0 4px 0 #1f2a5c12;
+    transition:.2s;
+}
+
+.tile:hover {
+    transform:translateY(-2px);
+    filter:brightness(1.04);
+}
+
+.tile-num {
+    position:absolute;
+    top:5px;
+    left:7px;
+    font-size:clamp(.55rem,.7vw,.72rem);
+    font-weight:900;
+    opacity:.75;
+}
+
+.tile-icon {
+    font-size:clamp(17px,2vw,30px);
+    line-height:1;
+}
+
+.tile-label {
+    font-size:clamp(.48rem,.72vw,.72rem);
+    font-weight:900;
+    line-height:1.05;
+    text-transform:uppercase;
+    overflow-wrap:anywhere;
+}
+
+.tile.terminal {
+    border:3px solid #fff;
+    box-shadow:0 4px 0 #1f2a5c25,0 0 0 2px #1f2a5c30;
+}
+
+.path-arrow {
+    position:absolute;
+    z-index:3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    filter:drop-shadow(0 1px 2px #1f2a5c55);
+    pointer-events:none;
+}
+
+.path-arrow svg {width:100%;height:100%}
+
+.pawn {
+    position:absolute;
+    z-index:10;
+    width:clamp(23px,2.1vw,32px);
+    height:clamp(23px,2.1vw,32px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:2px solid white;
+    border-radius:50%;
+    box-shadow:0 3px 7px #1f2a5c66;
+    font-size:.52rem;
+    font-weight:900;
+    transition:left .45s ease,top .45s ease;
+    pointer-events:none;
+}
+
+.blue {background:#3b82f6;color:white}
+.yellow {background:#facc15;color:#3a2c00}
+.red {background:#ef4444;color:white}
+.green {background:#22c55e;color:white}
+
+.legend {
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:9px 15px;
+    padding:15px 5px 0;
+    font-size:.72rem;
+    font-weight:900;
+}
+
+.legend-item {
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.legend-color {
+    width:11px;
+    height:11px;
+    border-radius:4px;
+}
+
+.sidebar {
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+    min-width:0;
+}
+
+.panel {
+    background:white;
+    border:2px solid var(--line);
+    border-radius:19px;
+    box-shadow:0 10px 25px #1f2a5c0d;
+}
+
+.decision-panel {
+    padding:16px;
+    min-height:290px;
+    display:flex;
+    flex-direction:column;
+}
+
+.panel-heading {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding-bottom:11px;
+    border-bottom:1px solid var(--line);
+}
+
+.panel-heading h2 {
+    margin:0;
+    font-size:1rem;
+    font-weight:900;
+}
+
+.turn-label {
+    font-size:.73rem;
+    color:var(--teal);
+    font-weight:900;
+}
+
+.decision-content {
+    flex:1;
+    padding:15px 0;
+}
+
+.decision-content h3 {
+    margin:0 0 8px;
+    color:var(--pink);
+    font-size:1rem;
+    line-height:1.3;
+    font-weight:900;
+}
+
+.decision-content p {
+    margin:0;
+    color:#596383;
+    font-size:.84rem;
+    line-height:1.5;
+    white-space:pre-line;
+}
+
+.options {
+    display:grid;
+    gap:8px;
+    margin-top:13px;
+}
+
+.option-btn {
+    width:100%;
+    padding:11px;
+    border:1px solid #e5e9f4;
+    border-radius:11px;
+    background:#f4f6fc;
+    color:var(--navy);
+    text-align:left;
+    font-size:.8rem;
+    line-height:1.4;
+    font-weight:900;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.option-btn:hover:not(:disabled) {
+    background:#e9edf9;
+    transform:translateY(-1px);
+}
+
+.option-btn:disabled {opacity:.55;cursor:default}
+
+.option-btn.continue {
+    background:linear-gradient(180deg,var(--pink-light),var(--pink));
+    color:white;
+    border:0;
+    text-align:center;
+    box-shadow:0 4px 0 var(--pink-dark);
+}
+
+.feedback {
+    color:#596383;
+    font-size:.77rem;
+    line-height:1.5;
+}
+
+.deltas {
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:center;
+    margin-top:9px;
+}
+
+.delta {
+    padding:4px 8px;
+    border-radius:20px;
+    background:#f1f3fa;
+    font-size:.67rem;
+    font-weight:900;
+}
+
+.positive {color:#168346}
+.negative {color:#c92c45}
+
+.control-panel,.score-panel {padding:14px}
+
+.control-panel h3,.score-panel h3 {
+    margin:0 0 11px;
+    font-size:.88rem;
+    font-weight:900;
+}
+
+.dice-row {
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.dice {
+    flex:0 0 55px;
+    width:55px;
+    height:55px;
+    display:grid;
+    place-items:center;
+    border:2px solid var(--line);
+    border-radius:14px;
+    background:#fff;
+    color:var(--pink);
+    box-shadow:0 4px 0 #e6e9f4;
+    font-size:1.9rem;
+}
+
+.dice-info {flex:1;min-width:0}
+
+.dice-result {
+    min-height:20px;
+    margin:0 0 6px;
+    color:#737b97;
+    font-size:.75rem;
+    font-weight:900;
+}
+
+.btn {
+    width:100%;
+    padding:10px 12px;
+    border:0;
+    border-radius:11px;
+    background:linear-gradient(180deg,var(--pink-light),var(--pink));
+    color:white;
+    box-shadow:0 4px 0 var(--pink-dark);
+    font-size:.81rem;
+    font-weight:900;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.btn:hover:not(:disabled) {transform:translateY(-2px)}
+.btn:active:not(:disabled) {transform:translateY(2px)}
+.btn:disabled {
+    background:#c9cee0;
+    box-shadow:0 4px 0 #aab1c7;
+    cursor:default;
+}
+
+.select-row {
+    display:flex;
+    gap:8px;
+}
+
+.select-row select {
+    flex:1;
+    min-width:0;
+    padding:9px;
+    border:1px solid #d8ddec;
+    border-radius:10px;
+    background:white;
+    color:var(--navy);
+    font-weight:800;
+}
+
+.select-row .btn {width:auto}
+
+.team-list {display:grid;gap:7px}
+
+.team-card {
+    padding:8px 10px;
+    border-left:4px solid #ccd2e4;
+    border-radius:9px;
+    background:#f6f8fd;
+}
+
+.team-card.active {
+    border-left-color:var(--pink);
+    background:#fff1f7;
+}
+
+.team-name {
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    font-size:.75rem;
+    font-weight:900;
+}
+
+.team-stats {
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:4px;
+    color:#626b8b;
+    font-size:.68rem;
+    font-weight:900;
+}
+
+.score-actions {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-top:11px;
+}
+
+.btn-outline {
+    background:white;
+    color:var(--navy);
+    border:2px solid var(--line);
+    box-shadow:0 4px 0 #e6e9f4;
+}
+
+.btn-soft {
+    background:white;
+    color:var(--pink);
+    border:2px solid #ffd3e7;
+    box-shadow:0 4px 0 #ffd3e7;
+}
+
+.ranking {
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+    font-size:.66rem;
+}
+
+.ranking th,.ranking td {
+    padding:6px 3px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+}
+
+.ranking th {color:#8189a0}
+.ranking .winner {color:var(--pink);font-weight:900}
+
+@media(max-width:1100px) {
+    .game-layout {grid-template-columns:minmax(0,1fr) 310px}
+}
+
+@media(max-width:850px) {
+    .game-layout {grid-template-columns:1fr}
+    .board {height:clamp(460px,75vw,680px)}
+    .sidebar {display:grid;grid-template-columns:1fr 1fr}
+    .decision-panel {grid-column:1/-1}
+}
+
+@media(max-width:580px) {
+    .app {padding:12px 8px}
+    .top-badge {display:none}
+    .board-shell {padding:7px;border-radius:16px}
     .board {
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        grid-template-rows: repeat(8, minmax(0, 1fr));
-        gap: var(--tile-gap);
-        width: 100%;
-        height: clamp(520px, 72vh, 780px);
+        height:clamp(350px,110vw,470px);
+        gap:4px;
     }
-
-    .tile {
-        z-index: 1;
-        position: relative;
-        min-width: 0;
-        min-height: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        padding: 5px;
-        border: 2px solid rgba(31, 42, 92, .1);
-        border-radius: 15px;
-        text-align: center;
-        box-shadow: 0 4px 0 rgba(31, 42, 92, .09);
-        transition: transform .15s ease, box-shadow .15s ease;
-    }
-
-    .tile:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 0 rgba(31, 42, 92, .12);
-    }
-
-    .tile-icon {
-        font-size: clamp(19px, 2.1vw, 30px);
-        line-height: 1;
-        display: block;
-    }
-
-    .tile-label {
-        max-width: 100%;
-        font-size: clamp(.48rem, .7vw, .68rem);
-        line-height: 1.05;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: .2px;
-        overflow-wrap: anywhere;
-    }
-
-    .tile-num {
-        position: absolute;
-        top: 5px;
-        left: 7px;
-        font-size: .6rem;
-        font-weight: 900;
-        opacity: .55;
-    }
-
-    .tile.terminal .tile-label { font-size: clamp(.6rem, .88vw, .82rem); }
-
-    .path-arrow {
-        z-index: 3;
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9aa4c4;
-        pointer-events: none;
-    }
-
-    .path-arrow svg { width: 100%; height: 100%; }
-
+    .tile {border-radius:8px;padding:2px;gap:3px}
+    .tile-icon {font-size:clamp(13px,4vw,19px)}
+    .tile-label {display:none}
+    .tile-num {top:3px;left:4px;font-size:.48rem}
     .pawn {
-        position: absolute;
-        z-index: 8;
-        width: clamp(22px, 1.9vw, 29px);
-        height: clamp(22px, 1.9vw, 29px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid #fff;
-        border-radius: 50%;
-        box-shadow: 0 2px 7px rgba(31, 42, 92, .4);
-        font-size: .5rem;
-        font-weight: 900;
-        transition: left .3s ease, top .3s ease;
+        width:clamp(19px,5vw,24px);
+        height:clamp(19px,5vw,24px);
+        font-size:.43rem;
     }
+    .legend {font-size:.62rem;gap:7px 10px}
+    .sidebar {display:flex}
+}
 
-    .blue { background: #3b82f6; color: #fff; }
-    .yellow { background: #f5c518; color: #3a2c00; }
-    .red { background: #ef4444; color: #fff; }
-    .green { background: #22c55e; color: #fff; }
-
-    .legend {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px 15px;
-        padding: 14px 8px 0;
-        color: var(--navy-soft);
-        font-size: .72rem;
-        font-weight: 800;
+@media(prefers-reduced-motion:reduce) {
+    *,*::before,*::after {
+        transition:none!important;
+        animation:none!important;
     }
-
-    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
-    .legend-color { width: 11px; height: 11px; border-radius: 4px; }
-
-    .sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        min-width: 0;
-    }
-
-    .panel {
-        border: 2px solid var(--line);
-        border-radius: 20px;
-        background: #fff;
-        color: var(--navy);
-        box-shadow: 0 12px 28px rgba(31, 42, 92, .08);
-    }
-
-    .decision-panel {
-        flex: 1;
-        min-height: 280px;
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .panel-heading {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid var(--line);
-    }
-
-    .panel-heading h2 {
-        margin: 0;
-        font-size: 1rem;
-        font-weight: 900;
-    }
-
-    .turn-label {
-        color: var(--teal);
-        font-size: .74rem;
-        font-weight: 900;
-        white-space: nowrap;
-    }
-
-    .decision-content {
-        flex: 1;
-        padding: 14px 0;
-        overflow: auto;
-    }
-
-    .decision-content h3 {
-        margin: 0 0 7px;
-        color: var(--pink);
-        font-size: 1rem;
-        line-height: 1.25;
-        font-weight: 900;
-    }
-
-    .decision-content p {
-        margin: 0;
-        color: var(--navy-soft);
-        font-size: .84rem;
-        line-height: 1.5;
-        white-space: pre-line;
-    }
-
-    .options {
-        display: grid;
-        gap: 7px;
-        margin-top: 12px;
-    }
-
-    .option-btn {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #e8ebf5;
-        border-radius: 11px;
-        background: #f4f6fc;
-        color: var(--navy);
-        text-align: left;
-        font-size: .79rem;
-        line-height: 1.35;
-        font-weight: 800;
-        cursor: pointer;
-        transition: background .15s ease, transform .15s ease;
-    }
-
-    .option-btn:hover:not(:disabled) {
-        background: #e8ecf9;
-        transform: translateY(-1px);
-    }
-
-    .option-btn:disabled { opacity: .55; cursor: default; }
-
-    .option-btn.continue {
-        background: linear-gradient(180deg, var(--pink-light), var(--pink));
-        border-color: transparent;
-        color: #fff;
-        text-align: center;
-        box-shadow: 0 3px 0 var(--pink-deep);
-    }
-
-    .option-btn.continue:hover { background: #cf126c; }
-
-    .feedback {
-        color: var(--navy-soft);
-        font-size: .76rem;
-        line-height: 1.45;
-    }
-
-    .deltas {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 5px;
-        margin-top: 8px;
-    }
-
-    .delta {
-        padding: 3px 9px;
-        border-radius: 99px;
-        background: #f1f3fa;
-        font-size: .68rem;
-        font-weight: 900;
-    }
-
-    .positive { color: #168346; }
-    .negative { color: #c92c45; }
-
-    .control-panel, .score-panel { padding: 13px; }
-
-    .control-panel h3, .score-panel h3 {
-        margin: 0 0 9px;
-        color: var(--navy);
-        font-size: .85rem;
-        font-weight: 900;
-    }
-
-    .dice-row {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-    }
-
-    .dice {
-        flex: 0 0 52px;
-        width: 52px;
-        height: 52px;
-        display: grid;
-        place-items: center;
-        border: 2px solid var(--line);
-        border-radius: 14px;
-        background: #fff;
-        color: var(--pink);
-        box-shadow: 0 3px 0 #e6e9f4;
-        font-size: 1.7rem;
-        font-weight: 900;
-        user-select: none;
-    }
-
-    .dice-info { flex: 1; min-width: 0; }
-
-    .dice-result {
-        min-height: 19px;
-        margin: 0 0 6px;
-        color: #6b7391;
-        font-size: .74rem;
-        font-weight: 800;
-    }
-
-    .btn {
-        width: 100%;
-        padding: 10px 12px;
-        border: none;
-        border-radius: 11px;
-        background: linear-gradient(180deg, var(--pink-light), var(--pink));
-        color: #fff;
-        box-shadow: 0 4px 0 var(--pink-deep);
-        font-size: .82rem;
-        font-weight: 900;
-        cursor: pointer;
-        transition: transform .12s ease, box-shadow .12s ease;
-    }
-
-    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 var(--pink-deep); }
-    .btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 var(--pink-deep); }
-    .btn:disabled { background: #c9cee0; box-shadow: 0 4px 0 #aab1c7; cursor: default; }
-
-    .select-row { display: flex; gap: 8px; }
-
-    .select-row select {
-        flex: 1;
-        min-width: 0;
-        padding: 9px;
-        border: 1px solid #d8ddec;
-        border-radius: 10px;
-        background: #fff;
-        color: var(--navy);
-        font-weight: 800;
-    }
-
-    .select-row .btn { width: auto; }
-
-    .team-list { display: grid; gap: 6px; }
-
-    .team-card {
-        padding: 7px 9px;
-        border-left: 4px solid #ccd2e4;
-        border-radius: 9px;
-        background: #f6f8fd;
-    }
-
-    .team-card.active {
-        border-left-color: var(--pink);
-        background: #fff2f8;
-    }
-
-    .team-name {
-        display: flex;
-        justify-content: space-between;
-        gap: 8px;
-        color: var(--navy);
-        font-size: .73rem;
-        font-weight: 900;
-    }
-
-    .team-stats {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 3px;
-        color: #5a6384;
-        font-size: .67rem;
-        font-weight: 900;
-    }
-
-    .score-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: 10px;
-    }
-
-    .btn-outline {
-        background: #fff;
-        color: var(--navy);
-        border: 2px solid var(--line);
-        box-shadow: 0 4px 0 #e6e9f4;
-    }
-
-    .btn-outline:hover:not(:disabled) {
-        background: #f6f8fd;
-        box-shadow: 0 6px 0 #e6e9f4;
-    }
-
-    .btn-soft {
-        background: #fff;
-        color: var(--pink);
-        border: 2px solid #ffd3e7;
-        box-shadow: 0 4px 0 #ffd3e7;
-    }
-
-    .btn-soft:hover:not(:disabled) {
-        background: #fff5fa;
-        box-shadow: 0 6px 0 #ffd3e7;
-    }
-
-    .ranking {
-        width: 100%;
-        border-collapse: collapse;
-        color: var(--navy);
-        font-size: .68rem;
-        margin-top: 10px;
-    }
-
-    .ranking th, .ranking td {
-        padding: 5px 3px;
-        border-bottom: 1px solid var(--line);
-        text-align: left;
-    }
-
-    .ranking th { color: #7b8299; }
-    .ranking .winner { color: var(--pink); font-weight: 900; }
-
-    @media (min-width: 1500px) {
-        .game-layout { grid-template-columns: minmax(0, 1fr) 386px; }
-        .board { height: clamp(600px, 74vh, 820px); }
-    }
-
-    @media (max-width: 1080px) {
-        .game-layout { grid-template-columns: minmax(0, 1fr) 306px; }
-        .board { height: clamp(480px, 66vh, 640px); }
-    }
-
-    @media (max-width: 860px) {
-        .game-layout { grid-template-columns: 1fr; }
-        .board { height: clamp(460px, 70vh, 700px); }
-        .sidebar { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
-        .decision-panel { grid-column: 1 / -1; min-height: 250px; }
-    }
-
-    @media (max-width: 580px) {
-        .app { padding: 14px 10px 20px; }
-        .top-badge { display: none; }
-        .board-shell { padding: 10px; border-radius: 18px; }
-        .board { height: 470px; gap: 6px; }
-        .tile { border-radius: 10px; padding: 3px; }
-        .tile-icon { font-size: 17px; }
-        .tile-label { display: none; }
-        .tile-num { top: 3px; left: 4px; font-size: .46rem; }
-        .sidebar { display: flex; }
-        .legend { gap: 7px 10px; font-size: .64rem; }
-    }
+}
 </style>
 </head>
 
 <body>
 <div class="app">
-    <header class="topbar">
-        <div class="brand">
-            <h1>Finanças <span>em Jogo</span></h1>
-            <p>Jogue • Aprenda • Evolua</p>
+
+<header class="topbar">
+    <div class="brand">
+        <h1>Finanças <span>em Jogo</span></h1>
+        <p>Jogue • Aprenda • Evolua</p>
+    </div>
+    <div class="top-badge">
+        <i class="bi bi-dice-5-fill"></i>
+        Tabuleiro de decisões financeiras
+    </div>
+</header>
+
+<main class="game-layout">
+
+<section class="board-column">
+    <div class="board-shell">
+        <div class="board" id="board" aria-label="Tabuleiro com 48 casas"></div>
+    </div>
+
+    <div class="legend">
+        <span class="legend-item"><i class="legend-color" style="background:#0d9488"></i>Salário</span>
+        <span class="legend-item"><i class="legend-color" style="background:#0284c7"></i>Orçamento</span>
+        <span class="legend-item"><i class="legend-color" style="background:#facc15"></i>Consumo</span>
+        <span class="legend-item"><i class="legend-color" style="background:#84cc16"></i>Reserva</span>
+        <span class="legend-item"><i class="legend-color" style="background:#7c3aed"></i>Investir</span>
+        <span class="legend-item"><i class="legend-color" style="background:#f1f5f9"></i>Oportunidade</span>
+        <span class="legend-item"><i class="legend-color" style="background:#ef4444"></i>Imprevisto</span>
+        <span class="legend-item"><i class="legend-color" style="background:#991b1b"></i>Golpe</span>
+        <span class="legend-item"><i class="legend-color" style="background:#f59e0b"></i>Bônus</span>
+        <span class="legend-item"><i class="legend-color" style="background:#db2777"></i>Desafio</span>
+    </div>
+</section>
+
+<aside class="sidebar">
+
+<section class="panel decision-panel">
+    <div class="panel-heading">
+        <h2><i class="bi bi-lightbulb-fill"></i> Central de decisões</h2>
+        <span class="turn-label" id="turn-label">Vez: Azul</span>
+    </div>
+
+    <div class="decision-content">
+        <h3 id="card-title">Pronto para jogar?</h3>
+        <p id="card-text">Escolha a quantidade de equipes e role o dado para começar.</p>
+        <div class="options" id="options"></div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+</section>
+
+<section class="panel control-panel">
+    <h3><i class="bi bi-dice-5"></i> Dado e equipes</h3>
+
+    <div class="dice-row">
+        <div class="dice" id="dice">
+            <i class="bi bi-dice-5"></i>
         </div>
-        <div class="top-badge">
-            <i class="bi bi-dice-5-fill"></i>
-            Tabuleiro de decisões financeiras
+
+        <div class="dice-info">
+            <p class="dice-result" id="dice-result">Clique para rolar</p>
+            <button class="btn" id="roll-btn" type="button">Rolar o dado</button>
         </div>
-    </header>
+    </div>
 
-    <main class="game-layout">
-        <section class="board-column">
-            <div class="board-shell">
-                <div class="board" id="board" aria-label="Tabuleiro em espiral com 48 casas"></div>
-            </div>
+    <div style="height:13px"></div>
 
-            <div class="legend">
-                <span class="legend-item"><i class="legend-color" style="background:#0d9488"></i>Salário</span>
-                <span class="legend-item"><i class="legend-color" style="background:#0284c7"></i>Orçamento</span>
-                <span class="legend-item"><i class="legend-color" style="background:#facc15"></i>Consumo</span>
-                <span class="legend-item"><i class="legend-color" style="background:#84cc16"></i>Reserva</span>
-                <span class="legend-item"><i class="legend-color" style="background:#7c3aed"></i>Investir</span>
-                <span class="legend-item"><i class="legend-color" style="background:#f1f5f9"></i>Oportunidade</span>
-                <span class="legend-item"><i class="legend-color" style="background:#ef4444"></i>Imprevisto</span>
-                <span class="legend-item"><i class="legend-color" style="background:#991b1b"></i>Golpe</span>
-                <span class="legend-item"><i class="legend-color" style="background:#f59e0b"></i>Bônus</span>
-                <span class="legend-item"><i class="legend-color" style="background:#db2777"></i>Desafio</span>
-            </div>
-        </section>
+    <div class="select-row">
+        <select id="pawn-count" aria-label="Quantidade de equipes">
+            <option value="1">1 equipe</option>
+            <option value="2">2 equipes</option>
+            <option value="3">3 equipes</option>
+            <option value="4" selected>4 equipes</option>
+        </select>
+        <button class="btn" id="apply-count" type="button">Aplicar</button>
+    </div>
+</section>
 
-        <aside class="sidebar">
-            <section class="panel decision-panel">
-                <div class="panel-heading">
-                    <h2>Central de decisões</h2>
-                    <span class="turn-label" id="turn-label">Vez de: Azul</span>
-                </div>
-                <div class="decision-content">
-                    <h3 id="card-title">Pronto para jogar?</h3>
-                    <p id="card-text">Escolha a quantidade de peões e role o dado para começar.</p>
-                    <div class="options" id="options"></div>
-                </div>
-                <div class="feedback" id="feedback"></div>
-            </section>
+<section class="panel score-panel">
+    <h3><i class="bi bi-bar-chart-fill"></i> Placar das equipes</h3>
 
-            <section class="panel control-panel">
-                <h3><i class="bi bi-dice-5"></i> Dado e equipes</h3>
-                <div class="dice-row">
-                    <div class="dice" id="dice"><i class="bi bi-dice-5"></i></div>
-                    <div class="dice-info">
-                        <p class="dice-result" id="dice-result">Clique para rolar</p>
-                        <button class="btn" id="roll-btn" type="button">Rolar o dado</button>
-                    </div>
-                </div>
-                <div style="height:12px"></div>
-                <div class="select-row">
-                    <select id="pawn-count" aria-label="Quantidade de peões">
-                        <option value="1">1 peão</option>
-                        <option value="2">2 peões</option>
-                        <option value="3">3 peões</option>
-                        <option value="4" selected>4 peões</option>
-                    </select>
-                    <button class="btn" id="apply-count" type="button">Aplicar</button>
-                </div>
-            </section>
+    <div class="team-list" id="team-list"></div>
 
-            <section class="panel score-panel">
-                <h3><i class="bi bi-bar-chart-fill"></i> Placar das equipes</h3>
-                <div class="team-list" id="team-list"></div>
-                <div class="score-actions">
-                    <button class="btn btn-outline" id="ranking-btn" type="button">Ver ranking</button>
-                    <button class="btn btn-soft" id="reset-btn" type="button">Reiniciar</button>
-                </div>
-            </section>
-        </aside>
-    </main>
+    <div class="score-actions">
+        <button class="btn btn-outline" id="ranking-btn" type="button">Ver ranking</button>
+        <button class="btn btn-soft" id="reset-btn" type="button">Reiniciar</button>
+    </div>
+</section>
+
+</aside>
+</main>
 </div>
 
 <script>
-/* ============ 1. GEOMETRIA: ESPIRAL VERTICAL ============ */
+/* =====================================
+   1. CONFIGURAÇÃO DO TABULEIRO
+===================================== */
+
 const ROWS = 8;
 const COLS = 6;
+const TOTAL = 48;
+const LAST = TOTAL - 1;
+
+const TEAM_INFO = [
+    {name:"Azul",cls:"blue",mark:"AZ"},
+    {name:"Amarela",cls:"yellow",mark:"AM"},
+    {name:"Vermelha",cls:"red",mark:"VM"},
+    {name:"Verde",cls:"green",mark:"VD"}
+];
+
+/*
+ Caminho em serpentina:
+ primeira coluna de cima para baixo;
+ segunda coluna de baixo para cima;
+ e assim sucessivamente.
+*/
 
 function getCell(index) {
     const col = Math.floor(index / ROWS);
     const n = index % ROWS;
-    return { row: col % 2 === 0 ? n + 1 : ROWS - n, col: col + 1 };
+
+    return {
+        row:col % 2 === 0 ? n + 1 : ROWS - n,
+        col:col + 1
+    };
 }
 
-/* ============ 2. CASAS ============ */
-const TEAM_INFO = [
-    { name: "Azul", cls: "blue", mark: "AZ" },
-    { name: "Amarelo", cls: "yellow", mark: "AM" },
-    { name: "Vermelho", cls: "red", mark: "VM" },
-    { name: "Verde", cls: "green", mark: "VD" }
-];
+/* =====================================
+   2. CASAS DO TABULEIRO
+===================================== */
 
 const TYPES = [
     "start","salario","consumo","bonus","reserva","desafio","invest","sorte",
@@ -641,633 +670,971 @@ const TYPES = [
 ];
 
 const COLORS = {
-    start:        ["#0f766e", "#ffffff"],
-    finish:       ["#4338ca", "#ffffff"],
-    salario:      ["#0d9488", "#ffffff"],
-    orcamento:    ["#0284c7", "#ffffff"],
-    consumo:      ["#facc15", "#2b3308"],
-    reserva:      ["#84cc16", "#25320a"],
-    invest:       ["#7c3aed", "#ffffff"],
-    oportunidade: ["#f1f5f9", "#0f766e"],
-    imprevisto:   ["#ef4444", "#ffffff"],
-    golpe:        ["#991b1b", "#ffffff"],
-    bonus:        ["#f59e0b", "#3a2a00"],
-    sorte:        ["#22c55e", "#ffffff"],
-    cilada:       ["#ea580c", "#ffffff"],
-    bloqueio:     ["#64748b", "#ffffff"],
-    desafio:      ["#db2777", "#ffffff"]
+    start:["#0f766e","#fff"],
+    finish:["#4338ca","#fff"],
+    salario:["#0d9488","#fff"],
+    orcamento:["#0284c7","#fff"],
+    consumo:["#facc15","#2b3308"],
+    reserva:["#84cc16","#25320a"],
+    invest:["#7c3aed","#fff"],
+    oportunidade:["#f1f5f9","#0f766e"],
+    imprevisto:["#ef4444","#fff"],
+    golpe:["#991b1b","#fff"],
+    bonus:["#f59e0b","#3a2a00"],
+    sorte:["#22c55e","#fff"],
+    cilada:["#ea580c","#fff"],
+    bloqueio:["#64748b","#fff"],
+    desafio:["#db2777","#fff"]
 };
 
 const LABELS = {
-    start: "Começo", finish: "Fim", salario: "Salário", orcamento: "Orçamento",
-    consumo: "Consumo", reserva: "Reserva", invest: "Investir",
-    oportunidade: "Oportunidade", imprevisto: "Imprevisto", golpe: "Golpe",
-    bonus: "Bônus", sorte: "Sorte", cilada: "Cilada", bloqueio: "Bloqueio",
-    desafio: "Desafio"
+    start:"Começo",
+    finish:"Chegada",
+    salario:"Salário",
+    orcamento:"Orçamento",
+    consumo:"Consumo",
+    reserva:"Reserva",
+    invest:"Investir",
+    oportunidade:"Oportunidade",
+    imprevisto:"Imprevisto",
+    golpe:"Golpe",
+    bonus:"Bônus",
+    sorte:"Sorte",
+    cilada:"Cilada",
+    bloqueio:"Bloqueio",
+    desafio:"Desafio"
 };
 
-/* Ícones do Bootstrap Icons */
 const ICONS = {
-    start:        "bi-flag-fill",
-    finish:       "bi-trophy-fill",
-    salario:      "bi-cash-coin",
-    orcamento:    "bi-clipboard2-check-fill",
-    consumo:      "bi-bag-fill",
-    reserva:      "bi-shield-fill-check",
-    invest:       "bi-graph-up-arrow",
-    oportunidade: "bi-lightbulb-fill",
-    imprevisto:   "bi-exclamation-triangle-fill",
-    golpe:        "bi-incognito",
-    bonus:        "bi-star-fill",
-    sorte:        "bi-arrow-up-circle-fill",
-    cilada:       "bi-arrow-down-circle-fill",
-    bloqueio:     "bi-pause-fill",
-    desafio:      "bi-mic-fill"
+    start:"bi-flag-fill",
+    finish:"bi-trophy-fill",
+    salario:"bi-cash-coin",
+    orcamento:"bi-clipboard2-check-fill",
+    consumo:"bi-bag-fill",
+    reserva:"bi-shield-fill-check",
+    invest:"bi-graph-up-arrow",
+    oportunidade:"bi-lightbulb-fill",
+    imprevisto:"bi-exclamation-triangle-fill",
+    golpe:"bi-incognito",
+    bonus:"bi-star-fill",
+    sorte:"bi-arrow-up-circle-fill",
+    cilada:"bi-arrow-down-circle-fill",
+    bloqueio:"bi-pause-fill",
+    desafio:"bi-mic-fill"
 };
 
-const tiles = TYPES.map((type, index) => ({ index, type, ...getCell(index) }));
+const tiles = TYPES.map((type,index)=>({
+    index,
+    type,
+    ...getCell(index)
+}));
 
-/* ============ 3. CARTAS DE DECISÃO ============ */
+/* =====================================
+   3. CARTAS EDUCATIVAS
+===================================== */
+
 const EVENTS = {
-    orcamento: [
-        {
-            title: "O orçamento passou do limite",
-            text: "Você gastou R$ 250 a mais do que planejou. O mês ainda não acabou.",
-            choices: [
-                ["Cortar parte do lazer para compensar", { saude: 5, felicidade: -6 },
-                 "Você ajustou o orçamento, mas vale pensar em um corte que consiga manter."],
-                ["Ignorar e deixar o saldo negativo", { saldo: -250, saude: -8 },
-                 "Ignorar o gasto não faz a conta desaparecer. Rever o orçamento ajuda a evitar novas dívidas."],
-                ["Planejar refeições e reduzir o mercado", { saldo: -60, saude: 4 },
-                 "Um ajuste específico pode corrigir o mês sem eliminar todo o lazer."]
-            ]
-        },
-        {
-            title: "Assinaturas esquecidas",
-            text: "Você percebeu que paga R$ 120 por mês por serviços que quase não usa.",
-            choices: [
-                ["Cancelar as que não usa", { saldo: 120, saude: 5 },
-                 "Revisar gastos recorrentes é uma forma simples de liberar dinheiro no orçamento."],
-                ["Manter todas", { saldo: -120, felicidade: 3 },
-                 "Manter pode fazer sentido se você realmente usa os serviços; o importante é escolher conscientemente."]
-            ]
-        }
-    ],
 
-    consumo: [
-        {
-            title: "Tênis em promoção",
-            text: "Um tênis custa R$ 400 na promoção. Você não tinha planejado essa compra.",
-            choices: [
-                ["Comprar agora", { saldo: -400, felicidade: 8, saude: -4 },
-                 "A promoção só é economia quando a compra faz sentido para o seu orçamento."],
-                ["Deixar passar", { felicidade: -2, saude: 4 },
-                 "Você evitou uma compra não planejada. Compare a vontade com as prioridades do mês."],
-                ["Pesquisar uma opção mais barata", { saldo: -150, felicidade: 4, saude: 2 },
-                 "Pesquisar alternativas pode equilibrar desejo e planejamento."]
-            ]
-        },
-        {
-            title: "Delivery toda semana",
-            text: "Pedir comida várias vezes no mês pesa no orçamento. Você está com pouco tempo.",
-            choices: [
-                ["Continuar pedindo", { saldo: -160, felicidade: 4, saude: -3 },
-                 "Conveniência tem valor, mas é bom saber quanto ela representa no mês."],
-                ["Preparar algumas refeições em casa", { saldo: -40, saude: 5, felicidade: -1 },
-                 "Planejar algumas refeições já pode reduzir o gasto sem exigir cortar tudo."]
-            ]
-        }
-    ],
+orcamento:[
+{
+title:"O orçamento passou do limite",
+text:"Você gastou R$ 250 a mais do que planejou. O mês ainda não acabou.",
+choices:[
+["Cortar parte do lazer para compensar",{saude:5,felicidade:-6},"Você ajustou o orçamento. Um corte planejado pode ajudar a recuperar o equilíbrio."],
+["Ignorar e deixar o saldo negativo",{saldo:-250,saude:-8},"Ignorar o gasto não faz a conta desaparecer. Rever o orçamento evita novas dívidas."],
+["Planejar refeições e reduzir o mercado",{saldo:-60,saude:4},"Um ajuste específico pode corrigir o mês sem eliminar todo o lazer."]
+]
+},
+{
+title:"Assinaturas esquecidas",
+text:"Você percebeu que paga R$ 120 por mês por serviços que quase não usa.",
+choices:[
+["Cancelar as que não usa",{saldo:120,saude:5},"Revisar gastos recorrentes é uma forma simples de liberar dinheiro."],
+["Manter todas",{saldo:-120,felicidade:3},"Manter pode fazer sentido se você realmente usa os serviços. O importante é escolher conscientemente."]
+]
+}
+],
 
-    reserva: [
-        {
-            title: "Sua primeira reserva",
-            text: "Sobrou dinheiro neste mês. Você ainda não tem uma reserva de emergência.",
-            choices: [
-                ["Guardar uma parte agora", { saldo: -200, saude: 9, felicidade: -2 },
-                 "Uma reserva ajuda a lidar com imprevistos sem depender imediatamente de crédito."],
-                ["Usar tudo no lazer", { felicidade: 6, saude: -5 },
-                 "Lazer é importante; tente também reservar uma parte para emergências futuras."]
-            ]
-        },
-        {
-            title: "Um imprevisto apareceu",
-            text: "Você teve uma despesa inesperada. Há dinheiro guardado e também existe a opção de parcelar.",
-            choices: [
-                ["Usar a reserva e planejar a reposição", { saldo: -250, saude: 7 },
-                 "A reserva existe para situações como essa. Depois, você pode planejar como recompô-la."],
-                ["Parcelar no cartão", { saldo: -80, saude: -6 },
-                 "A parcela parece menor agora, mas compromete o orçamento dos próximos meses."]
-            ]
-        }
-    ],
+consumo:[
+{
+title:"Tênis em promoção",
+text:"Um tênis custa R$ 400 na promoção. Você não tinha planejado essa compra.",
+choices:[
+["Comprar agora",{saldo:-400,felicidade:8,saude:-4},"A promoção só representa economia quando a compra faz sentido para seu orçamento."],
+["Deixar passar",{felicidade:-2,saude:4},"Você evitou uma compra não planejada. Compare a vontade com suas prioridades."],
+["Pesquisar uma opção mais barata",{saldo:-150,felicidade:4,saude:2},"Pesquisar alternativas pode equilibrar desejo e planejamento."]
+]
+},
+{
+title:"Delivery toda semana",
+text:"Pedir comida várias vezes no mês pesa no orçamento. Você está com pouco tempo.",
+choices:[
+["Continuar pedindo",{saldo:-160,felicidade:4,saude:-3},"A conveniência tem valor, mas é importante saber quanto representa no mês."],
+["Preparar algumas refeições em casa",{saldo:-40,saude:5,felicidade:-1},"Planejar algumas refeições pode reduzir gastos sem exigir cortar tudo."]
+]
+}
+],
 
-    invest: [
-        {
-            title: "Como começar a investir?",
-            text: "Você tem algum dinheiro disponível, mas ainda está aprendendo sobre investimentos.",
-            choices: [
-                ["Pesquisar opções e riscos antes de aplicar", { saude: 7, felicidade: 1 },
-                 "Entender prazo, risco e liquidez antes de investir é parte do planejamento."],
-                ["Aplicar sem pesquisar", { saldo: -100, saude: -4 },
-                 "Investir sem entender o produto pode trazer surpresas. Pesquisar é um bom primeiro passo."]
-            ]
-        },
-        {
-            title: "Seu investimento oscilou",
-            text: "O valor da aplicação caiu nesta semana. Você não precisa desse dinheiro agora.",
-            choices: [
-                ["Rever o plano antes de decidir", { saude: 5 },
-                 "Uma oscilação isolada não precisa decidir por você. Reavalie seus objetivos e o risco."],
-                ["Vender por medo", { saldo: -80, saude: -3 },
-                 "Decidir sob pressão pode transformar uma oscilação temporária em prejuízo."]
-            ]
-        }
-    ],
+reserva:[
+{
+title:"Sua primeira reserva",
+text:"Sobrou dinheiro neste mês. Você ainda não tem uma reserva de emergência.",
+choices:[
+["Guardar uma parte agora",{saldo:-200,saude:9,felicidade:-2},"Uma reserva ajuda a lidar com imprevistos sem depender imediatamente de crédito."],
+["Usar tudo no lazer",{felicidade:6,saude:-5},"Lazer é importante. Tente também reservar uma parte para emergências futuras."]
+]
+},
+{
+title:"Um imprevisto apareceu",
+text:"Você teve uma despesa inesperada. Há dinheiro guardado e também existe a opção de parcelar.",
+choices:[
+["Usar a reserva e planejar a reposição",{saldo:-250,saude:7},"A reserva existe para situações como essa. Depois, planeje como recompô-la."],
+["Parcelar no cartão",{saldo:-80,saude:-6},"A parcela parece menor agora, mas compromete os próximos meses."]
+]
+}
+],
 
-    oportunidade: [
-        {
-            title: "Curso para desenvolver uma habilidade",
-            text: "Um curso pode ajudar nos estudos ou no trabalho, mas exige tempo e dinheiro.",
-            choices: [
-                ["Verificar o custo e planejar o curso", { saldo: -100, saude: 6 },
-                 "Investir em aprendizado pode ser útil quando cabe no orçamento e tem um objetivo claro."],
-                ["Deixar para depois", { felicidade: 2, saude: -2 },
-                 "Adiar pode ser razoável. Anote a meta e avalie quando o orçamento permitir."]
-            ]
-        }
-    ],
+invest:[
+{
+title:"Como começar a investir?",
+text:"Você tem algum dinheiro disponível, mas ainda está aprendendo sobre investimentos.",
+choices:[
+["Pesquisar opções e riscos antes de aplicar",{saude:7,felicidade:1},"Entender prazo, risco e liquidez antes de investir é parte do planejamento."],
+["Aplicar sem pesquisar",{saldo:-100,saude:-4},"Investir sem entender o produto pode trazer surpresas. Pesquisar é essencial."]
+]
+},
+{
+title:"Seu investimento oscilou",
+text:"O valor da aplicação caiu nesta semana. Você não precisa desse dinheiro agora.",
+choices:[
+["Rever o plano antes de decidir",{saude:5},"Uma oscilação isolada não precisa decidir por você. Reavalie objetivos e riscos."],
+["Vender por medo",{saldo:-80,saude:-3},"Decidir sob pressão pode transformar uma oscilação temporária em prejuízo."]
+]
+}
+],
 
-    golpe: [
-        {
-            title: "Mensagem de prêmio",
-            text: "Uma mensagem diz que você ganhou um prêmio, mas pede pagamento de uma taxa para liberar o dinheiro.",
-            choices: [
-                ["Pagar a taxa", { saldo: -100, saude: -8 },
-                 "Desconfie de mensagens que exigem pagamento antecipado para liberar um prêmio."],
-                ["Não pagar e verificar por um canal oficial", { saude: 7 },
-                 "Você evitou compartilhar dados ou dinheiro sem confirmar a informação."]
-            ]
-        },
-        {
-            title: "Ligação pedindo sua senha",
-            text: "Uma pessoa diz ser do banco e pede sua senha para resolver um problema.",
-            choices: [
-                ["Informar a senha", { saldo: -300, saude: -10 },
-                 "Não informe sua senha. Entre em contato com o banco usando um canal oficial."],
-                ["Desligar e ligar para o número oficial", { saude: 8 },
-                 "Confirmar por um canal confiável ajuda a se proteger de golpes."]
-            ]
-        }
-    ]
+oportunidade:[
+{
+title:"Curso para desenvolver uma habilidade",
+text:"Um curso pode ajudar nos estudos ou no trabalho, mas exige tempo e dinheiro.",
+choices:[
+["Verificar o custo e planejar o curso",{saldo:-100,saude:6},"Investir em aprendizado pode ser útil quando cabe no orçamento e tem um objetivo claro."],
+["Deixar para depois",{felicidade:2,saude:-2},"Adiar pode ser razoável. Anote a meta e avalie quando o orçamento permitir."]
+]
+}
+],
+
+golpe:[
+{
+title:"Mensagem de prêmio",
+text:"Uma mensagem diz que você ganhou um prêmio, mas pede pagamento de uma taxa para liberar o dinheiro.",
+choices:[
+["Pagar a taxa",{saldo:-100,saude:-8},"Desconfie de mensagens que exigem pagamento antecipado para liberar um prêmio."],
+["Não pagar e verificar por um canal oficial",{saude:7},"Você evitou compartilhar dados ou dinheiro sem confirmar a informação."]
+]
+},
+{
+title:"Ligação pedindo sua senha",
+text:"Uma pessoa diz ser do banco e pede sua senha para resolver um problema.",
+choices:[
+["Informar a senha",{saldo:-300,saude:-10},"Nunca informe sua senha. Entre em contato com o banco por um canal oficial."],
+["Desligar e ligar para o número oficial",{saude:8},"Confirmar por um canal confiável ajuda a se proteger de golpes."]
+]
+}
+]
 };
+
+/* =====================================
+   4. DESAFIOS
+===================================== */
 
 const CHALLENGES = [
-    "Explique com suas palavras por que é útil planejar os gastos.",
-    "Diga uma forma de verificar se uma promoção vale a pena.",
-    "Cite uma atitude que ajuda a reconhecer uma tentativa de golpe.",
-    "Em equipe, deem um exemplo de meta financeira de curto prazo."
+"Explique com suas palavras por que é útil planejar os gastos.",
+"Diga uma forma de verificar se uma promoção realmente vale a pena.",
+"Cite uma atitude que ajuda a reconhecer uma tentativa de golpe.",
+"Em equipe, deem um exemplo de meta financeira de curto prazo.",
+"Qual é a diferença entre necessidade e desejo?",
+"Por que é importante guardar dinheiro para imprevistos?",
+"Explique o que significa consumir conscientemente.",
+"Qual a importância de comparar preços antes de comprar?",
+"O que pode acontecer quando gastamos mais do que recebemos?",
+"Explique a diferença entre poupar e investir."
 ];
 
-/* ============ 4. ESTADO ============ */
-const LAST = TYPES.length - 1;
+/* =====================================
+   5. ESTADO DO JOGO
+===================================== */
 
-let players = [];
-let current = 0;
-let phase = "idle";
-let gameOver = false;
+let players=[];
+let current=0;
+let phase="idle";
+let gameOver=false;
+let rolling=false;
+let rollTimer=null;
 
 function makePlayers(count) {
-    return TEAM_INFO.slice(0, count).map((team, id) => ({
+    return TEAM_INFO.slice(0,count).map((team,id)=>({
         id,
-        name: team.name,
-        cls: team.cls,
-        mark: team.mark,
-        pos: 0,
-        saldo: 800,
-        saude: 60,
-        felicidade: 70,
-        blocked: false
+        name:team.name,
+        cls:team.cls,
+        mark:team.mark,
+        pos:0,
+        saldo:800,
+        saude:60,
+        felicidade:70,
+        blocked:false,
+        finished:false
     }));
 }
 
-function clamp(value) { return Math.max(0, Math.min(100, value)); }
-function money(value) { return "R$ " + value.toLocaleString("pt-BR"); }
-
-function equilibrium(player) {
-    const bonus = player.saldo < 0 ? -20 : Math.min(20, Math.floor(player.saldo / 150));
-    return player.saude + player.felicidade + bonus;
+function clamp(value) {
+    return Math.max(0,Math.min(100,value));
 }
 
-/* ============ 5. TABULEIRO ============ */
-function createBoard() {
-    const board = document.getElementById("board");
-    board.innerHTML = "";
+function money(value) {
+    return "R$ "+value.toLocaleString("pt-BR");
+}
 
-    tiles.forEach(tile => {
-        const element = document.createElement("div");
-        element.id = `tile-${tile.index}`;
-        element.className = "tile" + (tile.type === "start" || tile.type === "finish" ? " terminal" : "");
-        element.style.gridRow = tile.row;
-        element.style.gridColumn = tile.col;
-        element.style.background = COLORS[tile.type][0];
-        element.style.color = COLORS[tile.type][1];
-        element.innerHTML = `
-            <span class="tile-num">${tile.index + 1}</span>
+function equilibrium(player) {
+    const bonus=player.saldo<0?-20:Math.min(20,Math.floor(player.saldo/150));
+    return player.saude+player.felicidade+bonus;
+}
+
+function getActivePlayer() {
+    return players[current];
+}
+
+/* =====================================
+   6. CRIAÇÃO DO TABULEIRO
+===================================== */
+
+function createBoard() {
+    const board=document.getElementById("board");
+    board.innerHTML="";
+
+    tiles.forEach(tile=>{
+        const element=document.createElement("div");
+
+        element.id=`tile-${tile.index}`;
+        element.className="tile";
+
+        if(tile.type==="start"||tile.type==="finish") {
+            element.classList.add("terminal");
+        }
+
+        element.style.gridRow=tile.row;
+        element.style.gridColumn=tile.col;
+        element.style.background=COLORS[tile.type][0];
+        element.style.color=COLORS[tile.type][1];
+
+        element.innerHTML=`
+            <span class="tile-num">${tile.index+1}</span>
             <i class="tile-icon bi ${ICONS[tile.type]}"></i>
-            <span class="tile-label">${LABELS[tile.type]}</span>`;
+            <span class="tile-label">${LABELS[tile.type]}</span>
+        `;
+
         board.appendChild(element);
     });
 
-    players.forEach((player, index) => {
-        const pawn = document.createElement("div");
-        pawn.className = `pawn ${player.cls}`;
-        pawn.id = `pawn-${index}`;
-        pawn.textContent = player.mark;
+    players.forEach((player,index)=>{
+        const pawn=document.createElement("div");
+        pawn.className=`pawn ${player.cls}`;
+        pawn.id=`pawn-${index}`;
+        pawn.textContent=player.mark;
         board.appendChild(pawn);
     });
 
     createArrows();
     updatePawns();
     updateScoreboard();
+
+    requestAnimationFrame(()=>{
+        createArrows();
+        updatePawns();
+    });
 }
 
+/* =====================================
+   7. SETAS DO CAMINHO
+===================================== */
+
 function createArrows() {
-    const board = document.getElementById("board");
-    board.querySelectorAll(".path-arrow").forEach(arrow => arrow.remove());
+    const board=document.getElementById("board");
 
-    const boardRect = board.getBoundingClientRect();
+    board.querySelectorAll(".path-arrow").forEach(a=>a.remove());
 
-    for (let i = 0; i < tiles.length - 1; i++) {
-        const from = document.getElementById(`tile-${i}`).getBoundingClientRect();
-        const to = document.getElementById(`tile-${i + 1}`).getBoundingClientRect();
-        const vertical = Math.abs(from.left - to.left) < 2;
-        const size = Math.max(10, Math.min(18, vertical ? from.width * .16 : from.height * .22));
+    const boardRect=board.getBoundingClientRect();
 
-        const arrow = document.createElement("div");
-        arrow.className = "path-arrow";
-        arrow.style.width = `${size}px`;
-        arrow.style.height = `${size}px`;
-        arrow.style.left = `${(from.left + from.width / 2 + to.left + to.width / 2) / 2 - boardRect.left - size / 2}px`;
-        arrow.style.top = `${(from.top + from.height / 2 + to.top + to.height / 2) / 2 - boardRect.top - size / 2}px`;
+    for(let i=0;i<TOTAL-1;i++) {
+        const from=document.getElementById(`tile-${i}`);
+        const to=document.getElementById(`tile-${i+1}`);
+
+        if(!from||!to) continue;
+
+        const a=from.getBoundingClientRect();
+        const b=to.getBoundingClientRect();
+
+        const vertical=Math.abs(a.left-b.left)<3;
+
+        const size=Math.max(10,Math.min(18,vertical?a.width*.17:a.height*.23));
+
+        const arrow=document.createElement("div");
+        arrow.className="path-arrow";
+
+        arrow.style.width=`${size}px`;
+        arrow.style.height=`${size}px`;
+
+        arrow.style.left=`
+            ${(a.left+a.width/2+b.left+b.width/2)/2-boardRect.left-size/2}px
+        `;
+
+        arrow.style.top=`
+            ${(a.top+a.height/2+b.top+b.height/2)/2-boardRect.top-size/2}px
+        `;
 
         let rotation;
-        if (vertical) rotation = to.top > from.top ? 0 : 180;
-        else rotation = to.left > from.left ? -90 : 90;
 
-        arrow.style.transform = `rotate(${rotation}deg)`;
-        arrow.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 9l6 6 6-6"/></svg>`;
+        if(vertical) {
+            rotation=b.top>a.top?0:180;
+        } else {
+            rotation=b.left>a.left?-90:90;
+        }
+
+        arrow.style.transform=`rotate(${rotation}deg)`;
+
+        arrow.innerHTML=`
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"/>
+            </svg>
+        `;
+
         board.appendChild(arrow);
     }
 }
 
+/* =====================================
+   8. POSIÇÃO DOS PEÕES
+===================================== */
+
 function updatePawns() {
-    const boardRect = document.getElementById("board").getBoundingClientRect();
+    const board=document.getElementById("board");
+    if(!board) return;
 
-    players.forEach((player, index) => {
-        const pawn = document.getElementById(`pawn-${index}`);
-        const tile = document.getElementById(`tile-${player.pos}`);
-        if (!pawn || !tile) return;
+    const boardRect=board.getBoundingClientRect();
 
-        const tileRect = tile.getBoundingClientRect();
-        const pawnSize = pawn.getBoundingClientRect().width;
-        const offsets = [[-10, -10], [10, -10], [-10, 10], [10, 10]][index] || [0, 0];
+    const offsets=[
+        [-.22,-.22],
+        [.22,-.22],
+        [-.22,.22],
+        [.22,.22]
+    ];
 
-        pawn.style.left = `${tileRect.left - boardRect.left + tileRect.width / 2 - pawnSize / 2 + offsets[0]}px`;
-        pawn.style.top = `${tileRect.top - boardRect.top + tileRect.height / 2 - pawnSize / 2 + offsets[1]}px`;
+    players.forEach((player,index)=>{
+        const pawn=document.getElementById(`pawn-${index}`);
+        const tile=document.getElementById(`tile-${player.pos}`);
+
+        if(!pawn||!tile) return;
+
+        const rect=tile.getBoundingClientRect();
+        const size=pawn.offsetWidth;
+
+        const offset=offsets[index]||[0,0];
+
+        pawn.style.left=`
+            ${rect.left-boardRect.left+rect.width/2-size/2+rect.width*offset[0]}px
+        `;
+
+        pawn.style.top=`
+            ${rect.top-boardRect.top+rect.height/2-size/2+rect.height*offset[1]}px
+        `;
     });
 }
 
-/* ============ 6. PAINEL E PLACAR ============ */
-function setPanel(title, text, color = "#e6197a") {
-    document.getElementById("card-title").textContent = title;
-    document.getElementById("card-title").style.color = color;
-    document.getElementById("card-text").textContent = text;
-    document.getElementById("options").innerHTML = "";
-    document.getElementById("feedback").innerHTML = "";
+/* =====================================
+   9. PAINEL DE DECISÕES
+===================================== */
+
+function setPanel(title,text,color="#e6197a") {
+    document.getElementById("card-title").textContent=title;
+    document.getElementById("card-title").style.color=color;
+    document.getElementById("card-text").textContent=text;
+    document.getElementById("options").innerHTML="";
+    document.getElementById("feedback").innerHTML="";
 }
 
-function updateScoreboard() {
-    const list = document.getElementById("team-list");
-    list.innerHTML = "";
+function addContinue(label="Continuar") {
+    const button=document.createElement("button");
 
-    players.forEach((player, index) => {
-        const card = document.createElement("div");
-        card.className = "team-card" + (index === current && !gameOver ? " active" : "");
-        card.innerHTML = `
+    button.className="option-btn continue";
+    button.textContent=label;
+    button.onclick=nextTurn;
+
+    document.getElementById("options").appendChild(button);
+}
+
+function updateTurnLabel() {
+    document.getElementById("turn-label").textContent=
+        `Vez: ${getActivePlayer().name}`;
+}
+
+/* =====================================
+   10. PLACAR
+===================================== */
+
+function updateScoreboard() {
+    const list=document.getElementById("team-list");
+    list.innerHTML="";
+
+    players.forEach((player,index)=>{
+        const card=document.createElement("div");
+
+        card.className="team-card";
+
+        if(index===current&&!gameOver) {
+            card.classList.add("active");
+        }
+
+        card.innerHTML=`
             <div class="team-name">
-                <span>${player.name}${player.blocked ? " ⏳" : ""}</span>
-                <span>Casa ${player.pos + 1}</span>
+                <span>${player.name}${player.blocked?" ⏳":""}</span>
+                <span>Casa ${player.pos+1}/48</span>
             </div>
+
             <div class="team-stats">
-                <span>${money(player.saldo)}</span>
+                <span>💰 ${money(player.saldo)}</span>
                 <span>🛡️ ${player.saude}</span>
                 <span>😊 ${player.felicidade}</span>
-            </div>`;
+            </div>
+        `;
+
         list.appendChild(card);
     });
 }
 
-function updateTurnLabel() {
-    document.getElementById("turn-label").textContent = `Vez de: ${players[current].name}`;
+/* =====================================
+   11. EFEITOS FINANCEIROS
+===================================== */
+
+function applyEffects(player,effects) {
+    if(effects.saldo!==undefined) {
+        player.saldo+=effects.saldo;
+    }
+
+    if(effects.saude!==undefined) {
+        player.saude=clamp(player.saude+effects.saude);
+    }
+
+    if(effects.felicidade!==undefined) {
+        player.felicidade=clamp(player.felicidade+effects.felicidade);
+    }
 }
 
 function showDeltas(effects) {
-    const entries = [];
-    if (effects.saldo) entries.push(`<span class="delta ${effects.saldo > 0 ? "positive" : "negative"}">Saldo ${effects.saldo > 0 ? "+" : ""}${money(effects.saldo)}</span>`);
-    if (effects.saude) entries.push(`<span class="delta ${effects.saude > 0 ? "positive" : "negative"}">Saúde ${effects.saude > 0 ? "+" : ""}${effects.saude}</span>`);
-    if (effects.felicidade) entries.push(`<span class="delta ${effects.felicidade > 0 ? "positive" : "negative"}">Felicidade ${effects.felicidade > 0 ? "+" : ""}${effects.felicidade}</span>`);
-    document.getElementById("feedback").innerHTML = `<div class="deltas">${entries.join("")}</div>`;
+    const entries=[];
+
+    if(effects.saldo) {
+        entries.push(`
+            <span class="delta ${effects.saldo>0?"positive":"negative"}">
+                Saldo ${effects.saldo>0?"+":""}${money(effects.saldo)}
+            </span>
+        `);
+    }
+
+    if(effects.saude) {
+        entries.push(`
+            <span class="delta ${effects.saude>0?"positive":"negative"}">
+                Saúde ${effects.saude>0?"+":""}${effects.saude}
+            </span>
+        `);
+    }
+
+    if(effects.felicidade) {
+        entries.push(`
+            <span class="delta ${effects.felicidade>0?"positive":"negative"}">
+                Felicidade ${effects.felicidade>0?"+":""}${effects.felicidade}
+            </span>
+        `);
+    }
+
+    document.getElementById("feedback").innerHTML=
+        `<div class="deltas">${entries.join("")}</div>`;
 }
 
-function addContinue(label = "Continuar") {
-    const button = document.createElement("button");
-    button.className = "option-btn continue";
-    button.textContent = label;
-    button.onclick = nextTurn;
-    document.getElementById("options").appendChild(button);
-}
+/* =====================================
+   12. DADO
+===================================== */
 
-function applyEffects(player, effects) {
-    if (effects.saldo) player.saldo += effects.saldo;
-    if (effects.saude) player.saude = clamp(player.saude + effects.saude);
-    if (effects.felicidade) player.felicidade = clamp(player.felicidade + effects.felicidade);
-}
-
-/* ============ 7. DADO E MOVIMENTO ============ */
 function rollDice() {
-    if (gameOver || phase !== "idle") return;
+    if(gameOver||phase!=="idle"||rolling) return;
 
-    const player = players[current];
+    const player=getActivePlayer();
 
-    if (player.blocked) {
-        player.blocked = false;
-        phase = "resolved";
-        setPanel("Rodada perdida", `${player.name} estava bloqueada e perdeu esta rodada. Agora está liberada.`, "#64748b");
+    if(player.finished) {
+        nextTurn();
+        return;
+    }
+
+    if(player.blocked) {
+        player.blocked=false;
+        phase="resolved";
+
+        setPanel(
+            "Rodada perdida",
+            `${player.name} estava bloqueada e perdeu esta rodada. Agora está liberada.`,
+            "#64748b"
+        );
+
         addContinue();
         updateScoreboard();
         return;
     }
 
-    document.getElementById("roll-btn").disabled = true;
-    const dice = document.getElementById("dice");
-    const result = document.getElementById("dice-result");
-    let ticks = 0;
+    rolling=true;
 
-    const timer = setInterval(() => {
-        dice.innerHTML = `<i class="bi bi-dice-${Math.floor(Math.random() * 6) + 1}-fill"></i>`;
+    const button=document.getElementById("roll-btn");
+    const dice=document.getElementById("dice");
+    const result=document.getElementById("dice-result");
+
+    button.disabled=true;
+
+    let ticks=0;
+
+    rollTimer=setInterval(()=>{
+        const random=Math.floor(Math.random()*6)+1;
+
+        dice.innerHTML=`<i class="bi bi-dice-${random}-fill"></i>`;
+
         ticks++;
 
-        if (ticks >= 10) {
-            clearInterval(timer);
-            const value = Math.floor(Math.random() * 6) + 1;
-            dice.innerHTML = `<i class="bi bi-dice-${value}-fill"></i>`;
-            result.textContent = `${player.name} tirou ${value}`;
-            movePlayer(player, value);
+        if(ticks>=12) {
+            clearInterval(rollTimer);
+            rollTimer=null;
+
+            const value=Math.floor(Math.random()*6)+1;
+
+            dice.innerHTML=`<i class="bi bi-dice-${value}-fill"></i>`;
+            result.textContent=`${player.name} tirou ${value}`;
+
+            rolling=false;
+
+            movePlayer(player,value);
         }
-    }, 55);
+    },65);
 }
 
-function movePlayer(player, steps) {
-    player.pos = Math.min(LAST, player.pos + steps);
+/* =====================================
+   13. MOVIMENTAÇÃO
+===================================== */
+
+function movePlayer(player,steps) {
+    const previous=player.pos;
+
+    player.pos=Math.min(LAST,player.pos+steps);
+
     updatePawns();
     updateScoreboard();
 
-    if (player.pos === LAST) {
-        phase = "resolved";
-        setPanel("Chegou ao fim!", `${player.name} completou o tabuleiro. O ranking considera o Índice de Equilíbrio de todas as equipes.`);
-        addContinue("Ver ranking");
+    if(player.pos===LAST) {
+        player.finished=true;
+
+        phase="resolved";
+
+        setPanel(
+            "🏆 Chegada!",
+            `${player.name} percorreu o tabuleiro e chegou à casa final! Agora é possível conferir o ranking das equipes.`
+        );
+
+        addContinue("Ver ranking final");
+
+        updateScoreboard();
         return;
     }
 
-    handleTile(player);
+    handleTile(player,previous);
 }
 
-/* ============ 8. AÇÕES DAS CASAS ============ */
-function handleTile(player) {
-    const type = tiles[player.pos].type;
+/* =====================================
+   14. AÇÕES DAS CASAS
+===================================== */
 
-    if (type === "salario" || type === "bonus") {
-        const effects = type === "salario" ? { saldo: 700, saude: 2 } : { saldo: 300, saude: 3 };
-        applyEffects(player, effects);
-        phase = "resolved";
+function handleTile(player) {
+    const type=tiles[player.pos].type;
+
+    if(type==="salario"||type==="bonus") {
+        const effects=type==="salario"
+            ?{saldo:700,saude:2}
+            :{saldo:300,saude:3};
+
+        applyEffects(player,effects);
+
+        phase="resolved";
+
         setPanel(
-            type === "salario" ? "Salário recebido" : "Bônus!",
-            type === "salario" ? `${player.name} recebeu R$ 700.` : `${player.name} ganhou R$ 300.`,
+            type==="salario"?"Salário recebido!":"Bônus!",
+            type==="salario"
+                ?`${player.name} recebeu R$ 700. Aproveite para organizar seu orçamento.`
+                :`${player.name} ganhou R$ 300 de bônus!`,
             "#0d9488"
         );
+
         showDeltas(effects);
         addContinue();
         updateScoreboard();
         return;
     }
 
-    if (type === "sorte" || type === "cilada") {
-        player.pos = type === "sorte"
-            ? Math.min(LAST - 1, player.pos + 1)
-            : Math.max(0, player.pos - 2);
+    if(type==="sorte"||type==="cilada") {
+        player.pos=type==="sorte"
+            ?Math.min(LAST-1,player.pos+1)
+            :Math.max(0,player.pos-2);
+
         updatePawns();
-        phase = "resolved";
+
+        phase="resolved";
+
         setPanel(
-            type === "sorte" ? "Sorte!" : "Cilada!",
-            type === "sorte" ? `${player.name} avançou uma casa.` : `${player.name} voltou duas casas.`,
-            type === "sorte" ? "#168346" : "#c92c45"
+            type==="sorte"?"🍀 Sorte!":"⚠️ Cilada!",
+            type==="sorte"
+                ?`${player.name} avançou mais uma casa!`
+                :`${player.name} voltou duas casas. Nem toda decisão traz bons resultados.`,
+            type==="sorte"?"#168346":"#c92c45"
         );
+
         addContinue();
         updateScoreboard();
         return;
     }
 
-    if (type === "bloqueio") {
-        player.blocked = true;
-        phase = "resolved";
-        setPanel("Bloqueio", `${player.name} perderá a próxima rodada.`, "#64748b");
+    if(type==="bloqueio") {
+        player.blocked=true;
+
+        phase="resolved";
+
+        setPanel(
+            "⏳ Bloqueio",
+            `${player.name} terá que perder a próxima rodada. Imprevistos podem mudar nossos planos!`,
+            "#64748b"
+        );
+
         addContinue();
         updateScoreboard();
         return;
     }
 
-    if (type === "imprevisto") {
-        const events = [
-            { text: "Uma despesa inesperada de saúde apareceu.", effects: { saldo: -250, saude: -4 } },
-            { text: "Foi necessário consertar um item importante.", effects: { saldo: -200, felicidade: -3 } },
-            { text: "Você recebeu uma pequena renda extra inesperada.", effects: { saldo: 150, felicidade: 2 } }
+    if(type==="imprevisto") {
+        const events=[
+            {
+                text:"Uma despesa inesperada de saúde apareceu.",
+                effects:{saldo:-250,saude:-4}
+            },
+            {
+                text:"Foi necessário consertar um item importante.",
+                effects:{saldo:-200,felicidade:-3}
+            },
+            {
+                text:"Você recebeu uma pequena renda extra inesperada.",
+                effects:{saldo:150,felicidade:2}
+            }
         ];
-        const event = events[Math.floor(Math.random() * events.length)];
-        applyEffects(player, event.effects);
-        phase = "resolved";
-        setPanel("Imprevisto", `${event.text} Uma reserva pode ajudar a lidar com gastos que não estavam planejados.`, "#c92c45");
+
+        const event=events[Math.floor(Math.random()*events.length)];
+
+        applyEffects(player,event.effects);
+
+        phase="resolved";
+
+        setPanel(
+            "Imprevisto!",
+            `${event.text} Uma reserva financeira pode ajudar a lidar com gastos que não estavam planejados.`,
+            "#c92c45"
+        );
+
         showDeltas(event.effects);
         addContinue();
         updateScoreboard();
         return;
     }
 
-    if (type === "desafio") {
-        const challenge = CHALLENGES[Math.floor(Math.random() * CHALLENGES.length)];
-        phase = "resolved";
-        setPanel("Desafio da equipe", `${challenge}\n\nConversem e respondam antes de continuar.`, "#db2777");
+    if(type==="desafio") {
+        const challenge=CHALLENGES[
+            Math.floor(Math.random()*CHALLENGES.length)
+        ];
+
+        phase="resolved";
+
+        setPanel(
+            "🎯 Desafio da equipe",
+            `${challenge}\n\nConversem e respondam antes de continuar.`,
+            "#db2777"
+        );
+
         addContinue("Desafio cumprido!");
         return;
     }
 
-    if (type === "start" || type === "finish") {
-        phase = "resolved";
-        setPanel(LABELS[type], `${player.name} está na casa ${LABELS[type]}.`, "#4338ca");
+    if(type==="start"||type==="finish") {
+        phase="resolved";
+
+        setPanel(
+            LABELS[type],
+            `${player.name} está na casa ${LABELS[type]}.`
+        );
+
         addContinue();
         return;
     }
 
-    const deck = EVENTS[type];
-    if (!deck) {
-        phase = "resolved";
-        setPanel("Casa", "Conversem sobre a escolha financeira da equipe.");
+    const deck=EVENTS[type];
+
+    if(!deck) {
+        phase="resolved";
+
+        setPanel(
+            "Casa educativa",
+            "Conversem sobre uma escolha financeira consciente."
+        );
+
         addContinue();
         return;
     }
 
-    showEvent(player, deck[Math.floor(Math.random() * deck.length)]);
+    showEvent(player,deck[Math.floor(Math.random()*deck.length)]);
 }
 
-function showEvent(player, event) {
-    phase = "card";
-    document.getElementById("card-title").textContent = event.title;
-    document.getElementById("card-title").style.color = "#e6197a";
-    document.getElementById("card-text").textContent = event.text;
-    document.getElementById("feedback").innerHTML = "";
+/* =====================================
+   15. CARTAS E ESCOLHAS
+===================================== */
 
-    const options = document.getElementById("options");
-    options.innerHTML = "";
+function showEvent(player,event) {
+    phase="card";
 
-    event.choices.forEach(([label, effects, feedback]) => {
-        const button = document.createElement("button");
-        button.className = "option-btn";
-        button.textContent = label;
-        button.onclick = () => resolveChoice(player, effects, feedback);
+    document.getElementById("card-title").textContent=event.title;
+    document.getElementById("card-title").style.color="#e6197a";
+    document.getElementById("card-text").textContent=event.text;
+    document.getElementById("feedback").innerHTML="";
+
+    const options=document.getElementById("options");
+    options.innerHTML="";
+
+    event.choices.forEach(([label,effects,feedback])=>{
+        const button=document.createElement("button");
+
+        button.className="option-btn";
+        button.textContent=label;
+
+        button.onclick=()=>{
+            if(phase!=="card") return;
+            resolveChoice(player,effects,feedback);
+        };
+
         options.appendChild(button);
     });
 }
 
-function resolveChoice(player, effects, feedback) {
-    applyEffects(player, effects);
-    document.querySelectorAll("#options .option-btn").forEach(button => button.disabled = true);
+function resolveChoice(player,effects,feedback) {
+    if(phase!=="card") return;
 
-    document.getElementById("feedback").insertAdjacentHTML("afterbegin", `<p>${feedback}</p>`);
+    applyEffects(player,effects);
+
+    document.querySelectorAll("#options .option-btn").forEach(button=>{
+        button.disabled=true;
+    });
+
+    document.getElementById("feedback").innerHTML=
+        `<p>${feedback}</p>`;
+
     showDeltas(effects);
 
-    phase = "resolved";
+    phase="resolved";
+
     addContinue();
+
     updateScoreboard();
 }
 
-/* ============ 9. TURNO ============ */
-function nextTurn() {
-    if (gameOver) return;
+/* =====================================
+   16. CONTROLE DE TURNOS
+===================================== */
 
-    if (players[current].pos === LAST) {
+function nextTurn() {
+    if(gameOver) return;
+
+    if(players.some(player=>player.finished)) {
         showRanking();
         return;
     }
 
-    current = (current + 1) % players.length;
-    phase = "idle";
-    document.getElementById("roll-btn").disabled = false;
-    document.getElementById("dice").innerHTML = `<i class="bi bi-dice-5"></i>`;
-    document.getElementById("dice-result").textContent = "Clique para rolar";
-    setPanel("Central de decisões", `${players[current].name}, é sua vez. Role o dado.`, "#087d83");
+    let attempts=0;
+
+    do {
+        current=(current+1)%players.length;
+        attempts++;
+    } while(players[current].finished&&attempts<=players.length);
+
+    phase="idle";
+
+    document.getElementById("roll-btn").disabled=false;
+
+    document.getElementById("dice").innerHTML=
+        `<i class="bi bi-dice-5"></i>`;
+
+    document.getElementById("dice-result").textContent="Clique para rolar";
+
+    setPanel(
+        "Central de decisões",
+        `${players[current].name}, é sua vez! Role o dado e descubra qual será seu próximo desafio.`,
+        "#087d83"
+    );
+
     updateTurnLabel();
     updateScoreboard();
 }
 
-/* ============ 10. RANKING ============ */
-function showRanking() {
-    gameOver = true;
-    phase = "over";
-    document.getElementById("roll-btn").disabled = true;
+/* =====================================
+   17. RANKING FINAL
+===================================== */
 
-    const ranked = [...players].sort((a, b) => equilibrium(b) - equilibrium(a));
-    const rows = ranked.map((player, index) =>
-        `<tr class="${index === 0 ? "winner" : ""}">
-            <td>${index + 1}º</td>
+function showRanking() {
+    gameOver=true;
+    phase="over";
+
+    document.getElementById("roll-btn").disabled=true;
+
+    const ranked=[...players].sort(
+        (a,b)=>equilibrium(b)-equilibrium(a)
+    );
+
+    const rows=ranked.map((player,index)=>`
+        <tr class="${index===0?"winner":""}">
+            <td>${index+1}º</td>
             <td>${player.name}</td>
             <td>${money(player.saldo)}</td>
             <td>${player.saude}</td>
             <td>${player.felicidade}</td>
             <td><b>${equilibrium(player)}</b></td>
-        </tr>`
-    ).join("");
+        </tr>
+    `).join("");
 
-    document.getElementById("card-title").textContent = "Ranking final";
-    document.getElementById("card-title").style.color = "#e6197a";
-    document.getElementById("card-text").textContent =
-        `Equipe em destaque: ${ranked[0].name}, com Índice de Equilíbrio ${equilibrium(ranked[0])}. O índice considera saúde, felicidade e saldo.`;
+    document.getElementById("card-title").textContent="🏆 Ranking final";
+    document.getElementById("card-title").style.color="#e6197a";
 
-    document.getElementById("options").innerHTML = `
-        <table class="ranking">
-            <thead>
-                <tr><th>#</th><th>Equipe</th><th>Saldo</th><th>Saúde</th><th>Felic.</th><th>Índice</th></tr>
-            </thead>
-            <tbody>${rows}</tbody>
-        </table>`;
+    document.getElementById("card-text").textContent=
+        `Equipe em destaque: ${ranked[0].name}, com Índice de Equilíbrio ${equilibrium(ranked[0])}. O índice considera saúde, felicidade e saldo financeiro.`;
 
-    document.getElementById("feedback").textContent = "Índice = saúde + felicidade + bônus de saldo.";
+    document.getElementById("options").innerHTML=`
+        <div style="overflow-x:auto">
+            <table class="ranking">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Equipe</th>
+                        <th>Saldo</th>
+                        <th>Saúde</th>
+                        <th>Felic.</th>
+                        <th>Índice</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+
+        <button class="option-btn continue" onclick="resetGame(players.length)">
+            Jogar novamente
+        </button>
+    `;
+
+    document.getElementById("feedback").textContent=
+        "Índice = saúde + felicidade + bônus de saldo.";
+
     updateScoreboard();
 }
 
-/* ============ 11. RESET ============ */
-function resetGame(count = players.length) {
-    players = makePlayers(count);
-    current = 0;
-    phase = "idle";
-    gameOver = false;
+/* =====================================
+   18. REINICIAR PARTIDA
+===================================== */
 
-    document.getElementById("roll-btn").disabled = false;
-    document.getElementById("dice").innerHTML = `<i class="bi bi-dice-5"></i>`;
-    document.getElementById("dice-result").textContent = "Clique para rolar";
-    setPanel("Pronto para jogar?", "Escolha a quantidade de peões e role o dado para começar.", "#e6197a");
+function resetGame(count=players.length) {
+    if(rollTimer) {
+        clearInterval(rollTimer);
+        rollTimer=null;
+    }
+
+    rolling=false;
+
+    players=makePlayers(count);
+
+    current=0;
+    phase="idle";
+    gameOver=false;
+
+    document.getElementById("pawn-count").value=count;
+
+    document.getElementById("roll-btn").disabled=false;
+
+    document.getElementById("dice").innerHTML=
+        `<i class="bi bi-dice-5"></i>`;
+
+    document.getElementById("dice-result").textContent="Clique para rolar";
+
+    setPanel(
+        "Pronto para jogar?",
+        "Escolha a quantidade de equipes e role o dado para começar.",
+        "#e6197a"
+    );
 
     createBoard();
     updateTurnLabel();
     updateScoreboard();
 }
 
-/* ============ 12. EVENTOS ============ */
-document.getElementById("roll-btn").addEventListener("click", rollDice);
+/* =====================================
+   19. EVENTOS E CONTROLES
+===================================== */
 
-document.getElementById("apply-count").addEventListener("click", () => {
-    const count = Number(document.getElementById("pawn-count").value);
-    if (count === players.length) return;
+document.getElementById("roll-btn").addEventListener("click",rollDice);
 
-    if (confirm("Alterar a quantidade de peões reiniciará a partida. Deseja continuar?")) {
+document.getElementById("apply-count").addEventListener("click",()=>{
+    const count=Number(document.getElementById("pawn-count").value);
+
+    if(count===players.length) return;
+
+    if(confirm("Alterar a quantidade de equipes reiniciará a partida. Deseja continuar?")) {
         resetGame(count);
     } else {
-        document.getElementById("pawn-count").value = players.length;
+        document.getElementById("pawn-count").value=players.length;
     }
 });
 
-document.getElementById("ranking-btn").addEventListener("click", showRanking);
+document.getElementById("ranking-btn").addEventListener("click",showRanking);
 
-document.getElementById("reset-btn").addEventListener("click", () => {
-    if (confirm("Reiniciar a partida e zerar as posições e os indicadores?")) {
+document.getElementById("reset-btn").addEventListener("click",()=>{
+    if(confirm("Deseja reiniciar a partida e zerar todas as posições e indicadores?")) {
         resetGame(players.length);
     }
 });
 
 let resizeTimer;
-window.addEventListener("resize", () => {
+
+window.addEventListener("resize",()=>{
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
+
+    resizeTimer=setTimeout(()=>{
         createArrows();
         updatePawns();
-    }, 100);
+    },120);
 });
 
-/* ============ 13. INÍCIO ============ */
-players = makePlayers(4);
+/* =====================================
+   20. INICIALIZAÇÃO
+===================================== */
+
+players=makePlayers(4);
+
 createBoard();
 updateTurnLabel();
+updateScoreboard();
+
 </script>
 </body>
 </html>
