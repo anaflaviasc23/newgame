@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -91,14 +92,13 @@ button,select {font:inherit}
 
 .board-shell {
     padding:clamp(10px,1.5vw,22px);
-    background:#fff;
+    background:linear-gradient(145deg,#ffffff,#f8f9ff);
     border:2px solid var(--line);
     border-radius:25px;
     box-shadow:0 15px 40px #1f2a5c12;
 }
 
 .board {
-    --cell-width:100%;
     position:relative;
     width:100%;
     height:clamp(520px,75vh,800px);
@@ -124,7 +124,16 @@ button,select {font:inherit}
     border-radius:13px;
     text-align:center;
     box-shadow:0 4px 0 #1f2a5c12;
-    transition:.2s;
+    transition:transform .2s,filter .2s;
+}
+
+.tile::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    pointer-events:none;
+    background:linear-gradient(145deg,#ffffff18,transparent 60%);
 }
 
 .tile:hover {
@@ -134,11 +143,15 @@ button,select {font:inherit}
 
 .tile-num {
     position:absolute;
+    z-index:2;
     top:5px;
     left:7px;
+    padding:2px 4px;
+    border-radius:5px;
+    background:#ffffff35;
     font-size:clamp(.55rem,.7vw,.72rem);
     font-weight:900;
-    opacity:.75;
+    opacity:.85;
 }
 
 .tile-icon {
@@ -174,7 +187,7 @@ button,select {font:inherit}
 
 .pawn {
     position:absolute;
-    z-index:10;
+    z-index:20;
     width:clamp(23px,2.1vw,32px);
     height:clamp(23px,2.1vw,32px);
     display:flex;
@@ -182,11 +195,18 @@ button,select {font:inherit}
     justify-content:center;
     border:2px solid white;
     border-radius:50%;
+    outline:2px solid #ffffff;
     box-shadow:0 3px 7px #1f2a5c66;
     font-size:.52rem;
     font-weight:900;
-    transition:left .45s ease,top .45s ease;
+    transition:left .25s ease,top .25s ease,transform .2s;
     pointer-events:none;
+    will-change:left,top;
+}
+
+.pawn.active-pawn {
+    box-shadow:0 0 0 4px #e6197a55,0 4px 9px #1f2a5c66;
+    transform:scale(1.12);
 }
 
 .blue {background:#3b82f6;color:white}
@@ -235,6 +255,20 @@ button,select {font:inherit}
     min-height:290px;
     display:flex;
     flex-direction:column;
+    position:relative;
+    overflow:hidden;
+}
+
+.decision-panel::before {
+    content:"";
+    position:absolute;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:#e6197a08;
+    right:-30px;
+    top:-30px;
+    pointer-events:none;
 }
 
 .panel-heading {
@@ -297,7 +331,7 @@ button,select {font:inherit}
     line-height:1.4;
     font-weight:900;
     cursor:pointer;
-    transition:.15s;
+    transition:background .2s,transform .2s,border-color .2s;
 }
 
 .option-btn:hover:not(:disabled) {
@@ -366,6 +400,16 @@ button,select {font:inherit}
     color:var(--pink);
     box-shadow:0 4px 0 #e6e9f4;
     font-size:1.9rem;
+    transition:transform .2s;
+}
+
+.dice.rolling {
+    animation:diceShake .15s infinite alternate;
+}
+
+@keyframes diceShake {
+    from {transform:rotate(-8deg) scale(.96)}
+    to {transform:rotate(8deg) scale(1.05)}
 }
 
 .dice-info {flex:1;min-width:0}
@@ -425,11 +469,17 @@ button,select {font:inherit}
     border-left:4px solid #ccd2e4;
     border-radius:9px;
     background:#f6f8fd;
+    transition:.2s;
 }
 
 .team-card.active {
     border-left-color:var(--pink);
     background:#fff1f7;
+}
+
+.team-card.finished-team {
+    background:#ecfdf5;
+    border-left-color:#16a34a;
 }
 
 .team-name {
@@ -486,6 +536,11 @@ button,select {font:inherit}
 
 .ranking th {color:#8189a0}
 .ranking .winner {color:var(--pink);font-weight:900}
+
+button:focus-visible,select:focus-visible {
+    outline:3px solid #e6197a88;
+    outline-offset:3px;
+}
 
 @media(max-width:1100px) {
     .game-layout {grid-template-columns:minmax(0,1fr) 310px}
@@ -638,13 +693,6 @@ const TEAM_INFO = [
     {name:"Vermelha",cls:"red",mark:"VM"},
     {name:"Verde",cls:"green",mark:"VD"}
 ];
-
-/*
- Caminho em serpentina:
- primeira coluna de cima para baixo;
- segunda coluna de baixo para cima;
- e assim sucessivamente.
-*/
 
 function getCell(index) {
     const col = Math.floor(index / ROWS);
@@ -871,6 +919,7 @@ let phase="idle";
 let gameOver=false;
 let rolling=false;
 let rollTimer=null;
+let resizeTimer=null;
 
 function makePlayers(count) {
     return TEAM_INFO.slice(0,count).map((team,id)=>({
@@ -896,7 +945,10 @@ function money(value) {
 }
 
 function equilibrium(player) {
-    const bonus=player.saldo<0?-20:Math.min(20,Math.floor(player.saldo/150));
+    const bonus=player.saldo<0
+        ?-20
+        :Math.min(20,Math.floor(player.saldo/150));
+
     return player.saude+player.felicidade+bonus;
 }
 
@@ -938,19 +990,19 @@ function createBoard() {
 
     players.forEach((player,index)=>{
         const pawn=document.createElement("div");
+
         pawn.className=`pawn ${player.cls}`;
         pawn.id=`pawn-${index}`;
         pawn.textContent=player.mark;
+        pawn.setAttribute("aria-label",`Peão da equipe ${player.name}`);
+
         board.appendChild(pawn);
     });
-
-    createArrows();
-    updatePawns();
-    updateScoreboard();
 
     requestAnimationFrame(()=>{
         createArrows();
         updatePawns();
+        updateScoreboard();
     });
 }
 
@@ -976,21 +1028,22 @@ function createArrows() {
 
         const vertical=Math.abs(a.left-b.left)<3;
 
-        const size=Math.max(10,Math.min(18,vertical?a.width*.17:a.height*.23));
+        const size=Math.max(
+            10,
+            Math.min(18,vertical?a.width*.17:a.height*.23)
+        );
 
         const arrow=document.createElement("div");
-        arrow.className="path-arrow";
 
+        arrow.className="path-arrow";
         arrow.style.width=`${size}px`;
         arrow.style.height=`${size}px`;
 
-        arrow.style.left=`
-            ${(a.left+a.width/2+b.left+b.width/2)/2-boardRect.left-size/2}px
-        `;
+        const centerX=(a.left+a.width/2+b.left+b.width/2)/2;
+        const centerY=(a.top+a.height/2+b.top+b.height/2)/2;
 
-        arrow.style.top=`
-            ${(a.top+a.height/2+b.top+b.height/2)/2-boardRect.top-size/2}px
-        `;
+        arrow.style.left=`${centerX-boardRect.left-size/2}px`;
+        arrow.style.top=`${centerY-boardRect.top-size/2}px`;
 
         let rotation;
 
@@ -1024,10 +1077,10 @@ function updatePawns() {
     const boardRect=board.getBoundingClientRect();
 
     const offsets=[
-        [-.22,-.22],
-        [.22,-.22],
-        [-.22,.22],
-        [.22,.22]
+        [-0.17,-0.17],
+        [0.17,-0.17],
+        [-0.17,0.17],
+        [0.17,0.17]
     ];
 
     players.forEach((player,index)=>{
@@ -1038,16 +1091,27 @@ function updatePawns() {
 
         const rect=tile.getBoundingClientRect();
         const size=pawn.offsetWidth;
-
         const offset=offsets[index]||[0,0];
 
-        pawn.style.left=`
-            ${rect.left-boardRect.left+rect.width/2-size/2+rect.width*offset[0]}px
-        `;
+        const left=
+            rect.left-boardRect.left+
+            rect.width/2-
+            size/2+
+            rect.width*offset[0];
 
-        pawn.style.top=`
-            ${rect.top-boardRect.top+rect.height/2-size/2+rect.height*offset[1]}px
-        `;
+        const top=
+            rect.top-boardRect.top+
+            rect.height/2-
+            size/2+
+            rect.height*offset[1];
+
+        pawn.style.left=`${left}px`;
+        pawn.style.top=`${top}px`;
+
+        pawn.classList.toggle(
+            "active-pawn",
+            index===current && !player.finished
+        );
     });
 }
 
@@ -1074,8 +1138,10 @@ function addContinue(label="Continuar") {
 }
 
 function updateTurnLabel() {
+    const player=getActivePlayer();
+
     document.getElementById("turn-label").textContent=
-        `Vez: ${getActivePlayer().name}`;
+        player ? `Vez: ${player.name}` : "Partida encerrada";
 }
 
 /* =====================================
@@ -1091,14 +1157,22 @@ function updateScoreboard() {
 
         card.className="team-card";
 
-        if(index===current&&!gameOver) {
+        if(index===current && !gameOver && !player.finished) {
             card.classList.add("active");
+        }
+
+        if(player.finished) {
+            card.classList.add("finished-team");
         }
 
         card.innerHTML=`
             <div class="team-name">
-                <span>${player.name}${player.blocked?" ⏳":""}</span>
-                <span>Casa ${player.pos+1}/48</span>
+                <span>${player.name}</span>
+                <span>
+                    ${player.finished
+                        ?"🏁 Finalizada"
+                        :`Casa ${player.pos+1}/48`}
+                </span>
             </div>
 
             <div class="team-stats">
@@ -1166,11 +1240,11 @@ function showDeltas(effects) {
 ===================================== */
 
 function rollDice() {
-    if(gameOver||phase!=="idle"||rolling) return;
+    if(gameOver || phase!=="idle" || rolling) return;
 
     const player=getActivePlayer();
 
-    if(player.finished) {
+    if(!player || player.finished) {
         nextTurn();
         return;
     }
@@ -1197,6 +1271,7 @@ function rollDice() {
     const result=document.getElementById("dice-result");
 
     button.disabled=true;
+    dice.classList.add("rolling");
 
     let ticks=0;
 
@@ -1214,6 +1289,8 @@ function rollDice() {
             const value=Math.floor(Math.random()*6)+1;
 
             dice.innerHTML=`<i class="bi bi-dice-${value}-fill"></i>`;
+            dice.classList.remove("rolling");
+
             result.textContent=`${player.name} tirou ${value}`;
 
             rolling=false;
@@ -1227,31 +1304,52 @@ function rollDice() {
    13. MOVIMENTAÇÃO
 ===================================== */
 
-function movePlayer(player,steps) {
-    const previous=player.pos;
+async function movePlayer(player,steps) {
+    if(phase!=="idle" || player.finished) return;
 
-    player.pos=Math.min(LAST,player.pos+steps);
+    phase="moving";
 
-    updatePawns();
-    updateScoreboard();
+    document.getElementById("roll-btn").disabled=true;
+
+    for(let i=0;i<steps;i++) {
+        if(player.pos>=LAST) break;
+
+        player.pos++;
+
+        updatePawns();
+        updateScoreboard();
+
+        await new Promise(resolve=>setTimeout(resolve,280));
+    }
 
     if(player.pos===LAST) {
         player.finished=true;
 
         phase="resolved";
 
-        setPanel(
-            "🏆 Chegada!",
-            `${player.name} percorreu o tabuleiro e chegou à casa final! Agora é possível conferir o ranking das equipes.`
-        );
-
-        addContinue("Ver ranking final");
-
+        updatePawns();
         updateScoreboard();
+
+        if(players.every(p=>p.finished)) {
+            setPanel(
+                "🏆 Todas as equipes chegaram!",
+                "A partida terminou! Todas as equipes concluíram o percurso. Confira o ranking final."
+            );
+
+            addContinue("Ver ranking final");
+        } else {
+            setPanel(
+                "🏁 Equipe chegou!",
+                `${player.name} alcançou a casa 48 e concluiu o percurso! As outras equipes continuam jogando.`
+            );
+
+            addContinue("Continuar partida");
+        }
+
         return;
     }
 
-    handleTile(player,previous);
+    handleTile(player);
 }
 
 /* =====================================
@@ -1370,6 +1468,7 @@ function handleTile(player) {
         );
 
         addContinue("Desafio cumprido!");
+        updateScoreboard();
         return;
     }
 
@@ -1460,8 +1559,8 @@ function resolveChoice(player,effects,feedback) {
 function nextTurn() {
     if(gameOver) return;
 
-    if(players.some(player=>player.finished)) {
-        showRanking();
+    if(players.every(player=>player.finished)) {
+        showRanking(true);
         return;
     }
 
@@ -1470,7 +1569,15 @@ function nextTurn() {
     do {
         current=(current+1)%players.length;
         attempts++;
-    } while(players[current].finished&&attempts<=players.length);
+    } while(
+        players[current].finished &&
+        attempts<=players.length
+    );
+
+    if(players[current].finished) {
+        showRanking(true);
+        return;
+    }
 
     phase="idle";
 
@@ -1479,7 +1586,10 @@ function nextTurn() {
     document.getElementById("dice").innerHTML=
         `<i class="bi bi-dice-5"></i>`;
 
-    document.getElementById("dice-result").textContent="Clique para rolar";
+    document.getElementById("dice").classList.remove("rolling");
+
+    document.getElementById("dice-result").textContent=
+        "Clique para rolar";
 
     setPanel(
         "Central de decisões",
@@ -1489,17 +1599,28 @@ function nextTurn() {
 
     updateTurnLabel();
     updateScoreboard();
+    updatePawns();
 }
 
 /* =====================================
-   17. RANKING FINAL
+   17. RANKING
 ===================================== */
 
-function showRanking() {
-    gameOver=true;
-    phase="over";
+function showRanking(final=false) {
+    const allFinished=players.every(player=>player.finished);
 
-    document.getElementById("roll-btn").disabled=true;
+    if(final && !allFinished) {
+        return;
+    }
+
+    if(allFinished) {
+        gameOver=true;
+        phase="over";
+        document.getElementById("roll-btn").disabled=true;
+    } else {
+        gameOver=false;
+        phase="ranking";
+    }
 
     const ranked=[...players].sort(
         (a,b)=>equilibrium(b)-equilibrium(a)
@@ -1516,11 +1637,15 @@ function showRanking() {
         </tr>
     `).join("");
 
-    document.getElementById("card-title").textContent="🏆 Ranking final";
+    document.getElementById("card-title").textContent=
+        allFinished?"🏆 Ranking final":"📊 Ranking parcial";
+
     document.getElementById("card-title").style.color="#e6197a";
 
     document.getElementById("card-text").textContent=
-        `Equipe em destaque: ${ranked[0].name}, com Índice de Equilíbrio ${equilibrium(ranked[0])}. O índice considera saúde, felicidade e saldo financeiro.`;
+        allFinished
+        ?`Parabéns! Todas as equipes concluíram o percurso. Destaque: ${ranked[0].name}, com índice de equilíbrio ${equilibrium(ranked[0])}.`
+        :"Confira a classificação atual. As equipes que ainda não chegaram à casa final continuam participando da partida.";
 
     document.getElementById("options").innerHTML=`
         <div style="overflow-x:auto">
@@ -1538,14 +1663,39 @@ function showRanking() {
                 <tbody>${rows}</tbody>
             </table>
         </div>
-
-        <button class="option-btn continue" onclick="resetGame(players.length)">
-            Jogar novamente
-        </button>
     `;
 
+    const button=document.createElement("button");
+
+    button.className="option-btn continue";
+
+    if(allFinished) {
+        button.textContent="Jogar novamente";
+        button.onclick=()=>resetGame(players.length);
+    } else {
+        button.textContent="Voltar para a partida";
+
+        button.onclick=()=>{
+            phase="idle";
+
+            setPanel(
+                "Central de decisões",
+                `${players[current].name}, é sua vez! Continue a partida.`,
+                "#087d83"
+            );
+
+            updateTurnLabel();
+            updateScoreboard();
+            updatePawns();
+
+            document.getElementById("roll-btn").disabled=false;
+        };
+    }
+
+    document.getElementById("options").appendChild(button);
+
     document.getElementById("feedback").textContent=
-        "Índice = saúde + felicidade + bônus de saldo.";
+        "Índice de equilíbrio = saúde + felicidade + bônus de saldo.";
 
     updateScoreboard();
 }
@@ -1575,7 +1725,10 @@ function resetGame(count=players.length) {
     document.getElementById("dice").innerHTML=
         `<i class="bi bi-dice-5"></i>`;
 
-    document.getElementById("dice-result").textContent="Clique para rolar";
+    document.getElementById("dice").classList.remove("rolling");
+
+    document.getElementById("dice-result").textContent=
+        "Clique para rolar";
 
     setPanel(
         "Pronto para jogar?",
@@ -1606,15 +1759,16 @@ document.getElementById("apply-count").addEventListener("click",()=>{
     }
 });
 
-document.getElementById("ranking-btn").addEventListener("click",showRanking);
+document.getElementById("ranking-btn").addEventListener("click",()=>{
+    if(phase==="moving" || rolling) return;
+    showRanking(false);
+});
 
 document.getElementById("reset-btn").addEventListener("click",()=>{
     if(confirm("Deseja reiniciar a partida e zerar todas as posições e indicadores?")) {
         resetGame(players.length);
     }
 });
-
-let resizeTimer;
 
 window.addEventListener("resize",()=>{
     clearTimeout(resizeTimer);
