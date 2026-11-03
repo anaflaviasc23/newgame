@@ -4,25 +4,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finanças em Jogo — Tabuleiro</title>
+<title>Finanças em Jogo</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-:root {
+:root{
     --navy:#1f2a5c;
     --pink:#e6197a;
     --pink-light:#ff4fa3;
     --pink-dark:#b10f5c;
     --teal:#087d83;
     --line:#e3e7f3;
-    --tile-gap:clamp(5px,.75vw,11px);
+    --tile-gap:clamp(4px,.65vw,9px);
 }
 
-* {box-sizing:border-box}
+*{box-sizing:border-box}
 
-body {
+body{
     margin:0;
     min-height:100vh;
     font-family:"Nunito",sans-serif;
@@ -33,14 +33,14 @@ body {
         linear-gradient(150deg,#fdf8fb,#f2f5fd);
 }
 
-button,select {font:inherit}
+button,select{font:inherit}
 
-.app {
+.app{
     min-height:100vh;
     padding:20px clamp(10px,2vw,30px);
 }
 
-.topbar {
+.topbar{
     max-width:1650px;
     margin:0 auto 18px;
     display:flex;
@@ -49,23 +49,23 @@ button,select {font:inherit}
     gap:15px;
 }
 
-.brand h1 {
+.brand h1{
     margin:0;
     font-size:clamp(1.5rem,2.5vw,2.2rem);
     font-weight:900;
     line-height:1.1;
 }
 
-.brand h1 span {color:var(--pink)}
+.brand h1 span{color:var(--pink)}
 
-.brand p {
+.brand p{
     margin:5px 0 0;
     color:#727b98;
     font-weight:800;
     font-size:.85rem;
 }
 
-.top-badge {
+.top-badge{
     display:flex;
     align-items:center;
     gap:8px;
@@ -78,9 +78,9 @@ button,select {font:inherit}
     box-shadow:0 5px 15px #1f2a5c12;
 }
 
-.top-badge i {color:var(--pink)}
+.top-badge i{color:var(--pink)}
 
-.game-layout {
+.game-layout{
     max-width:1650px;
     margin:auto;
     display:grid;
@@ -88,17 +88,17 @@ button,select {font:inherit}
     gap:20px;
 }
 
-.board-column {min-width:0}
+.board-column{min-width:0}
 
-.board-shell {
+.board-shell{
     padding:clamp(10px,1.5vw,22px);
-    background:linear-gradient(145deg,#ffffff,#f8f9ff);
+    background:#fff;
     border:2px solid var(--line);
     border-radius:25px;
     box-shadow:0 15px 40px #1f2a5c12;
 }
 
-.board {
+.board{
     position:relative;
     width:100%;
     height:clamp(520px,75vh,800px);
@@ -109,7 +109,7 @@ button,select {font:inherit}
     isolation:isolate;
 }
 
-.tile {
+.tile{
     position:relative;
     z-index:1;
     min-width:0;
@@ -124,42 +124,23 @@ button,select {font:inherit}
     border-radius:13px;
     text-align:center;
     box-shadow:0 4px 0 #1f2a5c12;
-    transition:transform .2s,filter .2s;
 }
 
-.tile::after {
-    content:"";
+.tile-num{
     position:absolute;
-    inset:0;
-    border-radius:inherit;
-    pointer-events:none;
-    background:linear-gradient(145deg,#ffffff18,transparent 60%);
-}
-
-.tile:hover {
-    transform:translateY(-2px);
-    filter:brightness(1.04);
-}
-
-.tile-num {
-    position:absolute;
-    z-index:2;
     top:5px;
     left:7px;
-    padding:2px 4px;
-    border-radius:5px;
-    background:#ffffff35;
     font-size:clamp(.55rem,.7vw,.72rem);
     font-weight:900;
-    opacity:.85;
+    opacity:.8;
 }
 
-.tile-icon {
+.tile-icon{
     font-size:clamp(17px,2vw,30px);
     line-height:1;
 }
 
-.tile-label {
+.tile-label{
     font-size:clamp(.48rem,.72vw,.72rem);
     font-weight:900;
     line-height:1.05;
@@ -167,12 +148,12 @@ button,select {font:inherit}
     overflow-wrap:anywhere;
 }
 
-.tile.terminal {
+.tile.terminal{
     border:3px solid #fff;
     box-shadow:0 4px 0 #1f2a5c25,0 0 0 2px #1f2a5c30;
 }
 
-.path-arrow {
+.path-arrow{
     position:absolute;
     z-index:3;
     display:flex;
@@ -183,11 +164,11 @@ button,select {font:inherit}
     pointer-events:none;
 }
 
-.path-arrow svg {width:100%;height:100%}
+.path-arrow svg{width:100%;height:100%}
 
-.pawn {
+.pawn{
     position:absolute;
-    z-index:20;
+    z-index:10;
     width:clamp(23px,2.1vw,32px);
     height:clamp(23px,2.1vw,32px);
     display:flex;
@@ -195,26 +176,24 @@ button,select {font:inherit}
     justify-content:center;
     border:2px solid white;
     border-radius:50%;
-    outline:2px solid #ffffff;
     box-shadow:0 3px 7px #1f2a5c66;
     font-size:.52rem;
     font-weight:900;
-    transition:left .25s ease,top .25s ease,transform .2s;
+    transition:left .45s ease,top .45s ease;
     pointer-events:none;
-    will-change:left,top;
 }
 
-.pawn.active-pawn {
-    box-shadow:0 0 0 4px #e6197a55,0 4px 9px #1f2a5c66;
-    transform:scale(1.12);
+.blue{background:#3b82f6;color:white}
+.yellow{background:#facc15;color:#3a2c00}
+.red{background:#ef4444;color:white}
+.green{background:#22c55e;color:white}
+
+.pawn.finished{
+    outline:3px solid #facc15;
+    outline-offset:2px;
 }
 
-.blue {background:#3b82f6;color:white}
-.yellow {background:#facc15;color:#3a2c00}
-.red {background:#ef4444;color:white}
-.green {background:#22c55e;color:white}
-
-.legend {
+.legend{
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
@@ -224,54 +203,40 @@ button,select {font:inherit}
     font-weight:900;
 }
 
-.legend-item {
+.legend-item{
     display:flex;
     align-items:center;
     gap:6px;
 }
 
-.legend-color {
+.legend-color{
     width:11px;
     height:11px;
     border-radius:4px;
 }
 
-.sidebar {
+.sidebar{
     display:flex;
     flex-direction:column;
     gap:13px;
     min-width:0;
 }
 
-.panel {
+.panel{
     background:white;
     border:2px solid var(--line);
     border-radius:19px;
     box-shadow:0 10px 25px #1f2a5c0d;
 }
 
-.decision-panel {
+.decision-panel{
     padding:16px;
     min-height:290px;
     display:flex;
     flex-direction:column;
-    position:relative;
-    overflow:hidden;
 }
 
-.decision-panel::before {
-    content:"";
-    position:absolute;
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    background:#e6197a08;
-    right:-30px;
-    top:-30px;
-    pointer-events:none;
-}
-
-.panel-heading {
+.panel-heading{
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -280,24 +245,24 @@ button,select {font:inherit}
     border-bottom:1px solid var(--line);
 }
 
-.panel-heading h2 {
+.panel-heading h2{
     margin:0;
     font-size:1rem;
     font-weight:900;
 }
 
-.turn-label {
+.turn-label{
     font-size:.73rem;
     color:var(--teal);
     font-weight:900;
 }
 
-.decision-content {
+.decision-content{
     flex:1;
     padding:15px 0;
 }
 
-.decision-content h3 {
+.decision-content h3{
     margin:0 0 8px;
     color:var(--pink);
     font-size:1rem;
@@ -305,7 +270,7 @@ button,select {font:inherit}
     font-weight:900;
 }
 
-.decision-content p {
+.decision-content p{
     margin:0;
     color:#596383;
     font-size:.84rem;
@@ -313,13 +278,13 @@ button,select {font:inherit}
     white-space:pre-line;
 }
 
-.options {
+.options{
     display:grid;
     gap:8px;
     margin-top:13px;
 }
 
-.option-btn {
+.option-btn{
     width:100%;
     padding:11px;
     border:1px solid #e5e9f4;
@@ -331,17 +296,17 @@ button,select {font:inherit}
     line-height:1.4;
     font-weight:900;
     cursor:pointer;
-    transition:background .2s,transform .2s,border-color .2s;
+    transition:.15s;
 }
 
-.option-btn:hover:not(:disabled) {
+.option-btn:hover:not(:disabled){
     background:#e9edf9;
     transform:translateY(-1px);
 }
 
-.option-btn:disabled {opacity:.55;cursor:default}
+.option-btn:disabled{opacity:.55;cursor:default}
 
-.option-btn.continue {
+.option-btn.continue{
     background:linear-gradient(180deg,var(--pink-light),var(--pink));
     color:white;
     border:0;
@@ -349,13 +314,13 @@ button,select {font:inherit}
     box-shadow:0 4px 0 var(--pink-dark);
 }
 
-.feedback {
+.feedback{
     color:#596383;
     font-size:.77rem;
     line-height:1.5;
 }
 
-.deltas {
+.deltas{
     display:flex;
     flex-wrap:wrap;
     gap:5px;
@@ -363,7 +328,7 @@ button,select {font:inherit}
     margin-top:9px;
 }
 
-.delta {
+.delta{
     padding:4px 8px;
     border-radius:20px;
     background:#f1f3fa;
@@ -371,24 +336,24 @@ button,select {font:inherit}
     font-weight:900;
 }
 
-.positive {color:#168346}
-.negative {color:#c92c45}
+.positive{color:#168346}
+.negative{color:#c92c45}
 
-.control-panel,.score-panel {padding:14px}
+.control-panel,.score-panel,.timer-panel{padding:14px}
 
-.control-panel h3,.score-panel h3 {
+.control-panel h3,.score-panel h3,.timer-panel h3{
     margin:0 0 11px;
     font-size:.88rem;
     font-weight:900;
 }
 
-.dice-row {
+.dice-row{
     display:flex;
     align-items:center;
     gap:12px;
 }
 
-.dice {
+.dice{
     flex:0 0 55px;
     width:55px;
     height:55px;
@@ -400,21 +365,11 @@ button,select {font:inherit}
     color:var(--pink);
     box-shadow:0 4px 0 #e6e9f4;
     font-size:1.9rem;
-    transition:transform .2s;
 }
 
-.dice.rolling {
-    animation:diceShake .15s infinite alternate;
-}
+.dice-info{flex:1;min-width:0}
 
-@keyframes diceShake {
-    from {transform:rotate(-8deg) scale(.96)}
-    to {transform:rotate(8deg) scale(1.05)}
-}
-
-.dice-info {flex:1;min-width:0}
-
-.dice-result {
+.dice-result{
     min-height:20px;
     margin:0 0 6px;
     color:#737b97;
@@ -422,7 +377,7 @@ button,select {font:inherit}
     font-weight:900;
 }
 
-.btn {
+.btn{
     width:100%;
     padding:10px 12px;
     border:0;
@@ -436,20 +391,17 @@ button,select {font:inherit}
     transition:.15s;
 }
 
-.btn:hover:not(:disabled) {transform:translateY(-2px)}
-.btn:active:not(:disabled) {transform:translateY(2px)}
-.btn:disabled {
+.btn:hover:not(:disabled){transform:translateY(-2px)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{
     background:#c9cee0;
     box-shadow:0 4px 0 #aab1c7;
     cursor:default;
 }
 
-.select-row {
-    display:flex;
-    gap:8px;
-}
+.select-row{display:flex;gap:8px}
 
-.select-row select {
+.select-row select{
     flex:1;
     min-width:0;
     padding:9px;
@@ -460,29 +412,25 @@ button,select {font:inherit}
     font-weight:800;
 }
 
-.select-row .btn {width:auto}
+.select-row .btn{width:auto}
 
-.team-list {display:grid;gap:7px}
+.team-list{display:grid;gap:7px}
 
-.team-card {
+.team-card{
     padding:8px 10px;
     border-left:4px solid #ccd2e4;
     border-radius:9px;
     background:#f6f8fd;
-    transition:.2s;
 }
 
-.team-card.active {
+.team-card.active{
     border-left-color:var(--pink);
     background:#fff1f7;
 }
 
-.team-card.finished-team {
-    background:#ecfdf5;
-    border-left-color:#16a34a;
-}
+.team-card.done{opacity:.7}
 
-.team-name {
+.team-name{
     display:flex;
     justify-content:space-between;
     gap:8px;
@@ -490,7 +438,7 @@ button,select {font:inherit}
     font-weight:900;
 }
 
-.team-stats {
+.team-stats{
     display:flex;
     flex-wrap:wrap;
     gap:9px;
@@ -500,82 +448,126 @@ button,select {font:inherit}
     font-weight:900;
 }
 
-.score-actions {
+.score-actions{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:9px;
     margin-top:11px;
 }
 
-.btn-outline {
+.btn-outline{
     background:white;
     color:var(--navy);
     border:2px solid var(--line);
     box-shadow:0 4px 0 #e6e9f4;
 }
 
-.btn-soft {
+.btn-soft{
     background:white;
     color:var(--pink);
     border:2px solid #ffd3e7;
     box-shadow:0 4px 0 #ffd3e7;
 }
 
-.ranking {
+.timer-display{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.timer-number{
+    font-size:1.8rem;
+    font-weight:900;
+    letter-spacing:1px;
+    color:var(--teal);
+}
+
+.timer-number.warning{color:#d97706}
+.timer-number.danger{color:#dc2626}
+
+.timer-status{
+    color:#737b97;
+    font-size:.7rem;
+    font-weight:800;
+}
+
+.progress-track{
+    height:8px;
+    overflow:hidden;
+    margin-top:9px;
+    border-radius:20px;
+    background:#edf0f8;
+}
+
+.progress-fill{
+    height:100%;
+    width:100%;
+    border-radius:20px;
+    background:linear-gradient(90deg,#0d9488,#22c55e);
+    transition:width .3s;
+}
+
+.ranking{
     width:100%;
     border-collapse:collapse;
     margin-top:12px;
     font-size:.66rem;
 }
 
-.ranking th,.ranking td {
+.ranking th,.ranking td{
     padding:6px 3px;
     border-bottom:1px solid var(--line);
     text-align:left;
 }
 
-.ranking th {color:#8189a0}
-.ranking .winner {color:var(--pink);font-weight:900}
+.ranking th{color:#8189a0}
+.ranking .winner{color:var(--pink);font-weight:900}
 
-button:focus-visible,select:focus-visible {
-    outline:3px solid #e6197a88;
-    outline-offset:3px;
+.help-text{
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
+    background:#f5f7fc;
+    color:#66708e;
+    font-size:.72rem;
+    line-height:1.5;
 }
 
-@media(max-width:1100px) {
-    .game-layout {grid-template-columns:minmax(0,1fr) 310px}
+@media(max-width:1100px){
+    .game-layout{grid-template-columns:minmax(0,1fr) 310px}
 }
 
-@media(max-width:850px) {
-    .game-layout {grid-template-columns:1fr}
-    .board {height:clamp(460px,75vw,680px)}
-    .sidebar {display:grid;grid-template-columns:1fr 1fr}
-    .decision-panel {grid-column:1/-1}
+@media(max-width:850px){
+    .game-layout{grid-template-columns:1fr}
+    .board{height:clamp(460px,75vw,680px)}
+    .sidebar{display:grid;grid-template-columns:1fr 1fr}
+    .decision-panel{grid-column:1/-1}
 }
 
-@media(max-width:580px) {
-    .app {padding:12px 8px}
-    .top-badge {display:none}
-    .board-shell {padding:7px;border-radius:16px}
-    .board {
+@media(max-width:580px){
+    .app{padding:12px 8px}
+    .top-badge{display:none}
+    .board-shell{padding:7px;border-radius:16px}
+    .board{
         height:clamp(350px,110vw,470px);
         gap:4px;
     }
-    .tile {border-radius:8px;padding:2px;gap:3px}
-    .tile-icon {font-size:clamp(13px,4vw,19px)}
-    .tile-label {display:none}
-    .tile-num {top:3px;left:4px;font-size:.48rem}
-    .pawn {
+    .tile{border-radius:8px;padding:2px;gap:3px}
+    .tile-icon{font-size:clamp(13px,4vw,19px)}
+    .tile-label{display:none}
+    .tile-num{top:3px;left:4px;font-size:.48rem}
+    .pawn{
         width:clamp(19px,5vw,24px);
         height:clamp(19px,5vw,24px);
         font-size:.43rem;
     }
-    .legend {font-size:.62rem;gap:7px 10px}
-    .sidebar {display:flex}
+    .legend{font-size:.62rem;gap:7px 10px}
+    .sidebar{display:flex}
 }
 
-@media(prefers-reduced-motion:reduce) {
-    *,*::before,*::after {
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
         transition:none!important;
         animation:none!important;
     }
@@ -591,6 +583,7 @@ button:focus-visible,select:focus-visible {
         <h1>Finanças <span>em Jogo</span></h1>
         <p>Jogue • Aprenda • Evolua</p>
     </div>
+
     <div class="top-badge">
         <i class="bi bi-dice-5-fill"></i>
         Tabuleiro de decisões financeiras
@@ -628,11 +621,25 @@ button:focus-visible,select:focus-visible {
 
     <div class="decision-content">
         <h3 id="card-title">Pronto para jogar?</h3>
-        <p id="card-text">Escolha a quantidade de equipes e role o dado para começar.</p>
+        <p id="card-text">Role o dado para começar. Cada equipe deverá tomar decisões para cuidar do próprio dinheiro.</p>
         <div class="options" id="options"></div>
     </div>
 
     <div class="feedback" id="feedback"></div>
+</section>
+
+<section class="panel timer-panel">
+    <h3><i class="bi bi-stopwatch-fill"></i> Tempo da partida</h3>
+    <div class="timer-display">
+        <div>
+            <div class="timer-number" id="timer">30:00</div>
+            <div class="timer-status" id="timer-status">O cronômetro começa na primeira jogada.</div>
+        </div>
+        <i class="bi bi-clock-history" style="font-size:2rem;color:#e6197a"></i>
+    </div>
+    <div class="progress-track">
+        <div class="progress-fill" id="timer-progress"></div>
+    </div>
 </section>
 
 <section class="panel control-panel">
@@ -671,6 +678,11 @@ button:focus-visible,select:focus-visible {
         <button class="btn btn-outline" id="ranking-btn" type="button">Ver ranking</button>
         <button class="btn btn-soft" id="reset-btn" type="button">Reiniciar</button>
     </div>
+
+    <div class="help-text">
+        <b>Como vencer?</b><br>
+        O jogo considera o equilíbrio entre dinheiro, saúde financeira e felicidade. Não basta apenas acumular dinheiro!
+    </div>
 </section>
 
 </aside>
@@ -679,13 +691,15 @@ button:focus-visible,select:focus-visible {
 
 <script>
 /* =====================================
-   1. CONFIGURAÇÃO DO TABULEIRO
+   1. CONFIGURAÇÕES
 ===================================== */
 
 const ROWS = 8;
 const COLS = 6;
 const TOTAL = 48;
 const LAST = TOTAL - 1;
+
+const GAME_DURATION = 30 * 60;
 
 const TEAM_INFO = [
     {name:"Azul",cls:"blue",mark:"AZ"},
@@ -694,13 +708,13 @@ const TEAM_INFO = [
     {name:"Verde",cls:"green",mark:"VD"}
 ];
 
-function getCell(index) {
-    const col = Math.floor(index / ROWS);
-    const n = index % ROWS;
+function getCell(index){
+    const col=Math.floor(index/ROWS);
+    const n=index%ROWS;
 
     return {
-        row:col % 2 === 0 ? n + 1 : ROWS - n,
-        col:col + 1
+        row:col%2===0?n+1:ROWS-n,
+        col:col+1
     };
 }
 
@@ -771,34 +785,41 @@ const ICONS = {
     desafio:"bi-mic-fill"
 };
 
-const tiles = TYPES.map((type,index)=>({
+const tiles=TYPES.map((type,index)=>({
     index,
     type,
     ...getCell(index)
 }));
 
 /* =====================================
-   3. CARTAS EDUCATIVAS
+   3. CARTAS EDUCATIVAS - NÍVEL FÁCIL
 ===================================== */
 
-const EVENTS = {
+const EVENTS={
 
 orcamento:[
 {
-title:"O orçamento passou do limite",
-text:"Você gastou R$ 250 a mais do que planejou. O mês ainda não acabou.",
+title:"Você recebeu seu dinheiro!",
+text:"Você recebeu R$ 800 e precisa organizar seus gastos do mês. Qual é a melhor atitude?",
 choices:[
-["Cortar parte do lazer para compensar",{saude:5,felicidade:-6},"Você ajustou o orçamento. Um corte planejado pode ajudar a recuperar o equilíbrio."],
-["Ignorar e deixar o saldo negativo",{saldo:-250,saude:-8},"Ignorar o gasto não faz a conta desaparecer. Rever o orçamento evita novas dívidas."],
-["Planejar refeições e reduzir o mercado",{saldo:-60,saude:4},"Um ajuste específico pode corrigir o mês sem eliminar todo o lazer."]
+["Separar dinheiro para as despesas e guardar uma parte",{saldo:100,saude:8,felicidade:2},"Muito bem! Planejar os gastos ajuda a evitar dívidas e permite guardar dinheiro."],
+["Gastar tudo com coisas que deseja",{saldo:-150,saude:-5,felicidade:5},"Comprar algo desejado pode ser legal, mas gastar tudo pode deixar você sem dinheiro para necessidades."]
 ]
 },
 {
-title:"Assinaturas esquecidas",
-text:"Você percebeu que paga R$ 120 por mês por serviços que quase não usa.",
+title:"Você gastou mais do que planejou",
+text:"No mercado, você comprou vários produtos que não estavam na lista. O que fazer?",
 choices:[
-["Cancelar as que não usa",{saldo:120,saude:5},"Revisar gastos recorrentes é uma forma simples de liberar dinheiro."],
-["Manter todas",{saldo:-120,felicidade:3},"Manter pode fazer sentido se você realmente usa os serviços. O importante é escolher conscientemente."]
+["Rever a lista e planejar melhor a próxima compra",{saude:7,felicidade:2},"Ótima escolha! Uma lista ajuda a evitar compras desnecessárias."],
+["Continuar comprando sem conferir os preços",{saldo:-100,saude:-5},"Sem acompanhar os gastos, fica mais fácil ultrapassar o orçamento."]
+]
+},
+{
+title:"Assinatura esquecida",
+text:"Você descobriu que paga por um aplicativo que quase nunca usa.",
+choices:[
+["Cancelar a assinatura",{saldo:100,saude:5},"Muito bem! Revisar gastos recorrentes ajuda a economizar."],
+["Continuar pagando sem usar",{saldo:-100,felicidade:0},"É importante saber para onde seu dinheiro está indo."]
 ]
 }
 ],
@@ -806,68 +827,83 @@ choices:[
 consumo:[
 {
 title:"Tênis em promoção",
-text:"Um tênis custa R$ 400 na promoção. Você não tinha planejado essa compra.",
+text:"Você viu um tênis em promoção, mas já tem um em boas condições. O que fazer?",
 choices:[
-["Comprar agora",{saldo:-400,felicidade:8,saude:-4},"A promoção só representa economia quando a compra faz sentido para seu orçamento."],
-["Deixar passar",{felicidade:-2,saude:4},"Você evitou uma compra não planejada. Compare a vontade com suas prioridades."],
-["Pesquisar uma opção mais barata",{saldo:-150,felicidade:4,saude:2},"Pesquisar alternativas pode equilibrar desejo e planejamento."]
+["Pensar se realmente precisa de outro",{saude:6,felicidade:2},"Consumir conscientemente significa pensar antes de comprar."],
+["Comprar só porque está em promoção",{saldo:-150,felicidade:5,saude:-3},"Uma promoção não é economia quando você compra algo de que não precisa."]
 ]
 },
 {
-title:"Delivery toda semana",
-text:"Pedir comida várias vezes no mês pesa no orçamento. Você está com pouco tempo.",
+title:"Celular novo",
+text:"Seu celular funciona bem, mas você quer comprar um modelo mais novo.",
 choices:[
-["Continuar pedindo",{saldo:-160,felicidade:4,saude:-3},"A conveniência tem valor, mas é importante saber quanto representa no mês."],
-["Preparar algumas refeições em casa",{saldo:-40,saude:5,felicidade:-1},"Planejar algumas refeições pode reduzir gastos sem exigir cortar tudo."]
+["Pesquisar preços e avaliar se a troca é necessária",{saude:6,felicidade:2},"Comparar preços e avaliar a necessidade são atitudes responsáveis."],
+["Comprar imediatamente sem pesquisar",{saldo:-250,felicidade:5,saude:-4},"Uma compra por impulso pode comprometer seu dinheiro."]
+]
+},
+{
+title:"Lanche na escola",
+text:"Você tem dinheiro para comprar um lanche todos os dias, mas também quer economizar.",
+choices:[
+["Organizar os gastos e levar lanche alguns dias",{saldo:60,saude:5},"Pequenas escolhas podem ajudar a economizar ao longo do mês."],
+["Gastar todo o dinheiro com lanches",{saldo:-80,felicidade:4},"É importante equilibrar os pequenos gastos com outras prioridades."]
 ]
 }
 ],
 
 reserva:[
 {
-title:"Sua primeira reserva",
-text:"Sobrou dinheiro neste mês. Você ainda não tem uma reserva de emergência.",
+title:"Dinheiro guardado",
+text:"Você recebeu um dinheiro extra. Qual atitude ajuda a se preparar para o futuro?",
 choices:[
-["Guardar uma parte agora",{saldo:-200,saude:9,felicidade:-2},"Uma reserva ajuda a lidar com imprevistos sem depender imediatamente de crédito."],
-["Usar tudo no lazer",{felicidade:6,saude:-5},"Lazer é importante. Tente também reservar uma parte para emergências futuras."]
+["Guardar uma parte para emergências",{saldo:-100,saude:9},"Excelente! A reserva ajuda quando aparece uma despesa inesperada."],
+["Gastar todo o dinheiro imediatamente",{felicidade:6,saude:-5},"Aproveitar o dinheiro pode ser bom, mas guardar uma parte também é importante."]
 ]
 },
 {
-title:"Um imprevisto apareceu",
-text:"Você teve uma despesa inesperada. Há dinheiro guardado e também existe a opção de parcelar.",
+title:"Quebrou um objeto importante",
+text:"Um objeto que você usa todos os dias quebrou e precisa ser consertado.",
 choices:[
-["Usar a reserva e planejar a reposição",{saldo:-250,saude:7},"A reserva existe para situações como essa. Depois, planeje como recompô-la."],
-["Parcelar no cartão",{saldo:-80,saude:-6},"A parcela parece menor agora, mas compromete os próximos meses."]
+["Usar parte da reserva e planejar como repor",{saldo:-100,saude:7},"A reserva serve para ajudar em situações inesperadas."],
+["Pegar dinheiro emprestado sem planejar",{saldo:-150,saude:-6},"Antes de assumir uma dívida, é importante pensar em como pagar."]
 ]
 }
 ],
 
 invest:[
 {
-title:"Como começar a investir?",
-text:"Você tem algum dinheiro disponível, mas ainda está aprendendo sobre investimentos.",
+title:"O que fazer com o dinheiro?",
+text:"Você conseguiu guardar um pouco de dinheiro. Antes de investir, o que deve fazer?",
 choices:[
-["Pesquisar opções e riscos antes de aplicar",{saude:7,felicidade:1},"Entender prazo, risco e liquidez antes de investir é parte do planejamento."],
-["Aplicar sem pesquisar",{saldo:-100,saude:-4},"Investir sem entender o produto pode trazer surpresas. Pesquisar é essencial."]
+["Pesquisar e entender como funciona o investimento",{saude:8,felicidade:2},"Muito bem! É importante entender os riscos antes de investir."],
+["Colocar o dinheiro em qualquer lugar que promete lucro",{saldo:-100,saude:-6},"Promessas de lucro fácil podem esconder riscos ou golpes."]
 ]
 },
 {
-title:"Seu investimento oscilou",
-text:"O valor da aplicação caiu nesta semana. Você não precisa desse dinheiro agora.",
+title:"Aprendendo sobre investimentos",
+text:"Um colega disse que todo investimento dá lucro. Essa informação está correta?",
 choices:[
-["Rever o plano antes de decidir",{saude:5},"Uma oscilação isolada não precisa decidir por você. Reavalie objetivos e riscos."],
-["Vender por medo",{saldo:-80,saude:-3},"Decidir sob pressão pode transformar uma oscilação temporária em prejuízo."]
+["Não. É preciso conhecer os riscos de cada investimento",{saude:8},"Correto! Investimentos podem ter riscos e resultados diferentes."],
+["Sim. Todo investimento garante lucro",{saude:-6,felicidade:2},"Nem todo investimento garante retorno. Pesquisar é essencial."]
 ]
 }
 ],
 
 oportunidade:[
 {
-title:"Curso para desenvolver uma habilidade",
-text:"Um curso pode ajudar nos estudos ou no trabalho, mas exige tempo e dinheiro.",
+title:"Curso gratuito",
+text:"Você encontrou um curso gratuito que pode ajudar nos estudos e no futuro profissional.",
 choices:[
-["Verificar o custo e planejar o curso",{saldo:-100,saude:6},"Investir em aprendizado pode ser útil quando cabe no orçamento e tem um objetivo claro."],
-["Deixar para depois",{felicidade:2,saude:-2},"Adiar pode ser razoável. Anote a meta e avalie quando o orçamento permitir."]
+["Aproveitar a oportunidade e organizar o tempo",{saude:7,felicidade:5},"Aprender novas habilidades pode abrir oportunidades."],
+["Ignorar sem conhecer o conteúdo",{felicidade:-2},"Conhecer novas oportunidades pode ajudar no desenvolvimento pessoal."]
+]
+},
+{
+title:"Economizar energia",
+text:"Sua família percebeu que a conta de energia aumentou. O que pode ajudar?",
+choices:[
+["Apagar as luzes e desligar aparelhos sem uso",{saldo:70,saude:4},"Pequenas atitudes podem reduzir despesas da casa."],
+["Deixar tudo ligado sem necessidade",{saldo:-70,saude:-3},"O desperdício pode aumentar os gastos da família."]
 ]
 }
 ],
@@ -875,38 +911,48 @@ choices:[
 golpe:[
 {
 title:"Mensagem de prêmio",
-text:"Uma mensagem diz que você ganhou um prêmio, mas pede pagamento de uma taxa para liberar o dinheiro.",
+text:"Você recebeu uma mensagem dizendo que ganhou um prêmio, mas precisa pagar uma taxa para receber.",
 choices:[
-["Pagar a taxa",{saldo:-100,saude:-8},"Desconfie de mensagens que exigem pagamento antecipado para liberar um prêmio."],
-["Não pagar e verificar por um canal oficial",{saude:7},"Você evitou compartilhar dados ou dinheiro sem confirmar a informação."]
+["Não pagar e verificar a informação por um canal oficial",{saude:9,felicidade:2},"Muito bem! Desconfie de cobranças antecipadas para liberar prêmios."],
+["Pagar a taxa imediatamente",{saldo:-100,saude:-9},"Atenção! Essa é uma estratégia comum em tentativas de golpe."]
 ]
 },
 {
-title:"Ligação pedindo sua senha",
-text:"Uma pessoa diz ser do banco e pede sua senha para resolver um problema.",
+title:"Pedido de senha",
+text:"Uma pessoa liga dizendo ser do banco e pede sua senha para resolver um problema.",
 choices:[
-["Informar a senha",{saldo:-300,saude:-10},"Nunca informe sua senha. Entre em contato com o banco por um canal oficial."],
-["Desligar e ligar para o número oficial",{saude:8},"Confirmar por um canal confiável ajuda a se proteger de golpes."]
+["Não informar a senha e procurar o banco pelo canal oficial",{saude:10},"Correto! Nunca compartilhe sua senha ou códigos de segurança."],
+["Informar a senha para resolver rapidamente",{saldo:-200,saude:-10},"Bancos não devem pedir sua senha por telefone. Proteja seus dados."]
+]
+},
+{
+title:"Link desconhecido",
+text:"Você recebeu um link dizendo que precisa atualizar seus dados bancários.",
+choices:[
+["Não clicar e confirmar diretamente com o banco",{saude:8},"Excelente! Links desconhecidos podem ser usados para roubar informações."],
+["Clicar e preencher todos os dados",{saldo:-150,saude:-8},"Cuidado! Nunca informe dados pessoais em páginas suspeitas."]
 ]
 }
 ]
 };
 
 /* =====================================
-   4. DESAFIOS
+   4. DESAFIOS FÁCEIS
 ===================================== */
 
-const CHALLENGES = [
-"Explique com suas palavras por que é útil planejar os gastos.",
-"Diga uma forma de verificar se uma promoção realmente vale a pena.",
-"Cite uma atitude que ajuda a reconhecer uma tentativa de golpe.",
-"Em equipe, deem um exemplo de meta financeira de curto prazo.",
-"Qual é a diferença entre necessidade e desejo?",
-"Por que é importante guardar dinheiro para imprevistos?",
-"Explique o que significa consumir conscientemente.",
-"Qual a importância de comparar preços antes de comprar?",
-"O que pode acontecer quando gastamos mais do que recebemos?",
-"Explique a diferença entre poupar e investir."
+const CHALLENGES=[
+"Explique por que é importante pensar antes de comprar.",
+"Cite uma necessidade e um desejo.",
+"Diga uma forma de economizar dinheiro no dia a dia.",
+"Por que devemos comparar preços antes de comprar?",
+"O que é uma reserva de emergência?",
+"Dê um exemplo de gasto que pode ser evitado.",
+"Por que não devemos compartilhar senhas bancárias?",
+"O que significa fazer um orçamento?",
+"Qual é a diferença entre poupar e gastar?",
+"Diga uma atitude que ajuda a evitar compras por impulso.",
+"Por que é importante guardar dinheiro para o futuro?",
+"Como podemos identificar uma possível tentativa de golpe?"
 ];
 
 /* =====================================
@@ -919,9 +965,12 @@ let phase="idle";
 let gameOver=false;
 let rolling=false;
 let rollTimer=null;
-let resizeTimer=null;
 
-function makePlayers(count) {
+let timeLeft=GAME_DURATION;
+let gameStarted=false;
+let clockTimer=null;
+
+function makePlayers(count){
     return TEAM_INFO.slice(0,count).map((team,id)=>({
         id,
         name:team.name,
@@ -936,15 +985,15 @@ function makePlayers(count) {
     }));
 }
 
-function clamp(value) {
+function clamp(value){
     return Math.max(0,Math.min(100,value));
 }
 
-function money(value) {
+function money(value){
     return "R$ "+value.toLocaleString("pt-BR");
 }
 
-function equilibrium(player) {
+function equilibrium(player){
     const bonus=player.saldo<0
         ?-20
         :Math.min(20,Math.floor(player.saldo/150));
@@ -952,15 +1001,75 @@ function equilibrium(player) {
     return player.saude+player.felicidade+bonus;
 }
 
-function getActivePlayer() {
+function getActivePlayer(){
     return players[current];
 }
 
 /* =====================================
-   6. CRIAÇÃO DO TABULEIRO
+   6. CRONÔMETRO
 ===================================== */
 
-function createBoard() {
+function startClock(){
+    if(gameStarted||gameOver)return;
+
+    gameStarted=true;
+
+    document.getElementById("timer-status").textContent=
+        "Partida em andamento";
+
+    clockTimer=setInterval(()=>{
+        if(gameOver)return;
+
+        timeLeft--;
+
+        updateTimer();
+
+        if(timeLeft<=0){
+            timeLeft=0;
+            updateTimer();
+            finishGame("O tempo de 30 minutos terminou!");
+        }
+    },1000);
+}
+
+function updateTimer(){
+    const minutes=Math.floor(timeLeft/60);
+    const seconds=timeLeft%60;
+
+    const timer=document.getElementById("timer");
+
+    timer.textContent=
+        `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+
+    timer.classList.remove("warning","danger");
+
+    if(timeLeft<=300){
+        timer.classList.add("danger");
+    }else if(timeLeft<=600){
+        timer.classList.add("warning");
+    }
+
+    document.getElementById("timer-progress").style.width=
+        `${(timeLeft/GAME_DURATION)*100}%`;
+
+    if(timeLeft<=300){
+        document.getElementById("timer-status").textContent=
+            "Atenção: faltam poucos minutos!";
+    }
+}
+
+function stopClock(){
+    if(clockTimer){
+        clearInterval(clockTimer);
+        clockTimer=null;
+    }
+}
+
+/* =====================================
+   7. CRIAÇÃO DO TABULEIRO
+===================================== */
+
+function createBoard(){
     const board=document.getElementById("board");
     board.innerHTML="";
 
@@ -970,7 +1079,7 @@ function createBoard() {
         element.id=`tile-${tile.index}`;
         element.className="tile";
 
-        if(tile.type==="start"||tile.type==="finish") {
+        if(tile.type==="start"||tile.type==="finish"){
             element.classList.add("terminal");
         }
 
@@ -994,62 +1103,61 @@ function createBoard() {
         pawn.className=`pawn ${player.cls}`;
         pawn.id=`pawn-${index}`;
         pawn.textContent=player.mark;
-        pawn.setAttribute("aria-label",`Peão da equipe ${player.name}`);
 
         board.appendChild(pawn);
     });
 
+    createArrows();
+    updatePawns();
+    updateScoreboard();
+
     requestAnimationFrame(()=>{
         createArrows();
         updatePawns();
-        updateScoreboard();
     });
 }
 
 /* =====================================
-   7. SETAS DO CAMINHO
+   8. SETAS DO CAMINHO
 ===================================== */
 
-function createArrows() {
+function createArrows(){
     const board=document.getElementById("board");
 
     board.querySelectorAll(".path-arrow").forEach(a=>a.remove());
 
     const boardRect=board.getBoundingClientRect();
 
-    for(let i=0;i<TOTAL-1;i++) {
+    for(let i=0;i<TOTAL-1;i++){
         const from=document.getElementById(`tile-${i}`);
         const to=document.getElementById(`tile-${i+1}`);
 
-        if(!from||!to) continue;
+        if(!from||!to)continue;
 
         const a=from.getBoundingClientRect();
         const b=to.getBoundingClientRect();
 
         const vertical=Math.abs(a.left-b.left)<3;
 
-        const size=Math.max(
-            10,
-            Math.min(18,vertical?a.width*.17:a.height*.23)
-        );
+        const size=Math.max(10,Math.min(18,vertical?a.width*.17:a.height*.23));
 
         const arrow=document.createElement("div");
-
         arrow.className="path-arrow";
+
         arrow.style.width=`${size}px`;
         arrow.style.height=`${size}px`;
 
-        const centerX=(a.left+a.width/2+b.left+b.width/2)/2;
-        const centerY=(a.top+a.height/2+b.top+b.height/2)/2;
+        arrow.style.left=
+            `${(a.left+a.width/2+b.left+b.width/2)/2-boardRect.left-size/2}px`;
 
-        arrow.style.left=`${centerX-boardRect.left-size/2}px`;
-        arrow.style.top=`${centerY-boardRect.top-size/2}px`;
+        arrow.style.top=
+            `${(a.top+a.height/2+b.top+b.height/2)/2-boardRect.top-size/2}px`;
 
         let rotation;
 
-        if(vertical) {
+        if(vertical){
             rotation=b.top>a.top?0:180;
-        } else {
+        }else{
             rotation=b.left>a.left?-90:90;
         }
 
@@ -1067,59 +1175,47 @@ function createArrows() {
 }
 
 /* =====================================
-   8. POSIÇÃO DOS PEÕES
+   9. POSIÇÃO DOS PEÕES
 ===================================== */
 
-function updatePawns() {
+function updatePawns(){
     const board=document.getElementById("board");
-    if(!board) return;
+    if(!board)return;
 
     const boardRect=board.getBoundingClientRect();
 
     const offsets=[
-        [-0.17,-0.17],
-        [0.17,-0.17],
-        [-0.17,0.17],
-        [0.17,0.17]
+        [-.22,-.22],
+        [.22,-.22],
+        [-.22,.22],
+        [.22,.22]
     ];
 
     players.forEach((player,index)=>{
         const pawn=document.getElementById(`pawn-${index}`);
         const tile=document.getElementById(`tile-${player.pos}`);
 
-        if(!pawn||!tile) return;
+        if(!pawn||!tile)return;
 
         const rect=tile.getBoundingClientRect();
         const size=pawn.offsetWidth;
         const offset=offsets[index]||[0,0];
 
-        const left=
-            rect.left-boardRect.left+
-            rect.width/2-
-            size/2+
-            rect.width*offset[0];
+        pawn.style.left=
+            `${rect.left-boardRect.left+rect.width/2-size/2+rect.width*offset[0]}px`;
 
-        const top=
-            rect.top-boardRect.top+
-            rect.height/2-
-            size/2+
-            rect.height*offset[1];
+        pawn.style.top=
+            `${rect.top-boardRect.top+rect.height/2-size/2+rect.height*offset[1]}px`;
 
-        pawn.style.left=`${left}px`;
-        pawn.style.top=`${top}px`;
-
-        pawn.classList.toggle(
-            "active-pawn",
-            index===current && !player.finished
-        );
+        pawn.classList.toggle("finished",player.finished);
     });
 }
 
 /* =====================================
-   9. PAINEL DE DECISÕES
+   10. PAINEL DE DECISÕES
 ===================================== */
 
-function setPanel(title,text,color="#e6197a") {
+function setPanel(title,text,color="#e6197a"){
     document.getElementById("card-title").textContent=title;
     document.getElementById("card-title").style.color=color;
     document.getElementById("card-text").textContent=text;
@@ -1127,28 +1223,32 @@ function setPanel(title,text,color="#e6197a") {
     document.getElementById("feedback").innerHTML="";
 }
 
-function addContinue(label="Continuar") {
+function addContinue(label="Continuar",callback=nextTurn){
     const button=document.createElement("button");
 
     button.className="option-btn continue";
     button.textContent=label;
-    button.onclick=nextTurn;
+    button.onclick=callback;
 
     document.getElementById("options").appendChild(button);
 }
 
-function updateTurnLabel() {
+function updateTurnLabel(){
+    if(!players.length)return;
+
     const player=getActivePlayer();
 
     document.getElementById("turn-label").textContent=
-        player ? `Vez: ${player.name}` : "Partida encerrada";
+        player.finished
+            ? "Equipe na chegada"
+            : `Vez: ${player.name}`;
 }
 
 /* =====================================
-   10. PLACAR
+   11. PLACAR
 ===================================== */
 
-function updateScoreboard() {
+function updateScoreboard(){
     const list=document.getElementById("team-list");
     list.innerHTML="";
 
@@ -1157,22 +1257,22 @@ function updateScoreboard() {
 
         card.className="team-card";
 
-        if(index===current && !gameOver && !player.finished) {
+        if(index===current&&!gameOver&&!player.finished){
             card.classList.add("active");
         }
 
-        if(player.finished) {
-            card.classList.add("finished-team");
+        if(player.finished){
+            card.classList.add("done");
         }
 
         card.innerHTML=`
             <div class="team-name">
-                <span>${player.name}</span>
                 <span>
-                    ${player.finished
-                        ?"🏁 Finalizada"
-                        :`Casa ${player.pos+1}/48`}
+                    ${player.name}
+                    ${player.blocked?" ⏳":""}
+                    ${player.finished?" 🏁":""}
                 </span>
+                <span>${player.finished?"Finalizou":`Casa ${player.pos+1}/48`}</span>
             </div>
 
             <div class="team-stats">
@@ -1187,27 +1287,27 @@ function updateScoreboard() {
 }
 
 /* =====================================
-   11. EFEITOS FINANCEIROS
+   12. EFEITOS FINANCEIROS
 ===================================== */
 
-function applyEffects(player,effects) {
-    if(effects.saldo!==undefined) {
+function applyEffects(player,effects){
+    if(effects.saldo!==undefined){
         player.saldo+=effects.saldo;
     }
 
-    if(effects.saude!==undefined) {
+    if(effects.saude!==undefined){
         player.saude=clamp(player.saude+effects.saude);
     }
 
-    if(effects.felicidade!==undefined) {
+    if(effects.felicidade!==undefined){
         player.felicidade=clamp(player.felicidade+effects.felicidade);
     }
 }
 
-function showDeltas(effects) {
+function showDeltas(effects){
     const entries=[];
 
-    if(effects.saldo) {
+    if(effects.saldo){
         entries.push(`
             <span class="delta ${effects.saldo>0?"positive":"negative"}">
                 Saldo ${effects.saldo>0?"+":""}${money(effects.saldo)}
@@ -1215,7 +1315,7 @@ function showDeltas(effects) {
         `);
     }
 
-    if(effects.saude) {
+    if(effects.saude){
         entries.push(`
             <span class="delta ${effects.saude>0?"positive":"negative"}">
                 Saúde ${effects.saude>0?"+":""}${effects.saude}
@@ -1223,7 +1323,7 @@ function showDeltas(effects) {
         `);
     }
 
-    if(effects.felicidade) {
+    if(effects.felicidade){
         entries.push(`
             <span class="delta ${effects.felicidade>0?"positive":"negative"}">
                 Felicidade ${effects.felicidade>0?"+":""}${effects.felicidade}
@@ -1236,20 +1336,22 @@ function showDeltas(effects) {
 }
 
 /* =====================================
-   12. DADO
+   13. DADO
 ===================================== */
 
-function rollDice() {
-    if(gameOver || phase!=="idle" || rolling) return;
+function rollDice(){
+    if(gameOver||phase!=="idle"||rolling)return;
 
     const player=getActivePlayer();
 
-    if(!player || player.finished) {
+    if(!player||player.finished){
         nextTurn();
         return;
     }
 
-    if(player.blocked) {
+    startClock();
+
+    if(player.blocked){
         player.blocked=false;
         phase="resolved";
 
@@ -1271,7 +1373,6 @@ function rollDice() {
     const result=document.getElementById("dice-result");
 
     button.disabled=true;
-    dice.classList.add("rolling");
 
     let ticks=0;
 
@@ -1282,15 +1383,13 @@ function rollDice() {
 
         ticks++;
 
-        if(ticks>=12) {
+        if(ticks>=12){
             clearInterval(rollTimer);
             rollTimer=null;
 
             const value=Math.floor(Math.random()*6)+1;
 
             dice.innerHTML=`<i class="bi bi-dice-${value}-fill"></i>`;
-            dice.classList.remove("rolling");
-
             result.textContent=`${player.name} tirou ${value}`;
 
             rolling=false;
@@ -1301,50 +1400,28 @@ function rollDice() {
 }
 
 /* =====================================
-   13. MOVIMENTAÇÃO
+   14. MOVIMENTAÇÃO
 ===================================== */
 
-async function movePlayer(player,steps) {
-    if(phase!=="idle" || player.finished) return;
+function movePlayer(player,steps){
+    player.pos=Math.min(LAST,player.pos+steps);
 
-    phase="moving";
+    updatePawns();
+    updateScoreboard();
 
-    document.getElementById("roll-btn").disabled=true;
-
-    for(let i=0;i<steps;i++) {
-        if(player.pos>=LAST) break;
-
-        player.pos++;
-
-        updatePawns();
-        updateScoreboard();
-
-        await new Promise(resolve=>setTimeout(resolve,280));
-    }
-
-    if(player.pos===LAST) {
+    if(player.pos===LAST){
         player.finished=true;
 
         phase="resolved";
 
-        updatePawns();
+        setPanel(
+            "🏆 Equipe na chegada!",
+            `${player.name} chegou à casa 48! Parabéns! As outras equipes continuarão jogando até chegarem ou até o tempo acabar.`,
+            "#4338ca"
+        );
+
+        addContinue("Continuar partida");
         updateScoreboard();
-
-        if(players.every(p=>p.finished)) {
-            setPanel(
-                "🏆 Todas as equipes chegaram!",
-                "A partida terminou! Todas as equipes concluíram o percurso. Confira o ranking final."
-            );
-
-            addContinue("Ver ranking final");
-        } else {
-            setPanel(
-                "🏁 Equipe chegou!",
-                `${player.name} alcançou a casa 48 e concluiu o percurso! As outras equipes continuam jogando.`
-            );
-
-            addContinue("Continuar partida");
-        }
 
         return;
     }
@@ -1353,16 +1430,16 @@ async function movePlayer(player,steps) {
 }
 
 /* =====================================
-   14. AÇÕES DAS CASAS
+   15. AÇÕES DAS CASAS
 ===================================== */
 
-function handleTile(player) {
+function handleTile(player){
     const type=tiles[player.pos].type;
 
-    if(type==="salario"||type==="bonus") {
+    if(type==="salario"||type==="bonus"){
         const effects=type==="salario"
-            ?{saldo:700,saude:2}
-            :{saldo:300,saude:3};
+            ?{saldo:300,saude:2}
+            :{saldo:150,saude:2};
 
         applyEffects(player,effects);
 
@@ -1371,8 +1448,8 @@ function handleTile(player) {
         setPanel(
             type==="salario"?"Salário recebido!":"Bônus!",
             type==="salario"
-                ?`${player.name} recebeu R$ 700. Aproveite para organizar seu orçamento.`
-                :`${player.name} ganhou R$ 300 de bônus!`,
+                ?`${player.name} recebeu R$ 300. Aproveite para organizar seu orçamento.`
+                :`${player.name} ganhou R$ 150 de bônus!`,
             "#0d9488"
         );
 
@@ -1382,7 +1459,7 @@ function handleTile(player) {
         return;
     }
 
-    if(type==="sorte"||type==="cilada") {
+    if(type==="sorte"||type==="cilada"){
         player.pos=type==="sorte"
             ?Math.min(LAST-1,player.pos+1)
             :Math.max(0,player.pos-2);
@@ -1395,7 +1472,7 @@ function handleTile(player) {
             type==="sorte"?"🍀 Sorte!":"⚠️ Cilada!",
             type==="sorte"
                 ?`${player.name} avançou mais uma casa!`
-                :`${player.name} voltou duas casas. Nem toda decisão traz bons resultados.`,
+                :`${player.name} voltou duas casas. Algumas escolhas podem trazer consequências.`,
             type==="sorte"?"#168346":"#c92c45"
         );
 
@@ -1404,14 +1481,14 @@ function handleTile(player) {
         return;
     }
 
-    if(type==="bloqueio") {
+    if(type==="bloqueio"){
         player.blocked=true;
 
         phase="resolved";
 
         setPanel(
             "⏳ Bloqueio",
-            `${player.name} terá que perder a próxima rodada. Imprevistos podem mudar nossos planos!`,
+            `${player.name} perderá a próxima rodada. Depois poderá jogar normalmente.`,
             "#64748b"
         );
 
@@ -1420,19 +1497,19 @@ function handleTile(player) {
         return;
     }
 
-    if(type==="imprevisto") {
+    if(type==="imprevisto"){
         const events=[
             {
-                text:"Uma despesa inesperada de saúde apareceu.",
-                effects:{saldo:-250,saude:-4}
+                text:"Uma despesa inesperada apareceu e você precisou comprar um item importante.",
+                effects:{saldo:-100,saude:-3}
             },
             {
-                text:"Foi necessário consertar um item importante.",
-                effects:{saldo:-200,felicidade:-3}
+                text:"Foi necessário consertar um objeto da sua casa.",
+                effects:{saldo:-80,felicidade:-2}
             },
             {
-                text:"Você recebeu uma pequena renda extra inesperada.",
-                effects:{saldo:150,felicidade:2}
+                text:"Você encontrou dinheiro que havia guardado e esquecido.",
+                effects:{saldo:80,felicidade:3}
             }
         ];
 
@@ -1444,7 +1521,7 @@ function handleTile(player) {
 
         setPanel(
             "Imprevisto!",
-            `${event.text} Uma reserva financeira pode ajudar a lidar com gastos que não estavam planejados.`,
+            `${event.text} Ter uma reserva pode ajudar a lidar com situações inesperadas.`,
             "#c92c45"
         );
 
@@ -1454,7 +1531,7 @@ function handleTile(player) {
         return;
     }
 
-    if(type==="desafio") {
+    if(type==="desafio"){
         const challenge=CHALLENGES[
             Math.floor(Math.random()*CHALLENGES.length)
         ];
@@ -1468,11 +1545,10 @@ function handleTile(player) {
         );
 
         addContinue("Desafio cumprido!");
-        updateScoreboard();
         return;
     }
 
-    if(type==="start"||type==="finish") {
+    if(type==="start"||type==="finish"){
         phase="resolved";
 
         setPanel(
@@ -1486,7 +1562,7 @@ function handleTile(player) {
 
     const deck=EVENTS[type];
 
-    if(!deck) {
+    if(!deck){
         phase="resolved";
 
         setPanel(
@@ -1502,10 +1578,10 @@ function handleTile(player) {
 }
 
 /* =====================================
-   15. CARTAS E ESCOLHAS
+   16. CARTAS E ESCOLHAS
 ===================================== */
 
-function showEvent(player,event) {
+function showEvent(player,event){
     phase="card";
 
     document.getElementById("card-title").textContent=event.title;
@@ -1523,7 +1599,7 @@ function showEvent(player,event) {
         button.textContent=label;
 
         button.onclick=()=>{
-            if(phase!=="card") return;
+            if(phase!=="card")return;
             resolveChoice(player,effects,feedback);
         };
 
@@ -1531,8 +1607,8 @@ function showEvent(player,event) {
     });
 }
 
-function resolveChoice(player,effects,feedback) {
-    if(phase!=="card") return;
+function resolveChoice(player,effects,feedback){
+    if(phase!=="card")return;
 
     applyEffects(player,effects);
 
@@ -1548,34 +1624,33 @@ function resolveChoice(player,effects,feedback) {
     phase="resolved";
 
     addContinue();
-
     updateScoreboard();
 }
 
 /* =====================================
-   16. CONTROLE DE TURNOS
+   17. CONTROLE DE TURNOS
 ===================================== */
 
-function nextTurn() {
-    if(gameOver) return;
+function nextTurn(){
+    if(gameOver)return;
 
-    if(players.every(player=>player.finished)) {
-        showRanking(true);
+    if(players.every(player=>player.finished)){
+        finishGame("Todas as equipes chegaram ao final do tabuleiro!");
         return;
     }
 
     let attempts=0;
 
-    do {
+    do{
         current=(current+1)%players.length;
         attempts++;
-    } while(
-        players[current].finished &&
-        attempts<=players.length
+    }while(
+        players[current].finished&&
+        attempts<players.length
     );
 
-    if(players[current].finished) {
-        showRanking(true);
+    if(players.every(player=>player.finished)){
+        finishGame("Todas as equipes chegaram ao final do tabuleiro!");
         return;
     }
 
@@ -1586,10 +1661,7 @@ function nextTurn() {
     document.getElementById("dice").innerHTML=
         `<i class="bi bi-dice-5"></i>`;
 
-    document.getElementById("dice").classList.remove("rolling");
-
-    document.getElementById("dice-result").textContent=
-        "Clique para rolar";
+    document.getElementById("dice-result").textContent="Clique para rolar";
 
     setPanel(
         "Central de decisões",
@@ -1599,37 +1671,37 @@ function nextTurn() {
 
     updateTurnLabel();
     updateScoreboard();
-    updatePawns();
 }
 
 /* =====================================
-   17. RANKING
+   18. RANKING
 ===================================== */
 
-function showRanking(final=false) {
-    const allFinished=players.every(player=>player.finished);
+function buildRanking(){
+    return [...players].sort((a,b)=>{
+        if(a.finished!==b.finished){
+            return Number(b.finished)-Number(a.finished);
+        }
 
-    if(final && !allFinished) {
-        return;
-    }
+        return equilibrium(b)-equilibrium(a);
+    });
+}
 
-    if(allFinished) {
+function showRanking(final=false){
+    if(final){
         gameOver=true;
         phase="over";
+        stopClock();
         document.getElementById("roll-btn").disabled=true;
-    } else {
-        gameOver=false;
-        phase="ranking";
     }
 
-    const ranked=[...players].sort(
-        (a,b)=>equilibrium(b)-equilibrium(a)
-    );
+    const ranked=buildRanking();
 
     const rows=ranked.map((player,index)=>`
         <tr class="${index===0?"winner":""}">
             <td>${index+1}º</td>
             <td>${player.name}</td>
+            <td>${player.finished?"🏁":player.pos+1+"/48"}</td>
             <td>${money(player.saldo)}</td>
             <td>${player.saude}</td>
             <td>${player.felicidade}</td>
@@ -1638,14 +1710,14 @@ function showRanking(final=false) {
     `).join("");
 
     document.getElementById("card-title").textContent=
-        allFinished?"🏆 Ranking final":"📊 Ranking parcial";
+        final?"🏆 Resultado final":"📊 Ranking parcial";
 
     document.getElementById("card-title").style.color="#e6197a";
 
     document.getElementById("card-text").textContent=
-        allFinished
-        ?`Parabéns! Todas as equipes concluíram o percurso. Destaque: ${ranked[0].name}, com índice de equilíbrio ${equilibrium(ranked[0])}.`
-        :"Confira a classificação atual. As equipes que ainda não chegaram à casa final continuam participando da partida.";
+        final
+            ?`Equipe em destaque: ${ranked[0].name}, com Índice de Equilíbrio ${equilibrium(ranked[0])}.`
+            :"Este é o ranking atualizado. A partida ainda pode continuar!";
 
     document.getElementById("options").innerHTML=`
         <div style="overflow-x:auto">
@@ -1654,6 +1726,7 @@ function showRanking(final=false) {
                     <tr>
                         <th>#</th>
                         <th>Equipe</th>
+                        <th>Casa</th>
                         <th>Saldo</th>
                         <th>Saúde</th>
                         <th>Felic.</th>
@@ -1665,58 +1738,84 @@ function showRanking(final=false) {
         </div>
     `;
 
-    const button=document.createElement("button");
-
-    button.className="option-btn continue";
-
-    if(allFinished) {
-        button.textContent="Jogar novamente";
-        button.onclick=()=>resetGame(players.length);
-    } else {
-        button.textContent="Voltar para a partida";
-
-        button.onclick=()=>{
-            phase="idle";
-
-            setPanel(
-                "Central de decisões",
-                `${players[current].name}, é sua vez! Continue a partida.`,
-                "#087d83"
-            );
-
-            updateTurnLabel();
-            updateScoreboard();
-            updatePawns();
-
-            document.getElementById("roll-btn").disabled=false;
-        };
+    if(final){
+        addContinue("Jogar novamente",()=>resetGame(players.length));
+    }else{
+        addContinue("Voltar à partida",resumeGame);
     }
 
-    document.getElementById("options").appendChild(button);
-
     document.getElementById("feedback").textContent=
-        "Índice de equilíbrio = saúde + felicidade + bônus de saldo.";
+        "Índice de equilíbrio = saúde + felicidade + bônus de saldo. Equipes que chegaram ao final recebem prioridade no desempate.";
 
     updateScoreboard();
 }
 
+function resumeGame(){
+    if(gameOver)return;
+
+    phase="idle";
+
+    setPanel(
+        "Partida em andamento",
+        `${players[current].name}, continue sua jogada!`,
+        "#087d83"
+    );
+
+    updateTurnLabel();
+    updateScoreboard();
+
+    document.getElementById("roll-btn").disabled=false;
+}
+
 /* =====================================
-   18. REINICIAR PARTIDA
+   19. ENCERRAMENTO DA PARTIDA
 ===================================== */
 
-function resetGame(count=players.length) {
-    if(rollTimer) {
+function finishGame(reason){
+    if(gameOver)return;
+
+    gameOver=true;
+    phase="over";
+
+    stopClock();
+
+    if(rollTimer){
         clearInterval(rollTimer);
         rollTimer=null;
     }
 
     rolling=false;
 
+    document.getElementById("roll-btn").disabled=true;
+    document.getElementById("timer-status").textContent="Partida encerrada";
+
+    showRanking(true);
+
+    document.getElementById("card-text").textContent=
+        `${reason} ${document.getElementById("card-text").textContent}`;
+}
+
+/* =====================================
+   20. REINICIAR PARTIDA
+===================================== */
+
+function resetGame(count=players.length){
+    if(rollTimer){
+        clearInterval(rollTimer);
+        rollTimer=null;
+    }
+
+    stopClock();
+
+    rolling=false;
     players=makePlayers(count);
 
     current=0;
     phase="idle";
     gameOver=false;
+
+    timeLeft=GAME_DURATION;
+    gameStarted=false;
 
     document.getElementById("pawn-count").value=count;
 
@@ -1725,14 +1824,16 @@ function resetGame(count=players.length) {
     document.getElementById("dice").innerHTML=
         `<i class="bi bi-dice-5"></i>`;
 
-    document.getElementById("dice").classList.remove("rolling");
+    document.getElementById("dice-result").textContent="Clique para rolar";
 
-    document.getElementById("dice-result").textContent=
-        "Clique para rolar";
+    document.getElementById("timer-status").textContent=
+        "O cronômetro começa na primeira jogada.";
+
+    updateTimer();
 
     setPanel(
         "Pronto para jogar?",
-        "Escolha a quantidade de equipes e role o dado para começar.",
+        "Role o dado para começar. Cada equipe deverá tomar decisões para cuidar do próprio dinheiro.",
         "#e6197a"
     );
 
@@ -1742,7 +1843,7 @@ function resetGame(count=players.length) {
 }
 
 /* =====================================
-   19. EVENTOS E CONTROLES
+   21. EVENTOS E CONTROLES
 ===================================== */
 
 document.getElementById("roll-btn").addEventListener("click",rollDice);
@@ -1750,25 +1851,30 @@ document.getElementById("roll-btn").addEventListener("click",rollDice);
 document.getElementById("apply-count").addEventListener("click",()=>{
     const count=Number(document.getElementById("pawn-count").value);
 
-    if(count===players.length) return;
+    if(count===players.length)return;
 
-    if(confirm("Alterar a quantidade de equipes reiniciará a partida. Deseja continuar?")) {
+    if(confirm("Alterar a quantidade de equipes reiniciará a partida. Deseja continuar?")){
         resetGame(count);
-    } else {
+    }else{
         document.getElementById("pawn-count").value=players.length;
     }
 });
 
 document.getElementById("ranking-btn").addEventListener("click",()=>{
-    if(phase==="moving" || rolling) return;
-    showRanking(false);
+    if(gameOver){
+        showRanking(true);
+    }else{
+        showRanking(false);
+    }
 });
 
 document.getElementById("reset-btn").addEventListener("click",()=>{
-    if(confirm("Deseja reiniciar a partida e zerar todas as posições e indicadores?")) {
+    if(confirm("Deseja reiniciar a partida e zerar todas as posições e indicadores?")){
         resetGame(players.length);
     }
 });
+
+let resizeTimer;
 
 window.addEventListener("resize",()=>{
     clearTimeout(resizeTimer);
@@ -1780,7 +1886,7 @@ window.addEventListener("resize",()=>{
 });
 
 /* =====================================
-   20. INICIALIZAÇÃO
+   22. INICIALIZAÇÃO
 ===================================== */
 
 players=makePlayers(4);
@@ -1788,6 +1894,7 @@ players=makePlayers(4);
 createBoard();
 updateTurnLabel();
 updateScoreboard();
+updateTimer();
 
 </script>
 </body>
