@@ -1,0 +1,764 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSIC DETECTIVES</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:#17151c;
+  --panel:#24212b;
+  --pink:#e91e63;
+  --yellow:#ffd166;
+  --white:#f8f5f2;
+  --muted:#aaa4b2;
+  --green:#65d6a2;
+  --red:#ff5577;
+}
+
+* {box-sizing:border-box}
+
+body {
+  margin:0;
+  min-height:100vh;
+  padding:20px;
+  color:var(--white);
+  font-family:'Poppins',sans-serif;
+  background:
+    radial-gradient(circle at top left,#3a1830,transparent 35%),
+    radial-gradient(circle at bottom right,#25264a,transparent 35%),
+    var(--bg);
+}
+
+.container {max-width:950px;margin:auto}
+
+header {text-align:center;margin-bottom:25px}
+
+.logo {
+  font-family:'Anton',sans-serif;
+  font-size:clamp(43px,9vw,78px);
+  color:var(--pink);
+  letter-spacing:3px;
+  line-height:1;
+  text-shadow:4px 4px 0 #702044;
+}
+
+.subtitle {
+  color:var(--yellow);
+  letter-spacing:4px;
+  font-size:11px;
+  font-weight:800;
+  margin-top:10px;
+}
+
+.panel {
+  background:rgba(36,33,43,.96);
+  border:2px solid #393440;
+  border-radius:20px;
+  padding:24px;
+  margin-bottom:20px;
+  box-shadow:0 10px 30px #0005;
+}
+
+h2 {
+  font-family:'Anton',sans-serif;
+  font-size:28px;
+  margin:0 0 18px;
+  letter-spacing:1px;
+}
+
+label {
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  margin:12px 0 6px;
+}
+
+input {
+  width:100%;
+  padding:13px;
+  border:2px solid #494350;
+  border-radius:10px;
+  background:#17151c;
+  color:white;
+  font:inherit;
+  outline:none;
+}
+
+input:focus {border-color:var(--pink)}
+
+button {
+  border:2px solid #080808;
+  border-radius:10px;
+  padding:13px 16px;
+  font-family:'Poppins',sans-serif;
+  font-weight:800;
+  cursor:pointer;
+  color:#17151c;
+  background:var(--yellow);
+  transition:.15s;
+}
+
+button:hover {transform:translateY(-2px);filter:brightness(1.08)}
+button:active {transform:scale(.97)}
+button:disabled {opacity:.35;cursor:not-allowed;transform:none}
+
+.primary {
+  background:var(--pink);
+  color:white;
+}
+
+.dark {
+  background:#393440;
+  color:white;
+}
+
+.green {background:var(--green)}
+.red {background:var(--red);color:white}
+
+.full {width:100%;margin-top:20px;padding:16px;font-size:16px}
+.hidden {display:none!important}
+
+.teams {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-bottom:20px;
+}
+
+.team {
+  background:var(--panel);
+  border:2px solid #393440;
+  border-radius:15px;
+  padding:17px;
+  text-align:center;
+}
+
+.team.active {
+  border-color:var(--pink);
+  box-shadow:0 0 0 3px #e91e6330;
+}
+
+.team-name {
+  font-weight:800;
+  font-size:15px;
+  overflow-wrap:anywhere;
+}
+
+.active-label {
+  min-height:17px;
+  font-size:10px;
+  color:var(--pink);
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.score {
+  font-family:'Anton',sans-serif;
+  color:var(--yellow);
+  font-size:42px;
+  margin-top:3px;
+}
+
+.score-caption {
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:2px;
+}
+
+.game-info {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.round-label {
+  color:var(--yellow);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2px;
+}
+
+.badge {
+  background:#393440;
+  border-radius:30px;
+  padding:7px 13px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.timer-area {
+  text-align:center;
+  margin:20px 0 25px;
+}
+
+.timer {
+  font-family:'Anton',sans-serif;
+  font-size:clamp(75px,16vw,115px);
+  color:var(--yellow);
+  line-height:1;
+  text-shadow:4px 4px 0 #8d6422;
+}
+
+.timer.warning {
+  color:var(--red);
+  text-shadow:4px 4px 0 #76223b;
+}
+
+.timer-caption {
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:3px;
+  margin-top:7px;
+}
+
+.progress {
+  height:9px;
+  background:#45404d;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.progress-bar {
+  width:100%;
+  height:100%;
+  background:var(--pink);
+  transition:width 1s linear;
+}
+
+.word-card {
+  background:#17151c;
+  border:2px dashed #514958;
+  border-radius:18px;
+  text-align:center;
+  padding:35px 15px;
+  margin:20px 0;
+}
+
+.word-label {
+  color:var(--pink);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:4px;
+  margin-bottom:12px;
+}
+
+.word {
+  font-family:'Anton',sans-serif;
+  font-size:clamp(48px,12vw,90px);
+  letter-spacing:3px;
+  line-height:1.1;
+  overflow-wrap:anywhere;
+}
+
+.word-instruction {
+  color:var(--muted);
+  font-size:13px;
+  margin-top:15px;
+}
+
+.status {
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  min-height:20px;
+  margin:12px 0;
+}
+
+.actions {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:15px;
+}
+
+.actions button {width:100%}
+
+.answer {
+  display:none;
+  background:#172e29;
+  border:2px solid #3c8c70;
+  border-radius:15px;
+  padding:20px;
+  text-align:center;
+  margin-top:15px;
+}
+
+.answer-label {
+  color:var(--green);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:3px;
+}
+
+.song {
+  font-family:'Anton',sans-serif;
+  font-size:clamp(25px,6vw,39px);
+  margin:8px 0;
+  overflow-wrap:anywhere;
+}
+
+.artist {
+  color:#c5e8d9;
+  font-size:13px;
+}
+
+.answer-actions {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+
+.instructions {
+  background:#302a38;
+  border-left:4px solid var(--yellow);
+  border-radius:8px;
+  padding:15px;
+  color:#e8dfec;
+  font-size:12px;
+  line-height:1.8;
+  margin-top:20px;
+}
+
+.turn-finish {
+  text-align:center;
+  padding:25px 10px;
+}
+
+.turn-finish h2 {
+  color:var(--yellow);
+  font-size:35px;
+}
+
+.final-winner {
+  font-family:'Anton',sans-serif;
+  color:var(--yellow);
+  font-size:clamp(35px,8vw,60px);
+  margin:20px 0;
+  overflow-wrap:anywhere;
+}
+
+.small-note {
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.7;
+}
+
+@media(max-width:600px) {
+  body {padding:12px}
+  .panel {padding:17px}
+  .teams {gap:8px}
+  .team {padding:12px 5px}
+  .score {font-size:34px}
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <div class="logo">MUSIC DETECTIVES</div>
+  <div class="subtitle">THINK FAST · NAME THAT SONG · SCORE POINTS</div>
+</header>
+
+<!-- SETUP -->
+<section id="setup" class="panel">
+  <h2>🎯 TEAM SETUP</h2>
+
+  <label for="team1Input">TEAM 1 NAME</label>
+  <input id="team1Input" value="TEAM A" maxlength="25">
+
+  <label for="team2Input">TEAM 2 NAME</label>
+  <input id="team2Input" value="TEAM B" maxlength="25">
+
+  <div class="instructions">
+    <strong>HOW TO PLAY</strong><br>
+    • Each team has 30 seconds.<br>
+    • The teacher shows one word at a time.<br>
+    • The team must name a song related to the word.<br>
+    • Each correct song earns 1 point.<br>
+    • Keep going until the timer reaches zero!
+  </div>
+
+  <button class="primary full" onclick="startGame()">START THE GAME →</button>
+</section>
+
+<!-- GAME -->
+<section id="game" class="hidden">
+
+  <div class="teams">
+    <div class="team active" id="teamBox0">
+      <div class="active-label" id="active0">PLAYING NOW</div>
+      <div class="team-name" id="teamName0">TEAM A</div>
+      <div class="score" id="score0">0</div>
+      <div class="score-caption">POINTS</div>
+    </div>
+
+    <div class="team" id="teamBox1">
+      <div class="active-label" id="active1"></div>
+      <div class="team-name" id="teamName1">TEAM B</div>
+      <div class="score" id="score1">0</div>
+      <div class="score-caption">POINTS</div>
+    </div>
+  </div>
+
+  <div class="panel">
+
+    <div class="game-info">
+      <div class="round-label" id="turnLabel">TEAM A'S TURN</div>
+      <div class="badge">2025–2026 HITS</div>
+    </div>
+
+    <div class="timer-area">
+      <div class="timer" id="timer">00:30</div>
+      <div class="timer-caption">YOUR TEAM'S TIME</div>
+      <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <div class="word-card">
+      <div class="word-label">YOUR SECRET WORD</div>
+      <div class="word" id="word">LOVE</div>
+      <div class="word-instruction">
+        Name a song that contains or matches this word!
+      </div>
+    </div>
+
+    <div class="status" id="status">
+      Press START TIMER to begin!
+    </div>
+
+    <button class="primary full" id="startBtn" onclick="startTimer()">
+      ▶ START TIMER
+    </button>
+
+    <div class="actions">
+      <button class="green" id="revealBtn" onclick="revealAnswer()" disabled>
+        🔎 REVEAL SONG
+      </button>
+
+      <button class="dark" id="skipBtn" onclick="skipWord()" disabled>
+        SKIP WORD →
+      </button>
+    </div>
+
+    <div class="answer" id="answerBox">
+      <div class="answer-label">🎵 SUGGESTED SONG</div>
+      <div class="song" id="songTitle"></div>
+      <div class="artist" id="songArtist"></div>
+
+      <div class="answer-actions">
+        <button class="green" onclick="correctAnswer()">✓ CORRECT +1</button>
+        <button class="dark" onclick="skipWord()">NEXT WORD →</button>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <strong>TEACHER'S RULE:</strong><br>
+      The team can name any valid song that contains the word or is clearly connected to it. The suggested song is only a reference for checking answers. You decide whether the answer counts!
+    </div>
+
+  </div>
+</section>
+
+<!-- TURN END -->
+<section id="turnFinish" class="panel hidden turn-finish">
+  <h2 id="turnFinishTitle">TIME'S UP!</h2>
+  <div class="final-winner" id="turnFinishTeam"></div>
+  <p id="turnFinishMessage"></p>
+  <button class="primary full" id="nextTurnBtn" onclick="continueGame()">
+    START NEXT TEAM →
+  </button>
+</section>
+
+<!-- FINAL -->
+<section id="finish" class="panel hidden turn-finish">
+  <h2>🏆 GAME OVER!</h2>
+  <div class="final-winner" id="winnerText"></div>
+  <p id="finalScores"></p>
+  <button class="primary full" onclick="location.reload()">PLAY AGAIN</button>
+</section>
+
+</div>
+
+<script>
+
+// SONG WORD CARDS
+// Suggested references from 2025 and 2026.
+
+const cards = [
+  {word:"OPALITE",song:"Opalite",artist:"Taylor Swift — 2026"},
+  {word:"DREAM",song:"Fever Dream",artist:"Alex Warren — 2026"},
+  {word:"DROP",song:"Drop Dead",artist:"Olivia Rodrigo — 2026"},
+  {word:"GIRLS",song:"American Girls",artist:"Harry Styles — 2026"},
+  {word:"BABYDOLL",song:"Babydoll",artist:"Dominic Fike — 2026"},
+  {word:"LOVE",song:"Bring Your Love",artist:"Madonna & Sabrina Carpenter — 2026"},
+  {word:"MAN",song:"Man I Need",artist:"Olivia Dean — 2026"},
+  {word:"TEXAS",song:"Choosin' Texas",artist:"Ella Langley — 2026"},
+  {word:"HILL",song:"Die on This Hill",artist:"Sienna Spiro — 2026"},
+  {word:"APERTURE",song:"Aperture",artist:"Harry Styles — 2026"},
+  {word:"SWIM",song:"SWIM",artist:"BTS — 2026"},
+  {word:"GOLDEN",song:"Golden",artist:"HUNTR/X — 2025"},
+  {word:"ORDINARY",song:"Ordinary",artist:"Alex Warren — 2025"},
+  {word:"MESSY",song:"Messy",artist:"Lola Young — 2025"},
+  {word:"PINK",song:"Pink Pony Club",artist:"Chappell Roan — 2025"},
+  {word:"CLUB",song:"Pink Pony Club",artist:"Chappell Roan — 2025"},
+  {word:"APT",song:"APT.",artist:"ROSÉ & Bruno Mars — 2025"},
+  {word:"SMILE",song:"Die With A Smile",artist:"Lady Gaga & Bruno Mars — 2025"},
+  {word:"LUTHER",song:"Luther",artist:"Kendrick Lamar & SZA — 2025"},
+  {word:"BAR",song:"A Bar Song (Tipsy)",artist:"Shaboozey — 2025"},
+  {word:"CONTROL",song:"Lose Control",artist:"Teddy Swims — 2025"},
+  {word:"BIRDS",song:"Birds of a Feather",artist:"Billie Eilish — 2025"},
+  {word:"BEAUTIFUL",song:"Beautiful Things",artist:"Benson Boone — 2025"},
+  {word:"HELP",song:"I Had Some Help",artist:"Post Malone ft. Morgan Wallen — 2025"},
+  {word:"TASTE",song:"Taste",artist:"Sabrina Carpenter — 2025"},
+  {word:"PROBLEM",song:"I'm the Problem",artist:"Morgan Wallen — 2025"},
+  {word:"TRUE",song:"That's So True",artist:"Gracie Abrams — 2025"},
+  {word:"ANXIETY",song:"Anxiety",artist:"Doechii — 2025"},
+  {word:"WILDFLOWER",song:"Wildflower",artist:"Billie Eilish — 2025"},
+  {word:"STARGAZING",song:"Stargazing",artist:"Myles Smith — 2025"},
+  {word:"TIMELESS",song:"Timeless",artist:"The Weeknd & Playboi Carti — 2025"},
+  {word:"JUST",song:"Just in Case",artist:"Morgan Wallen — 2025"},
+  {word:"SWEET",song:"Too Sweet",artist:"Hozier — 2025"},
+  {word:"LUCK",song:"Good Luck, Babe!",artist:"Chappell Roan — 2025"},
+  {word:"NOKIA",song:"Nokia",artist:"Drake — 2025"}
+];
+
+let teams = ["TEAM A","TEAM B"];
+let scores = [0,0];
+let activeTeam = 0;
+
+let deck = [];
+let currentCard = null;
+
+let timeLeft = 30;
+let timerInterval = null;
+let gameStarted = false;
+let answerRevealed = false;
+let turnEnded = false;
+
+function shuffle(array) {
+  const result = [...array];
+
+  for(let i=result.length-1;i>0;i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [result[i],result[j]] = [result[j],result[i]];
+  }
+
+  return result;
+}
+
+function startGame() {
+  teams[0] = document.getElementById("team1Input").value.trim() || "TEAM A";
+  teams[1] = document.getElementById("team2Input").value.trim() || "TEAM B";
+
+  deck = shuffle(cards);
+
+  document.getElementById("setup").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+
+  activeTeam = 0;
+  updateTeams();
+  drawWord();
+
+  document.getElementById("turnLabel").textContent =
+    teams[activeTeam] + "'S TURN";
+}
+
+function updateTeams() {
+  for(let i=0;i<2;i++) {
+    document.getElementById("teamName"+i).textContent = teams[i];
+    document.getElementById("score"+i).textContent = scores[i];
+
+    document.getElementById("teamBox"+i)
+      .classList.toggle("active",i===activeTeam);
+
+    document.getElementById("active"+i).textContent =
+      i===activeTeam ? "PLAYING NOW" : "";
+  }
+}
+
+function drawWord() {
+  if(deck.length===0) {
+    deck = shuffle(cards);
+  }
+
+  currentCard = deck.pop();
+  answerRevealed = false;
+
+  document.getElementById("word").textContent = currentCard.word;
+  document.getElementById("answerBox").style.display = "none";
+
+  document.getElementById("status").textContent =
+    gameStarted ? "Find a song! Keep going!" : "Press START TIMER to begin!";
+
+  document.getElementById("revealBtn").disabled = !gameStarted;
+  document.getElementById("skipBtn").disabled = !gameStarted;
+}
+
+function startTimer() {
+  if(timerInterval || turnEnded || timeLeft<=0) return;
+
+  gameStarted = true;
+
+  document.getElementById("startBtn").disabled = true;
+  document.getElementById("startBtn").textContent = "TIME IS RUNNING!";
+  document.getElementById("revealBtn").disabled = false;
+  document.getElementById("skipBtn").disabled = false;
+
+  document.getElementById("status").textContent =
+    "GO! NAME A SONG FOR EACH WORD!";
+
+  timerInterval = setInterval(()=>{
+    timeLeft--;
+    updateTimer();
+
+    if(timeLeft<=0) {
+      endTurn();
+    }
+  },1000);
+}
+
+function updateTimer() {
+  const min = Math.floor(timeLeft/60);
+  const sec = timeLeft%60;
+
+  document.getElementById("timer").textContent =
+    String(min).padStart(2,"0")+":"+
+    String(sec).padStart(2,"0");
+
+  document.getElementById("timer").classList.toggle(
+    "warning",timeLeft<=10
+  );
+
+  document.getElementById("progressBar").style.width =
+    (timeLeft/30*100)+"%";
+}
+
+function revealAnswer() {
+  if(!gameStarted || turnEnded || answerRevealed) return;
+
+  answerRevealed = true;
+
+  document.getElementById("songTitle").textContent = currentCard.song;
+  document.getElementById("songArtist").textContent = currentCard.artist;
+  document.getElementById("answerBox").style.display = "block";
+
+  document.getElementById("status").textContent =
+    "Check the suggested answer!";
+}
+
+function correctAnswer() {
+  if(!gameStarted || turnEnded || !answerRevealed) return;
+
+  scores[activeTeam]++;
+  updateTeams();
+
+  document.getElementById("status").textContent =
+    "✓ CORRECT! +1 POINT!";
+
+  document.getElementById("answerBox").style.display = "none";
+
+  drawWord();
+}
+
+function skipWord() {
+  if(!gameStarted || turnEnded) return;
+
+  document.getElementById("answerBox").style.display = "none";
+  document.getElementById("status").textContent = "NEXT WORD!";
+
+  drawWord();
+}
+
+function endTurn() {
+  if(turnEnded) return;
+
+  clearInterval(timerInterval);
+  timerInterval = null;
+  turnEnded = true;
+
+  timeLeft = 0;
+  updateTimer();
+
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("turnFinish").classList.remove("hidden");
+
+  document.getElementById("turnFinishTitle").textContent = "TIME'S UP!";
+  document.getElementById("turnFinishTeam").textContent = teams[activeTeam];
+
+  document.getElementById("turnFinishMessage").textContent =
+    "Final score: " + scores[activeTeam] + " points.";
+
+  document.getElementById("nextTurnBtn").textContent =
+    activeTeam===0
+      ? "START " + teams[1] + " →"
+      : "SEE FINAL RESULTS →";
+}
+
+function continueGame() {
+  document.getElementById("turnFinish").classList.add("hidden");
+
+  if(activeTeam===0) {
+    activeTeam = 1;
+    timeLeft = 30;
+    gameStarted = false;
+    turnEnded = false;
+    timerInterval = null;
+
+    document.getElementById("game").classList.remove("hidden");
+
+    document.getElementById("turnLabel").textContent =
+      teams[activeTeam] + "'S TURN";
+
+    document.getElementById("startBtn").disabled = false;
+    document.getElementById("startBtn").textContent = "▶ START TIMER";
+
+    document.getElementById("timer").classList.remove("warning");
+
+    updateTimer();
+    updateTeams();
+    drawWord();
+
+  } else {
+    finishGame();
+  }
+}
+
+function finishGame() {
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("turnFinish").classList.add("hidden");
+  document.getElementById("finish").classList.remove("hidden");
+
+  let winner;
+
+  if(scores[0]>scores[1]) {
+    winner = teams[0] + " WINS! 🏆";
+  } else if(scores[1]>scores[0]) {
+    winner = teams[1] + " WINS! 🏆";
+  } else {
+    winner = "IT'S A TIE! 🤝";
+  }
+
+  document.getElementById("winnerText").textContent = winner;
+
+  document.getElementById("finalScores").innerHTML =
+    "<strong>"+teams[0]+":</strong> "+scores[0]+" points<br><br>"+
+    "<strong>"+teams[1]+":</strong> "+scores[1]+" points";
+}
+
+</script>
+</body>
+</html>
