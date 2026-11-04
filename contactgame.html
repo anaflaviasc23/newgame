@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WORD CONTACT</title>
+
+<style>
+:root {
+    --bg: #11121d;
+    --panel: #202235;
+    --pink: #ff3f91;
+    --cyan: #45e5dc;
+    --white: #ffffff;
+    --muted: #b2b4c7;
+    --green: #65e5a2;
+    --yellow: #ffd166;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #29213f, var(--bg) 65%);
+    color: var(--white);
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+header {
+    margin-bottom: 25px;
+}
+
+header h1 {
+    margin: 5px 0;
+    color: var(--pink);
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    letter-spacing: 5px;
+}
+
+header p {
+    color: var(--muted);
+    letter-spacing: 2px;
+}
+
+.container {
+    max-width: 950px;
+    margin: auto;
+}
+
+.screen {
+    padding: 30px 20px;
+    background: linear-gradient(145deg, #25273d, #181a29);
+    border: 2px solid #393b55;
+    border-radius: 22px;
+    box-shadow: 0 15px 45px #0008;
+}
+
+.top-info {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 35px;
+}
+
+.tag {
+    padding: 9px 15px;
+    border-radius: 30px;
+    background: #373951;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.screen h2 {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+}
+
+.word-display {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 95px;
+    margin: 30px 0;
+}
+
+.letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(32px, 7vw, 62px);
+    height: clamp(48px, 9vw, 75px);
+    border-bottom: 5px solid var(--cyan);
+    color: var(--white);
+    font-size: clamp(1.5rem, 5vw, 2.8rem);
+    font-weight: bold;
+}
+
+.letter.hidden {
+    color: var(--pink);
+}
+
+.message {
+    min-height: 30px;
+    color: var(--muted);
+}
+
+.success {
+    color: var(--green);
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.controls {
+    margin-top: 22px;
+    padding: 25px;
+    background: var(--panel);
+    border: 1px solid #393b55;
+    border-radius: 20px;
+    text-align: left;
+}
+
+.controls h2 {
+    margin-top: 0;
+    color: var(--cyan);
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--muted);
+}
+
+select,
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+select {
+    margin-bottom: 18px;
+    background: #373951;
+    color: white;
+}
+
+button {
+    cursor: pointer;
+    color: white;
+    background: var(--pink);
+    transition: 0.2s;
+}
+
+button:hover {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    transform: none;
+}
+
+.cyan {
+    background: var(--cyan);
+    color: #11121d;
+}
+
+.green {
+    background: var(--green);
+    color: #11121d;
+}
+
+.yellow {
+    background: var(--yellow);
+    color: #11121d;
+}
+
+.secondary {
+    background: #41435e;
+}
+
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.secret-area {
+    margin-top: 20px;
+    padding: 18px;
+    background: #141522;
+    border: 1px dashed var(--pink);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.secret-area p {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.secret-word {
+    min-height: 35px;
+    margin: 12px;
+    color: var(--yellow);
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 4px;
+}
+
+.status {
+    min-height: 25px;
+    margin-top: 18px;
+    color: var(--muted);
+    text-align: center;
+}
+
+footer {
+    margin-top: 25px;
+    color: #77798e;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 550px) {
+    body {
+        padding: 10px;
+    }
+
+    .controls {
+        padding: 15px;
+    }
+
+    .control-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>WORD CONTACT</h1>
+    <p>THE SECRET WORD CHALLENGE</p>
+</header>
+
+<main class="container">
+
+    <section class="screen">
+
+        <div class="top-info">
+            <span class="tag" id="roundInfo">WORD 1 / 50</span>
+            <span class="tag" id="levelInfo">MIXED LEVEL</span>
+        </div>
+
+        <h2>GUESS THE SECRET WORD!</h2>
+
+        <p class="message">
+            Listen to the clues. Find the secret word!
+        </p>
+
+        <div class="word-display" id="wordDisplay"></div>
+
+        <div class="message" id="gameMessage">
+            Give clues and try to make CONTACT!
+        </div>
+
+    </section>
+
+    <section class="controls">
+
+        <h2>TEACHER CONTROL PANEL</h2>
+
+        <label for="difficulty">Choose difficulty:</label>
+
+        <select id="difficulty">
+            <option value="all">Mixed - All Levels</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="challenge">Challenge</option>
+        </select>
+
+        <div class="control-grid">
+
+            <button type="button" class="cyan" id="revealBtn">
+                REVEAL NEXT LETTER
+            </button>
+
+            <button type="button" class="green" id="discoveredBtn">
+                WORD DISCOVERED!
+            </button>
+
+            <button type="button" class="yellow" id="interceptBtn">
+                INTERCEPT!
+            </button>
+
+            <button type="button" class="secondary" id="nextBtn">
+                NEXT WORD →
+            </button>
+
+            <button type="button" class="secondary" id="answerBtn">
+                SHOW / HIDE ANSWER
+            </button>
+
+            <button type="button" class="secondary" id="restartBtn">
+                RESTART GAME
+            </button>
+
+        </div>
+
+        <div class="secret-area">
+            <p>TEACHER ONLY - SECRET ANSWER</p>
+            <div class="secret-word" id="secretWord">••••••••</div>
+            <p id="secretHint">Answer hidden.</p>
+        </div>
+
+        <div class="status" id="teacherStatus">
+            Game ready!
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    WORD CONTACT • ENGLISH CLASSROOM GAME
+</footer>
+
+<script>
+"use strict";
+
+/* =================================
+   WORD BANK - 50 WORDS
+================================= */
+
+const wordBank = [
+    { word: "MOUNTAIN", level: "easy" },
+    { word: "BUTTERFLY", level: "easy" },
+    { word: "ELEPHANT", level: "easy" },
+    { word: "CHOCOLATE", level: "easy" },
+    { word: "RAINBOW", level: "easy" },
+    { word: "PINEAPPLE", level: "easy" },
+    { word: "BACKPACK", level: "easy" },
+    { word: "SUNFLOWER", level: "easy" },
+    { word: "FOOTBALL", level: "easy" },
+    { word: "NOTEBOOK", level: "easy" },
+    { word: "HOSPITAL", level: "easy" },
+    { word: "BASKETBALL", level: "easy" },
+    { word: "STRAWBERRY", level: "easy" },
+    { word: "WATERFALL", level: "easy" },
+    { word: "BREAKFAST", level: "easy" },
+
+    { word: "KEYBOARD", level: "medium" },
+    { word: "ADVENTURE", level: "medium" },
+    { word: "FRIENDSHIP", level: "medium" },
+    { word: "CELEBRATION", level: "medium" },
+    { word: "DISCOVERY", level: "medium" },
+    { word: "PLAYGROUND", level: "medium" },
+    { word: "TELEPHONE", level: "medium" },
+    { word: "FIREWORKS", level: "medium" },
+    { word: "LANGUAGE", level: "medium" },
+    { word: "EDUCATION", level: "medium" },
+    { word: "PHOTOGRAPH", level: "medium" },
+    { word: "MICROWAVE", level: "medium" },
+    { word: "MYSTERY", level: "medium" },
+    { word: "BOOKSTORE", level: "medium" },
+    { word: "CROSSWALK", level: "medium" },
+
+    { word: "TECHNOLOGY", level: "challenge" },
+    { word: "WILDLIFE", level: "challenge" },
+    { word: "VOLUNTEER", level: "challenge" },
+    { word: "CURIOSITY", level: "challenge" },
+    { word: "ENVIRONMENT", level: "challenge" },
+    { word: "IMAGINATION", level: "challenge" },
+    { word: "COMMUNICATION", level: "challenge" },
+    { word: "OPPORTUNITY", level: "challenge" },
+    { word: "DETERMINATION", level: "challenge" },
+    { word: "INDEPENDENCE", level: "challenge" },
+    { word: "RESPONSIBILITY", level: "challenge" },
+    { word: "NEIGHBORHOOD", level: "challenge" },
+    { word: "CONFIDENCE", level: "challenge" },
+    { word: "EXPERIENCE", level: "challenge" },
+    { word: "CREATIVITY", level: "challenge" },
+    { word: "CELEBRITY", level: "challenge" },
+    { word: "INFORMATION", level: "challenge" },
+    { word: "DEVELOPMENT", level: "challenge" },
+    { word: "CONVERSATION", level: "challenge" },
+    { word: "ACHIEVEMENT", level: "challenge" }
+];
+
+/* =================================
+   GAME STATE
+================================= */
+
+let deck = [];
+let currentIndex = 0;
+let revealedLetters = 1;
+let answerVisible = false;
+let gameFinished = false;
+let roundResolved = false;
+
+/* =================================
+   HTML ELEMENTS
+================================= */
+
+const elements = {
+    wordDisplay: document.getElementById("wordDisplay"),
+    roundInfo: document.getElementById("roundInfo"),
+    levelInfo: document.getElementById("levelInfo"),
+    gameMessage: document.getElementById("gameMessage"),
+    secretWord: document.getElementById("secretWord"),
+    secretHint: document.getElementById("secretHint"),
+    teacherStatus: document.getElementById("teacherStatus"),
+    difficulty: document.getElementById("difficulty"),
+    revealBtn: document.getElementById("revealBtn"),
+    discoveredBtn: document.getElementById("discoveredBtn"),
+    interceptBtn: document.getElementById("interceptBtn"),
+    nextBtn: document.getElementById("nextBtn"),
+    answerBtn: document.getElementById("answerBtn"),
+    restartBtn: document.getElementById("restartBtn")
+};
+
+/* =================================
+   SHUFFLE ARRAY
+================================= */
+
+function shuffleArray(array) {
+    const shuffled = [...array];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temporary = shuffled[i];
+        shuffled[i] = shuffled[j];
+        shuffled[j] = temporary;
+    }
+
+    return shuffled;
+}
+
+/* =================================
+   START GAME
+================================= */
+
+function startGame() {
+    const selectedLevel = elements.difficulty.value;
+
+    const filteredWords = wordBank.filter(function(item) {
+        return selectedLevel === "all" || item.level === selectedLevel;
+    });
+
+    deck = shuffleArray(filteredWords);
+
+    currentIndex = 0;
+    revealedLetters = 1;
+    answerVisible = false;
+    gameFinished = false;
+    roundResolved = false;
+
+    if (deck.length === 0) {
+        finishGame();
+        return;
+    }
+
+    renderWord();
+
+    elements.teacherStatus.textContent = deck.length + " words loaded successfully!";
+}
+
+/* =================================
+   RENDER WORD
+================================= */
+
+function renderWord() {
+    if (currentIndex >= deck.length) {
+        finishGame();
+        return;
+    }
+
+    const currentWord = deck[currentIndex].word;
+
+    elements.wordDisplay.innerHTML = "";
+
+    for (let i = 0; i < currentWord.length; i++) {
+        const letterElement = document.createElement("div");
+        letterElement.classList.add("letter");
+
+        if (i < revealedLetters) {
+            letterElement.textContent = currentWord[i];
+        } else {
+            letterElement.textContent = "_";
+            letterElement.classList.add("hidden");
+        }
+
+        elements.wordDisplay.appendChild(letterElement);
+    }
+
+    elements.roundInfo.textContent = "WORD " + (currentIndex + 1) + " / " + deck.length;
+    elements.levelInfo.textContent = deck[currentIndex].level.toUpperCase() + " LEVEL";
+    elements.gameMessage.textContent = "Give clues and try to make CONTACT!";
+    elements.gameMessage.className = "message";
+
+    elements.secretWord.textContent = "••••••••";
+    elements.secretHint.textContent = "Answer hidden.";
+
+    answerVisible = false;
+    roundResolved = false;
+
+    updateButtons();
+}
+
+/* =================================
+   REVEAL LETTER
+================================= */
+
+function revealNextLetter() {
+    if (gameFinished || roundResolved || deck.length === 0) {
+        return;
+    }
+
+    const currentWord = deck[currentIndex].word;
+
+    if (revealedLetters < currentWord.length) {
+        revealedLetters++;
+        renderWord();
+        elements.teacherStatus.textContent = "Letter revealed: " + revealedLetters + " of " + currentWord.length;
+    } else {
+        resolveRound("WORD DISCOVERED!");
+    }
+}
+
+/* =================================
+   SHOW SECRET ANSWER
+================================= */
+
+function showSecretAnswer() {
+    if (deck.length === 0 || gameFinished) {
+        return;
+    }
+
+    elements.secretWord.textContent = deck[currentIndex].word;
+    elements.secretHint.textContent = "Difficulty: " + deck[currentIndex].level.toUpperCase();
+    answerVisible = true;
+}
+
+/* =================================
+   TOGGLE ANSWER
+================================= */
+
+function toggleAnswer() {
+    if (deck.length === 0 || gameFinished) {
+        return;
+    }
+
+    answerVisible = !answerVisible;
+
+    if (answerVisible) {
+        showSecretAnswer();
+    } else {
+        elements.secretWord.textContent = "••••••••";
+        elements.secretHint.textContent = "Answer hidden.";
+    }
+}
+
+/* =================================
+   RESOLVE ROUND
+================================= */
+
+function resolveRound(message) {
+    if (gameFinished || roundResolved || deck.length === 0) {
+        return;
+    }
+
+    roundResolved = true;
+
+    elements.gameMessage.textContent = message;
+    elements.gameMessage.className = "success";
+
+    showSecretAnswer();
+
+    elements.teacherStatus.textContent = "Secret word: " + deck[currentIndex].word;
+
+    updateButtons();
+}
+
+/* =================================
+   WORD DISCOVERED
+================================= */
+
+function wordDiscovered() {
+    resolveRound("WORD DISCOVERED! WELL DONE!");
+}
+
+/* =================================
+   INTERCEPT
+================================= */
+
+function interceptWord() {
+    resolveRound("INTERCEPTED! THE WORD MASTER BLOCKED THE CONTACT!");
+}
+
+/* =================================
+   NEXT WORD
+================================= */
+
+function nextWord() {
+    if (gameFinished || deck.length === 0) {
+        return;
+    }
+
+    if (!roundResolved) {
+        elements.teacherStatus.textContent = "Round skipped. Moving to the next word.";
+    }
+
+    currentIndex++;
+    revealedLetters = 1;
+    answerVisible = false;
+    roundResolved = false;
+
+    if (currentIndex >= deck.length) {
+        finishGame();
+        return;
+    }
+
+    renderWord();
+
+    elements.teacherStatus.textContent = "Next word loaded!";
+}
+
+/* =================================
+   FINISH GAME
+================================= */
+
+function finishGame() {
+    gameFinished = true;
+
+    elements.wordDisplay.innerHTML = "";
+    elements.roundInfo.textContent = "GAME COMPLETED";
+    elements.levelInfo.textContent = "WELL DONE!";
+    elements.gameMessage.textContent = "CONGRATULATIONS! YOU FINISHED THE GAME!";
+    elements.gameMessage.className = "success";
+
+    elements.secretWord.textContent = "THE END";
+    elements.secretHint.textContent = "All words have been played.";
+
+    elements.teacherStatus.textContent = "You completed all " + deck.length + " words!";
+
+    updateButtons();
+}
+
+/* =================================
+   RESTART GAME
+================================= */
+
+function restartGame() {
+    const confirmed = window.confirm("Restart the game with a new random order?");
+
+    if (confirmed) {
+        startGame();
+    }
+}
+
+/* =================================
+   BUTTON STATES
+================================= */
+
+function updateButtons() {
+    const disabled = gameFinished || roundResolved;
+
+    elements.revealBtn.disabled = disabled;
+    elements.discoveredBtn.disabled = disabled;
+    elements.interceptBtn.disabled = disabled;
+    elements.nextBtn.disabled = gameFinished;
+    elements.answerBtn.disabled = gameFinished;
+}
+
+/* =================================
+   EVENT LISTENERS
+================================= */
+
+elements.revealBtn.addEventListener("click", revealNextLetter);
+elements.discoveredBtn.addEventListener("click", wordDiscovered);
+elements.interceptBtn.addEventListener("click", interceptWord);
+elements.nextBtn.addEventListener("click", nextWord);
+elements.answerBtn.addEventListener("click", toggleAnswer);
+elements.restartBtn.addEventListener("click", restartGame);
+elements.difficulty.addEventListener("change", startGame);
+
+/* =================================
+   INITIALIZE GAME
+================================= */
+
+startGame();
+</script>
+
+</body>
+</html>
