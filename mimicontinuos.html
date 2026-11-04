@@ -79,7 +79,7 @@ select,input{width:100%;padding:11px;border:2px solid var(--ink);background:#fff
     <section class="panel">
       <div class="game-top">
         <span class="pill" id="categoryLabel">TODAS AS CATEGORIAS</span>
-        <span class="counter" id="counter">Cartão 1 de 30</span>
+        <span class="counter" id="counter">Cartão 1 de 100</span>
       </div>
       <div class="card">
         <div class="eyebrow">Your acting challenge</div>
@@ -121,7 +121,7 @@ select,input{width:100%;padding:11px;border:2px solid var(--ink);background:#fff
       </div>
 
       <h3>⏱️ Cronômetro</h3>
-      <div class="timer" id="timer">00:45</div>
+      <div class="timer" id="timer">01:00</div>
       <div class="timer-actions">
         <button id="startTimer">▶ Iniciar</button>
         <button id="resetTimer">↺ Reiniciar</button>
@@ -142,6 +142,7 @@ select,input{width:100%;padding:11px;border:2px solid var(--ink);background:#fff
 
 <script>
 const cards = [
+  // EASY LEVEL (35 cards)
   {id:1,level:"easy",emoji:"😴",action:"You were sleeping.",pt:"Você estava dormindo.",extra:"The phone rang. → I was sleeping when the phone rang."},
   {id:2,level:"easy",emoji:"💃",action:"You were dancing.",pt:"Você estava dançando.",extra:"The music stopped. → I was dancing when the music stopped."},
   {id:3,level:"easy",emoji:"🍳",action:"You were cooking.",pt:"Você estava cozinhando.",extra:"The doorbell rang. → I was cooking when the doorbell rang."},
@@ -152,41 +153,130 @@ const cards = [
   {id:8,level:"easy",emoji:"🎤",action:"You were singing.",pt:"Você estava cantando.",extra:"Someone opened the door. → I was singing when someone opened the door."},
   {id:9,level:"easy",emoji:"🏃",action:"You were running.",pt:"Você estava correndo.",extra:"You fell down. → I was running when I fell down."},
   {id:10,level:"easy",emoji:"🥪",action:"You were eating a sandwich.",pt:"Você estava comendo um sanduíche.",extra:"The teacher arrived. → I was eating a sandwich when the teacher arrived."},
-  {id:11,level:"medium",emoji:"📱",action:"You were talking on the phone.",pt:"Você estava falando ao telefone.",extra:"The battery died. → I was talking on the phone when the battery died."},
-  {id:12,level:"medium",emoji:"🏊",action:"You were swimming.",pt:"Você estava nadando.",extra:"It started to rain. → I was swimming when it started to rain."},
-  {id:13,level:"medium",emoji:"🧹",action:"You were cleaning your bedroom.",pt:"Você estava limpando seu quarto.",extra:"You found an old photo. → I was cleaning my bedroom when I found an old photo."},
-  {id:14,level:"medium",emoji:"🛍️",action:"You were shopping.",pt:"Você estava fazendo compras.",extra:"You saw your teacher. → I was shopping when I saw my teacher."},
-  {id:15,level:"medium",emoji:"🐕",action:"You were walking a dog.",pt:"Você estava passeando com um cachorro.",extra:"The dog ran away. → I was walking the dog when it ran away."},
-  {id:16,level:"medium",emoji:"📸",action:"You were taking photos.",pt:"Você estava tirando fotos.",extra:"Your camera stopped working. → I was taking photos when my camera stopped working."},
-  {id:17,level:"medium",emoji:"🚌",action:"You were waiting for the bus.",pt:"Você estava esperando o ônibus.",extra:"The bus arrived. → I was waiting for the bus when it arrived."},
-  {id:18,level:"medium",emoji:"🎂",action:"You were blowing out birthday candles.",pt:"Você estava soprando as velas do bolo.",extra:"Everyone started singing. → I was blowing out the candles when everyone started singing."},
-  {id:19,level:"medium",emoji:"🧊",action:"You were slipping on the ice.",pt:"Você estava escorregando no gelo.",extra:"You dropped your bag. → I was slipping on the ice when I dropped my bag."},
-  {id:20,level:"medium",emoji:"🧑‍🍳",action:"You were making a cake.",pt:"Você estava fazendo um bolo.",extra:"You dropped an egg. → I was making a cake when I dropped an egg."},
-  {id:21,level:"challenge",emoji:"🕵️",action:"You were looking for something you lost.",pt:"Você estava procurando algo que perdeu.",extra:"You found it in your pocket. → I was looking for my keys when I found them in my pocket."},
-  {id:22,level:"challenge",emoji:"🤫",action:"You were trying to be quiet.",pt:"Você estava tentando ficar em silêncio.",extra:"The floor creaked. → I was trying to be quiet when the floor creaked."},
-  {id:23,level:"challenge",emoji:"😱",action:"You were getting scared during a movie.",pt:"Você estava ficando com medo durante um filme.",extra:"A loud noise came from outside. → I was watching a movie when I heard a loud noise."},
-  {id:24,level:"challenge",emoji:"🎁",action:"You were hiding a surprise gift.",pt:"Você estava escondendo um presente surpresa.",extra:"The person entered the room. → I was hiding a gift when she entered the room."},
-  {id:25,level:"challenge",emoji:"🧳",action:"You were packing your suitcase.",pt:"Você estava arrumando sua mala.",extra:"You couldn't find your passport. → I was packing my suitcase when I couldn't find my passport."},
-  {id:26,level:"challenge",emoji:"🍦",action:"You were trying to eat melting ice cream.",pt:"Você estava tentando tomar um sorvete que estava derretendo.",extra:"The ice cream fell. → I was eating ice cream when it fell."},
-  {id:27,level:"challenge",emoji:"🧟",action:"You were walking like a zombie.",pt:"Você estava andando como um zumbi.",extra:"Your friend screamed. → I was walking like a zombie when my friend screamed."},
-  {id:28,level:"challenge",emoji:"🎸",action:"You were playing air guitar on stage.",pt:"Você estava tocando guitarra imaginária no palco.",extra:"The audience started cheering. → I was playing air guitar when the audience started cheering."},
-  {id:29,level:"challenge",emoji:"🧼",action:"You were trying to wash a very muddy dog.",pt:"Você estava tentando dar banho em um cachorro muito sujo.",extra:"The dog shook its body. → I was washing the dog when it shook its body."},
-  {id:30,level:"challenge",emoji:"🧛",action:"You were pretending to be a vampire.",pt:"Você estava fingindo ser um vampiro.",extra:"Someone turned on the lights. → I was pretending to be a vampire when someone turned on the lights."}
+  {id:11,level:"easy",emoji:"⚽",action:"You were playing soccer.",pt:"Você estava jogando futebol.",extra:"It started to rain. → I was playing soccer when it started to rain."},
+  {id:12,level:"easy",emoji:"🚗",action:"You were driving a car.",pt:"Você estava dirigindo um carro.",extra:"A cat crossed the street. → I was driving a car when a cat crossed the street."},
+  {id:13,level:"easy",emoji:"📖",action:"You were reading a book.",pt:"Você estava lendo um livro.",extra:"The lights turned off. → I was reading a book when the lights turned off."},
+  {id:14,level:"easy",emoji:"🚿",action:"You were taking a shower.",pt:"Você estava tomando banho.",extra:"The cold water ran out. → I was taking a shower when the cold water ran out."},
+  {id:15,level:"easy",emoji:"🎨",action:"You were painting a picture.",pt:"Você estava pintando um quadro.",extra:"You spilled the paint. → I was painting a picture when I spilled the paint."},
+  {id:16,level:"easy",emoji:"🥤",action:"You were drinking juice.",pt:"Você estava bebendo suco.",extra:"You dropped the glass. → I was drinking juice when I dropped the glass."},
+  {id:17,level:"easy",emoji:"🧹",action:"You were sweeping the floor.",pt:"Você estava varrendo o chão.",extra:"You found a coin. → I was sweeping the floor when I found a coin."},
+  {id:18,level:"easy",emoji:"🍿",action:"You were watching a movie.",pt:"Você estava assistindo a um filme.",extra:"The power went out. → I was watching a movie when the power went out."},
+  {id:19,level:"easy",emoji:"🎸",action:"You were playing the guitar.",pt:"Você estava tocando violão.",extra:"A string broke. → I was playing the guitar when a string broke."},
+  {id:20,level:"easy",emoji:"✍️",action:"You were writing a letter.",pt:"Você estava escrevendo uma carta.",extra:"Your pen ran out of ink. → I was writing a letter when my pen ran out of ink."},
+  {id:21,level:"easy",emoji:"🛹",action:"You were skateboarding.",pt:"Você estava andando de skate.",extra:"You lost your balance. → I was skateboarding when I lost my balance."},
+  {id:22,level:"easy",emoji:"🎣",action:"You were fishing.",pt:"Você estava pescando.",extra:"A big fish pulled the line. → I was fishing when a big fish pulled the line."},
+  {id:23,level:"easy",emoji:"🛌",action:"You were making your bed.",pt:"Você estava arrumando sua cama.",extra:"You found your lost sock. → I was making my bed when I found my lost sock."},
+  {id:24,level:"easy",emoji:"🪴",action:"You were watering the plants.",pt:"Você estava regando as plantas.",extra:"A bee flew near you. → I was watering the plants when a bee flew near me."},
+  {id:25,level:"easy",emoji:"🍕",action:"You were eating pizza.",pt:"Você estava comendo pizza.",extra:"You burned your mouth. → I was eating pizza when I burned my mouth."},
+  {id:26,level:"easy",emoji:"🎧",action:"You were listening to music.",pt:"Você estava ouvindo música.",extra:"Your headphones disconnected. → I was listening to music when my headphones disconnected."},
+  {id:27,level:"easy",emoji:"🧼",action:"You were washing your hands.",pt:"Você estava lavando as mãos.",extra:"The soap fell. → I was washing my hands when the soap fell."},
+  {id:28,level:"easy",emoji:"🏀",action:"You were playing basketball.",pt:"Você estava jogando basquete.",extra:"Someone scored a point. → I was playing basketball when someone scored a point."},
+  {id:29,level:"easy",emoji:"🧘",action:"You were doing yoga.",pt:"Você estava fazendo ioga.",extra:"The pet dog jumped on you. → I was doing yoga when my dog jumped on me."},
+  {id:30,level:"easy",emoji:"💇",action:"You were combing your hair.",pt:"Você estava penteando o cabelo.",extra:"The comb broke. → I was combing my hair when the comb broke."},
+  {id:31,level:"easy",emoji:"⌨️",action:"You were typing an email.",pt:"Você estava digitando um e-mail.",extra:"The computer shut down. → I was typing an email when the computer shut down."},
+  {id:32,level:"easy",emoji:"👟",action:"You were tying your shoes.",pt:"Você estava amarrando os sapatos.",extra:"The shoelace broke. → I was tying my shoes when the shoelace broke."},
+  {id:33,level:"easy",emoji:"📸",action:"You were taking a selfie.",pt:"Você estava tirando uma selfie.",extra:"Your phone slipped. → I was taking a selfie when my phone slipped."},
+  {id:34,level:"easy",emoji:"🧗",action:"You were climbing a tree.",pt:"Você estava subindo em uma árvore.",extra:"A bird flew away. → I was climbing a tree when a bird flew away."},
+  {id:35,level:"easy",emoji:"🍌",action:"You were peeling a banana.",pt:"Você estava descascando uma banana.",extra:"It dropped on the floor. → I was peeling a banana when it dropped on the floor."},
+
+  // MEDIUM LEVEL (35 cards)
+  {id:36,level:"medium",emoji:"📱",action:"You were talking on the phone.",pt:"Você estava falando ao telefone.",extra:"The battery died. → I was talking on the phone when the battery died."},
+  {id:37,level:"medium",emoji:"🏊",action:"You were swimming.",pt:"Você estava nadando.",extra:"It started to rain. → I was swimming when it started to rain."},
+  {id:38,level:"medium",emoji:"🧹",action:"You were cleaning your bedroom.",pt:"Você estava limpando seu quarto.",extra:"You found an old photo. → I was cleaning my bedroom when I found an old photo."},
+  {id:39,level:"medium",emoji:"🛍️",action:"You were shopping.",pt:"Você estava fazendo compras.",extra:"You saw your teacher. → I was shopping when I saw my teacher."},
+  {id:40,level:"medium",emoji:"🐕",action:"You were walking a dog.",pt:"Você estava passeando com um cachorro.",extra:"The dog ran away. → I was walking the dog when it ran away."},
+  {id:41,level:"medium",emoji:"📸",action:"You were taking photos.",pt:"Você estava tirando fotos.",extra:"Your camera stopped working. → I was taking photos when my camera stopped working."},
+  {id:42,level:"medium",emoji:"🚌",action:"You were waiting for the bus.",pt:"Você estava esperando o ônibus.",extra:"The bus arrived. → I was waiting for the bus when it arrived."},
+  {id:43,level:"medium",emoji:"🎂",action:"You were blowing out birthday candles.",pt:"Você estava soprando as velas do bolo.",extra:"Everyone started singing. → I was blowing out the candles when everyone started singing."},
+  {id:44,level:"medium",emoji:"🧊",action:"You were slipping on the ice.",pt:"Você estava escorregando no gelo.",extra:"You dropped your bag. → I was slipping on the ice when I dropped my bag."},
+  {id:45,level:"medium",emoji:"🧑‍🍳",action:"You were making a cake.",pt:"Você estava fazendo um bolo.",extra:"You dropped an egg. → I was making a cake when I dropped an egg."},
+  {id:46,level:"medium",emoji:"🧽",action:"You were washing the dishes.",pt:"Você estava lavando a louça.",extra:"A plate broke. → I was washing the dishes when a plate broke."},
+  {id:47,level:"medium",emoji:"🎪",action:"You were juggling balls.",pt:"Você estava fazendo malabarismo com bolas.",extra:"You dropped one ball. → I was juggling when I dropped a ball."},
+  {id:48,level:"medium",emoji:"⛺",action:"You were setting up a tent.",pt:"Você estava montando uma barraca.",extra:"A strong wind blew. → I was setting up a tent when a strong wind blew."},
+  {id:49,level:"medium",emoji:"🪁",action:"You were flying a kite.",pt:"Você estava empinando uma pipa.",extra:"The string broke. → I was flying a kite when the string broke."},
+  {id:50,level:"medium",emoji:"🍦",action:"You were eating an ice cream.",pt:"Você estava comendo um sorvete.",extra:"It started melting quickly. → I was eating ice cream when it started melting."},
+  {id:51,level:"medium",emoji:"👗",action:"You were trying on new clothes.",pt:"Você estava experimentando roupas novas.",extra:"The zipper got stuck. → I was trying on clothes when the zipper got stuck."},
+  {id:52,level:"medium",emoji:"🚜",action:"You were driving a tractor.",pt:"Você estava dirigindo um trator.",extra:"An engine light turned on. → I was driving a tractor when an engine light turned on."},
+  {id:53,level:"medium",emoji:"🏓",action:"You were playing table tennis.",pt:"Você estava jogando tênis de mesa.",extra:"The ball bounced away. → I was playing table tennis when the ball bounced away."},
+  {id:54,level:"medium",emoji:"🎁",action:"You were wrapping a birthday present.",pt:"Você estava embrulhando um presente de aniversário.",extra:"You ran out of tape. → I was wrapping a gift when I ran out of tape."},
+  {id:55,level:"medium",emoji:"🥞",action:"You were flipping a pancake.",pt:"Você estava virando uma panqueca.",extra:"It stuck to the ceiling. → I was flipping a pancake when it stuck to the ceiling."},
+  {id:56,level:"medium",emoji:"🎳",action:"You were bowling.",pt:"Você estava jogando boliche.",extra:"You scored a strike. → I was bowling when I scored a strike."},
+  {id:57,level:"medium",emoji:"🐶",action:"You were teaching your dog tricks.",pt:"Você estava ensinando truques ao seu cachorro.",extra:"It barked happily. → I was training my dog when it barked happily."},
+  {id:58,level:"medium",emoji:"🪵",action:"You were chopping firewood.",pt:"Você estava cortando lenha.",extra:"The axe got stuck. → I was chopping firewood when the axe got stuck."},
+  {id:59,level:"medium",emoji:"🛷",action:"You were riding a sled.",pt:"Você estava andando de trenó.",extra:"You hit a snow heap. → I was riding a sled when I hit a snow heap."},
+  {id:60,level:"medium",emoji:"🎨",action:"You were painting your room.",pt:"Você estava pintando seu quarto.",extra:"You stepped on a paint can. → I was painting my room when I stepped on a paint can."},
+  {id:61,level:"medium",emoji:"🎯",action:"You were playing darts.",pt:"Você estava jogando dardos.",extra:"You hit the bullseye. → I was playing darts when I hit the bullseye."},
+  {id:62,level:"medium",emoji:"🎒",action:"You were packing your backpack.",pt:"Você estava arrumando sua mochila.",extra:"The zipper broke. → I was packing my backpack when the zipper broke."},
+  {id:63,level:"medium",emoji:"🧅",action:"You were chopping onions.",pt:"Você estava cortando cebolas.",extra:"You started crying. → I was chopping onions when I started crying."},
+  {id:64,level:"medium",emoji:"🚗",action:"You were washing the family car.",pt:"Você estava lavando o carro da família.",extra:"A splash of water hit your face. → I was washing the car when water splashed on me."},
+  {id:65,level:"medium",emoji:"🧩",action:"You were completing a jigsaw puzzle.",pt:"Você estava montando um quebra-cabeça.",extra:"You realized a piece was missing. → I was doing a puzzle when I realized a piece was missing."},
+  {id:66,level:"medium",emoji:"🍿",action:"You were making popcorn.",pt:"Você estava fazendo pipoca.",extra:"It started to burn. → I was making popcorn when it started to burn."},
+  {id:67,level:"medium",emoji:"🪢",action:"You were jumping rope.",pt:"Você estava pulando corda.",extra:"You tripped on the rope. → I was jumping rope when I tripped."},
+  {id:68,level:"medium",emoji:"🎺",action:"You were playing the trumpet.",pt:"Você estava tocando trompete.",extra:"A neighbor knocked on the door. → I was playing trumpet when a neighbor knocked."},
+  {id:69,level:"medium",emoji:"🌱",action:"You were planting seeds in the garden.",pt:"Você estava plantando sementes no jardim.",extra:"A worm appeared. → I was planting seeds when a worm appeared."},
+  {id:70,level:"medium",emoji:"🚲",action:"You were fixing a flat tire on your bike.",pt:"Você estava consertando o pneu furado da bicicleta.",extra:"Your hands got dirty. → I was fixing a flat tire when my hands got dirty."},
+
+  // CHALLENGE LEVEL (30 cards)
+  {id:71,level:"challenge",emoji:"🕵️",action:"You were looking for something you lost.",pt:"Você estava procurando algo que perdeu.",extra:"You found it in your pocket. → I was looking for my keys when I found them in my pocket."},
+  {id:72,level:"challenge",emoji:"🤫",action:"You were trying to be quiet.",pt:"Você estava tentando ficar em silêncio.",extra:"The floor creaked. → I was trying to be quiet when the floor creaked."},
+  {id:73,level:"challenge",emoji:"😱",action:"You were getting scared during a movie.",pt:"Você estava ficando com medo durante um filme.",extra:"A loud noise came from outside. → I was watching a movie when I heard a loud noise."},
+  {id:74,level:"challenge",emoji:"🎁",action:"You were hiding a surprise gift.",pt:"Você estava escondendo um presente surpresa.",extra:"The person entered the room. → I was hiding a gift when she entered the room."},
+  {id:75,level:"challenge",emoji:"🧳",action:"You were packing your suitcase.",pt:"Você estava arrumando sua mala.",extra:"You couldn't find your passport. → I was packing my suitcase when I couldn't find my passport."},
+  {id:76,level:"challenge",emoji:"🍦",action:"You were trying to eat melting ice cream.",pt:"Você estava tentando tomar um sorvete que estava derretendo.",extra:"The ice cream fell. → I was eating ice cream when it fell."},
+  {id:77,level:"challenge",emoji:"🧟",action:"You were walking like a zombie.",pt:"Você estava andando como um zumbi.",extra:"Your friend screamed. → I was walking like a zombie when my friend screamed."},
+  {id:78,level:"challenge",emoji:"🎸",action:"You were playing air guitar on stage.",pt:"Você estava tocando guitarra imaginária no palco.",extra:"The audience started cheering. → I was playing air guitar when the audience started cheering."},
+  {id:79,level:"challenge",emoji:"🧼",action:"You were trying to wash a very muddy dog.",pt:"Você estava tentando dar banho em um cachorro muito sujo.",extra:"The dog shook its body. → I was washing the dog when it shook its body."},
+  {id:80,level:"challenge",emoji:"🧛",action:"You were pretending to be a vampire.",pt:"Você estava fingindo ser um vampiro.",extra:"Someone turned on the lights. → I was pretending to be a vampire when someone turned on the lights."},
+  {id:81,level:"challenge",emoji:"🤖",action:"You were acting like a broken robot.",pt:"Você estava agindo como um robô quebrado.",extra:"Your battery ran out. → I was acting like a robot when my battery ran out."},
+  {id:82,level:"challenge",emoji:"🦸",action:"You were pretending to fly like a superhero.",pt:"Você estava fingindo voar como um super-herói.",extra:"You tripped over a rug. → I was pretending to fly when I tripped over a rug."},
+  {id:83,level:"challenge",emoji:"🐝",action:"You were running away from a swarm of bees.",pt:"Você estava correndo de um enxame de abelhas.",extra:"You jumped into the pool. → I was running from bees when I jumped into the pool."},
+  {id:84,level:"challenge",emoji:"🦩",action:"You were balancing on one foot like a flamingo.",pt:"Você estava se equilibrando em um pé como um flamingo.",extra:"You lost your balance. → I was balancing on one foot when I lost my balance."},
+  {id:85,level:"challenge",emoji:"🥷",action:"You were sneaking around like a ninja.",pt:"Você estava se esgueirando como um ninja.",extra:"You bumped into a vase. → I was sneaking like a ninja when I bumped into a vase."},
+  {id:86,level:"challenge",emoji:"🎩",action:"You were performing a magic trick.",pt:"Você estava fazendo um truque de mágica.",extra:"The rabbit escaped. → I was doing a magic trick when the rabbit escaped."},
+  {id:87,level:"challenge",emoji:"🦕",action:"You were walking like a dinosaur.",pt:"Você estava andando como um dinossauro.",extra:"You knocked over a chair. → I was walking like a dinosaur when I knocked over a chair."},
+  {id:88,level:"challenge",emoji:"⛵",action:"You were trying to steer a boat in a storm.",pt:"Você estava tentando pilotar um barco em uma tempestade.",extra:"A wave hit the boat. → I was steering the boat when a wave hit."},
+  {id:89,level:"challenge",emoji:"🐒",action:"You were imitating a monkey in the jungle.",pt:"Você estava imitando um macaco na selva.",extra:"You dropped a banana. → I was imitating a monkey when I dropped a banana."},
+  {id:90,level:"challenge",emoji:"🏋️",action:"You were trying to lift a very heavy weight.",pt:"Você estava tentando levantar um peso muito pesado.",extra:"You dropped the barbell. → I was lifting heavy weights when I dropped the barbell."},
+  {id:91,level:"challenge",emoji:"🪐",action:"You were walking on the moon in zero gravity.",pt:"Você estava caminhando na lua em gravidade zero.",extra:"Your helmet visor fogged up. → I was walking on the moon when my helmet fogged up."},
+  {id:92,level:"challenge",emoji:"🤠",action:"You were riding a wild bucking bull.",pt:"Você estava montando em um touro bravo.",extra:"You fell onto the hay. → I was riding a wild bull when I fell onto the hay."},
+  {id:93,level:"challenge",emoji:"🕸️",action:"You were trying to escape from a giant spider web.",pt:"Você estava tentando escapar de uma teia de aranha gigante.",extra:"You got tangled up. → I was escaping a web when I got tangled up."},
+  {id:94,level:"challenge",emoji:"⛷️",action:"You were skiing down a steep mountain.",pt:"Você estava esquiando por uma montanha íngreme.",extra:"You lost a ski pole. → I was skiing down a mountain when I lost a ski pole."},
+  {id:95,level:"challenge",emoji:"🤹",action:"You were balancing a spinning plate on a stick.",pt:"Você estava equilibrando um prato giratório em uma vareta.",extra:"The plate fell and shattered. → I was balancing a plate when it fell."},
+  {id:96,level:"challenge",emoji:"👻",action:"You were telling a scary ghost story.",pt:"Você estava contando uma história de fantasma assustadora.",extra:"The door slammed shut. → I was telling a ghost story when the door slammed shut."},
+  {id:97,level:"challenge",emoji:"🦜",action:"You were trying to teach a parrot how to speak.",pt:"Você estava tentando ensinar um papagaio a falar.",extra:"The parrot repeated your secret. → I was teaching the parrot when it repeated my secret."},
+  {id:98,level:"challenge",emoji:"🛸",action:"You were signaling to an alien spaceship.",pt:"Você estava fazendo sinais para uma nave espacial alienígena.",extra:"The lights flashed brightly. → I was signaling to aliens when bright lights flashed."},
+  {id:99,level:"challenge",emoji:"🧗",action:"You were climbing a steep rock wall.",pt:"Você estava escalando uma parede de pedra íngreme.",extra:"Your foot slipped. → I was climbing a rock wall when my foot slipped."},
+  {id:100,level:"challenge",emoji:"🏴‍☠️",action:"You were digging for buried pirate treasure.",pt:"Você estava escavando em busca de um tesouro pirata enterrado.",extra:"Your shovel hit a metal chest. → I was digging for treasure when my shovel hit a chest."}
 ];
 
 const teamNames=["Team Red","Team Blue","Team Green","Team Yellow"];
-let scores=[0,0,0,0], deck=[], current=null, revealed=false, seconds=45, timerId=null;
+let scores=[0,0,0,0], deck=[], current=null, revealed=false, seconds=60, timerId=null;
 const $=id=>document.getElementById(id);
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
 function selectedCards(){
   const level=$("difficulty").value;
   return cards.filter(c=>level==="all"||c.level===level);
 }
-function refillDeck(){deck=shuffle(selectedCards());}
+
+function refillDeck(){
+  deck=shuffle(selectedCards());
+}
+
 function updateCounter(){
   const total=selectedCards().length;
-  $("counter").textContent=`Cartão ${current ? total-deck.length : 0} de ${total}`;
+  const currentNum = current ? (total - deck.length) : 0;
+  $("counter").textContent=`Cartão ${currentNum} de ${total}`;
 }
+
 function drawCard(){
   stopTimer(); resetTimer();
   if(deck.length===0) refillDeck();
@@ -201,9 +291,10 @@ function drawCard(){
   $("nextBtn").disabled=false;
   $("status").textContent="Valendo! Inicie o cronômetro e faça a mímica.";
   const levelNames={easy:"FÁCIL",medium:"MÉDIO",challenge:"DESAFIO"};
-  $("categoryLabel").textContent=levelNames[current.level];
+  $("categoryLabel").textContent=levelNames[current.level] || "TODAS AS CATEGORIAS";
   updateCounter();
 }
+
 function reveal(){
   if(!current)return;
   revealed=true;
@@ -213,6 +304,7 @@ function reveal(){
   $("status").textContent="Resposta revelada! Peça à equipe para criar a frase completa.";
   $("revealBtn").disabled=true;
 }
+
 function renderScores(){
   $("scoreList").innerHTML="";
   teamNames.forEach((name,i)=>{
@@ -223,15 +315,39 @@ function renderScores(){
   $("scoreList").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{scores[+b.dataset.add]+=5;renderScores();});
   $("scoreList").querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{let i=+b.dataset.sub;scores[i]=Math.max(0,scores[i]-5);renderScores();});
 }
+
 function activeTeam(){return +$("teamSelect").value;}
-function setTime(){const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;$("timer").classList.toggle("warning",seconds<=10);}
-function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
-function resetTimer(){stopTimer();seconds=45;setTime();}
+
+function setTime(){
+  const m=String(Math.floor(seconds/60)).padStart(2,"0");
+  const s=String(seconds%60).padStart(2,"0");
+  $("timer").textContent=`${m}:${s}`;
+  $("timer").classList.toggle("warning",seconds<=10);
+}
+
+function stopTimer(){
+  if(timerId){clearInterval(timerId);timerId=null;}
+}
+
+function resetTimer(){
+  stopTimer();
+  seconds=60;
+  setTime();
+}
+
 function startTimer(){
   if(timerId)return;
   if(seconds===0)resetTimer();
-  timerId=setInterval(()=>{seconds--;setTime();if(seconds<=0){stopTimer();$("status").textContent="⏰ Tempo esgotado! Hora de revelar e conferir a resposta.";}},1000);
+  timerId=setInterval(()=>{
+    seconds--;
+    setTime();
+    if(seconds<=0){
+      stopTimer();
+      $("status").textContent="⏰ Tempo esgotado! Hora de revelar e conferir a resposta.";
+    }
+  },1000);
 }
+
 $("drawBtn").onclick=drawCard;
 $("nextBtn").onclick=drawCard;
 $("revealBtn").onclick=reveal;
@@ -239,9 +355,44 @@ $("startTimer").onclick=startTimer;
 $("resetTimer").onclick=resetTimer;
 $("addPoint").onclick=()=>{scores[activeTeam()]+=5;renderScores();};
 $("removePoint").onclick=()=>{let i=activeTeam();scores[i]=Math.max(0,scores[i]-5);renderScores();};
-$("difficulty").onchange=()=>{deck=[];current=null;stopTimer();resetTimer();$("prompt").textContent="Categoria alterada! Sorteie uma nova mímica."; $("emoji").textContent="🎭";$("answerBox").classList.remove("show");$("revealBtn").disabled=true;$("nextBtn").disabled=true;$("categoryLabel").textContent=$("difficulty").selectedOptions[0].text.toUpperCase();updateCounter();};
-$("resetGame").onclick=()=>{scores=[0,0,0,0];deck=[];current=null;revealed=false;stopTimer();resetTimer();renderScores();$("prompt").textContent="Clique em “Sortear mímica” para começar!";$("emoji").textContent="🎭";$("hint").textContent="Faça a mímica sem falar. Sua equipe deve adivinhar em inglês.";$("answerBox").classList.remove("show");$("revealBtn").disabled=true;$("nextBtn").disabled=true;$("status").textContent="Jogo reiniciado. Boa sorte!";$("categoryLabel").textContent="TODAS AS CATEGORIAS";updateCounter();};
-renderScores();setTime();refillDeck();updateCounter();
+
+$("difficulty").onchange=()=>{
+  deck=[];
+  current=null;
+  stopTimer();
+  resetTimer();
+  $("prompt").textContent="Categoria alterada! Sorteie uma nova mímica.";
+  $("emoji").textContent="🎭";
+  $("answerBox").classList.remove("show");
+  $("revealBtn").disabled=true;
+  $("nextBtn").disabled=true;
+  $("categoryLabel").textContent=$("difficulty").selectedOptions[0].text.toUpperCase();
+  updateCounter();
+};
+
+$("resetGame").onclick=()=>{
+  scores=[0,0,0,0];
+  deck=[];
+  current=null;
+  revealed=false;
+  stopTimer();
+  resetTimer();
+  renderScores();
+  $("prompt").textContent="Clique em “Sortear mímica” para começar!";
+  $("emoji").textContent="🎭";
+  $("hint").textContent="Faça a mímica sem falar. Sua equipe deve adivinhar em inglês.";
+  $("answerBox").classList.remove("show");
+  $("revealBtn").disabled=true;
+  $("nextBtn").disabled=true;
+  $("status").textContent="Jogo reiniciado. Boa sorte!";
+  $("categoryLabel").textContent="TODAS AS CATEGORIAS";
+  updateCounter();
+};
+
+renderScores();
+setTime();
+refillDeck();
+updateCounter();
 </script>
 </body>
 </html>
