@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Were You Doing? | English Challenge</title>
+<style>
+:root{
+  --paper:#f4efe8;--ink:#202020;--pink:#e91e63;--muted:#6d675f;
+  --card:#fffdf9;--line:#202020;--green:#dff2e5;--yellow:#fff0c9;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+button,select,input{font:inherit}
+.app{max-width:1100px;margin:auto;padding:22px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}
+.brand{font-weight:900;letter-spacing:1px;font-size:clamp(20px,4vw,32px)}
+.brand span{color:var(--pink)}
+.tag{border:2px solid var(--ink);padding:8px 12px;font-size:12px;font-weight:800;transform:rotate(2deg);background:#fff}
+.intro{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:18px}
+h1{font-size:clamp(28px,5vw,46px);line-height:1;margin:0 0 8px}
+.subtitle{color:var(--muted);margin:0;line-height:1.5}
+.layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(250px,.8fr);gap:18px}
+.panel{background:var(--card);border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:18px}
+.game-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px}
+.pill{display:inline-block;border:1.5px solid var(--ink);padding:6px 10px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;background:var(--yellow)}
+.counter{font-size:12px;color:var(--muted);font-weight:700}
+.card{min-height:330px;background:#fff;border:2px dashed #aaa;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;position:relative}
+.card .eyebrow{font-size:12px;letter-spacing:2px;font-weight:900;color:var(--pink);text-transform:uppercase}
+.card .emoji{font-size:clamp(55px,9vw,88px);margin:14px 0}
+.card h2{font-size:clamp(24px,4vw,38px);margin:0 0 10px;max-width:650px}
+.card .hint{color:var(--muted);font-size:14px;line-height:1.5;max-width:520px}
+.answer{display:none;margin-top:18px;padding:14px 18px;background:var(--green);border:2px solid var(--ink);width:100%;max-width:620px}
+.answer.show{display:block}
+.answer strong{display:block;font-size:clamp(20px,3vw,28px);margin-bottom:6px}
+.answer small{font-size:13px;line-height:1.5}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+button{border:2px solid var(--ink);background:#fff;padding:12px 15px;font-weight:900;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+button.primary{background:var(--pink);color:white}
+button.dark{background:var(--ink);color:white}
+button:disabled{opacity:.45;cursor:not-allowed}
+.side h3{margin:0 0 12px;font-size:18px}
+.field{margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+select,input{width:100%;padding:11px;border:2px solid var(--ink);background:#fff;border-radius:0}
+.timer{font-size:52px;font-weight:900;text-align:center;letter-spacing:2px;margin:8px 0}
+.timer.warning{color:var(--pink)}
+.timer-actions{display:flex;gap:8px}
+.timer-actions button{flex:1;padding:10px 6px}
+.score-list{display:grid;gap:9px;margin-top:12px}
+.score-row{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1.5px solid var(--ink);padding:9px;background:#fff}
+.score-name{font-weight:900;font-size:13px}
+.score-value{font-size:20px;font-weight:900;min-width:28px;text-align:center}
+.score-buttons{display:flex;gap:5px}
+.score-buttons button{padding:5px 9px;box-shadow:none;border-width:1.5px}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:14px}
+.status{font-size:12px;font-weight:800;color:var(--muted);margin-top:10px;min-height:18px}
+.footer{margin-top:22px;text-align:center;color:var(--muted);font-size:11px}
+@media(max-width:760px){.app{padding:14px}.layout{grid-template-columns:1fr}.intro{align-items:start;flex-direction:column}.card{min-height:290px}header{align-items:flex-start}.tag{font-size:10px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">ENGLISH <span>CHALLENGE</span></div>
+    <div class="tag">PAST TENSE EDITION</div>
+  </header>
+
+  <section class="intro">
+    <div>
+      <h1>WHAT WERE<br>YOU DOING?</h1>
+      <p class="subtitle">A mímica do passado: represente, adivinhe e crie frases em inglês!</p>
+    </div>
+    <div class="pill">🎭 MÍMICA + GRAMÁTICA</div>
+  </section>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="game-top">
+        <span class="pill" id="categoryLabel">TODAS AS CATEGORIAS</span>
+        <span class="counter" id="counter">Cartão 1 de 30</span>
+      </div>
+      <div class="card">
+        <div class="eyebrow">Your acting challenge</div>
+        <div class="emoji" id="emoji">🎭</div>
+        <h2 id="prompt">Clique em “Sortear mímica” para começar!</h2>
+        <p class="hint" id="hint">Faça a mímica sem falar. Sua equipe deve adivinhar em inglês.</p>
+        <div class="answer" id="answerBox">
+          <strong id="answerText"></strong>
+          <small id="extraText"></small>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="primary" id="drawBtn">🎲 Sortear mímica</button>
+        <button id="revealBtn" disabled>👀 Revelar resposta</button>
+        <button class="dark" id="nextBtn" disabled>Próximo cartão →</button>
+      </div>
+      <div class="status" id="status">Prepare a equipe e sorteie o primeiro desafio.</div>
+    </section>
+
+    <aside class="panel side">
+      <h3>⚙️ Configurações</h3>
+      <div class="field">
+        <label for="difficulty">Categoria</label>
+        <select id="difficulty">
+          <option value="all">Todas as categorias</option>
+          <option value="easy">Fácil — ações simples</option>
+          <option value="medium">Médio — situações</option>
+          <option value="challenge">Desafio — mais difícil</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="teamSelect">Equipe que está jogando</label>
+        <select id="teamSelect">
+          <option value="0">Team Red</option>
+          <option value="1">Team Blue</option>
+          <option value="2">Team Green</option>
+          <option value="3">Team Yellow</option>
+        </select>
+      </div>
+
+      <h3>⏱️ Cronômetro</h3>
+      <div class="timer" id="timer">00:45</div>
+      <div class="timer-actions">
+        <button id="startTimer">▶ Iniciar</button>
+        <button id="resetTimer">↺ Reiniciar</button>
+      </div>
+
+      <h3 style="margin-top:24px">🏆 Placar</h3>
+      <div class="score-list" id="scoreList"></div>
+      <div class="controls">
+        <button id="addPoint" class="primary">+ 5 pontos</button>
+        <button id="removePoint">− 5 pontos</button>
+      </div>
+      <p class="note">Sugestão: 5 pontos por adivinhar a mímica; 10 pontos por formar uma frase correta; 15 pontos por combinar Past Continuous + Simple Past.</p>
+      <button id="resetGame" style="width:100%;margin-top:10px">Reiniciar jogo completo</button>
+    </aside>
+  </main>
+  <p class="footer">ENGLISH CHALLENGE • SIMPLE PAST & PAST CONTINUOUS</p>
+</div>
+
+<script>
+const cards = [
+  {id:1,level:"easy",emoji:"😴",action:"You were sleeping.",pt:"Você estava dormindo.",extra:"The phone rang. → I was sleeping when the phone rang."},
+  {id:2,level:"easy",emoji:"💃",action:"You were dancing.",pt:"Você estava dançando.",extra:"The music stopped. → I was dancing when the music stopped."},
+  {id:3,level:"easy",emoji:"🍳",action:"You were cooking.",pt:"Você estava cozinhando.",extra:"The doorbell rang. → I was cooking when the doorbell rang."},
+  {id:4,level:"easy",emoji:"🎮",action:"You were playing video games.",pt:"Você estava jogando videogame.",extra:"Your mother arrived. → I was playing video games when my mother arrived."},
+  {id:5,level:"easy",emoji:"🪥",action:"You were brushing your teeth.",pt:"Você estava escovando os dentes.",extra:"The lights went out. → I was brushing my teeth when the lights went out."},
+  {id:6,level:"easy",emoji:"🚴",action:"You were riding a bike.",pt:"Você estava andando de bicicleta.",extra:"It started to rain. → I was riding a bike when it started to rain."},
+  {id:7,level:"easy",emoji:"📚",action:"You were doing your homework.",pt:"Você estava fazendo sua lição de casa.",extra:"Your friend called. → I was doing my homework when my friend called."},
+  {id:8,level:"easy",emoji:"🎤",action:"You were singing.",pt:"Você estava cantando.",extra:"Someone opened the door. → I was singing when someone opened the door."},
+  {id:9,level:"easy",emoji:"🏃",action:"You were running.",pt:"Você estava correndo.",extra:"You fell down. → I was running when I fell down."},
+  {id:10,level:"easy",emoji:"🥪",action:"You were eating a sandwich.",pt:"Você estava comendo um sanduíche.",extra:"The teacher arrived. → I was eating a sandwich when the teacher arrived."},
+  {id:11,level:"medium",emoji:"📱",action:"You were talking on the phone.",pt:"Você estava falando ao telefone.",extra:"The battery died. → I was talking on the phone when the battery died."},
+  {id:12,level:"medium",emoji:"🏊",action:"You were swimming.",pt:"Você estava nadando.",extra:"It started to rain. → I was swimming when it started to rain."},
+  {id:13,level:"medium",emoji:"🧹",action:"You were cleaning your bedroom.",pt:"Você estava limpando seu quarto.",extra:"You found an old photo. → I was cleaning my bedroom when I found an old photo."},
+  {id:14,level:"medium",emoji:"🛍️",action:"You were shopping.",pt:"Você estava fazendo compras.",extra:"You saw your teacher. → I was shopping when I saw my teacher."},
+  {id:15,level:"medium",emoji:"🐕",action:"You were walking a dog.",pt:"Você estava passeando com um cachorro.",extra:"The dog ran away. → I was walking the dog when it ran away."},
+  {id:16,level:"medium",emoji:"📸",action:"You were taking photos.",pt:"Você estava tirando fotos.",extra:"Your camera stopped working. → I was taking photos when my camera stopped working."},
+  {id:17,level:"medium",emoji:"🚌",action:"You were waiting for the bus.",pt:"Você estava esperando o ônibus.",extra:"The bus arrived. → I was waiting for the bus when it arrived."},
+  {id:18,level:"medium",emoji:"🎂",action:"You were blowing out birthday candles.",pt:"Você estava soprando as velas do bolo.",extra:"Everyone started singing. → I was blowing out the candles when everyone started singing."},
+  {id:19,level:"medium",emoji:"🧊",action:"You were slipping on the ice.",pt:"Você estava escorregando no gelo.",extra:"You dropped your bag. → I was slipping on the ice when I dropped my bag."},
+  {id:20,level:"medium",emoji:"🧑‍🍳",action:"You were making a cake.",pt:"Você estava fazendo um bolo.",extra:"You dropped an egg. → I was making a cake when I dropped an egg."},
+  {id:21,level:"challenge",emoji:"🕵️",action:"You were looking for something you lost.",pt:"Você estava procurando algo que perdeu.",extra:"You found it in your pocket. → I was looking for my keys when I found them in my pocket."},
+  {id:22,level:"challenge",emoji:"🤫",action:"You were trying to be quiet.",pt:"Você estava tentando ficar em silêncio.",extra:"The floor creaked. → I was trying to be quiet when the floor creaked."},
+  {id:23,level:"challenge",emoji:"😱",action:"You were getting scared during a movie.",pt:"Você estava ficando com medo durante um filme.",extra:"A loud noise came from outside. → I was watching a movie when I heard a loud noise."},
+  {id:24,level:"challenge",emoji:"🎁",action:"You were hiding a surprise gift.",pt:"Você estava escondendo um presente surpresa.",extra:"The person entered the room. → I was hiding a gift when she entered the room."},
+  {id:25,level:"challenge",emoji:"🧳",action:"You were packing your suitcase.",pt:"Você estava arrumando sua mala.",extra:"You couldn't find your passport. → I was packing my suitcase when I couldn't find my passport."},
+  {id:26,level:"challenge",emoji:"🍦",action:"You were trying to eat melting ice cream.",pt:"Você estava tentando tomar um sorvete que estava derretendo.",extra:"The ice cream fell. → I was eating ice cream when it fell."},
+  {id:27,level:"challenge",emoji:"🧟",action:"You were walking like a zombie.",pt:"Você estava andando como um zumbi.",extra:"Your friend screamed. → I was walking like a zombie when my friend screamed."},
+  {id:28,level:"challenge",emoji:"🎸",action:"You were playing air guitar on stage.",pt:"Você estava tocando guitarra imaginária no palco.",extra:"The audience started cheering. → I was playing air guitar when the audience started cheering."},
+  {id:29,level:"challenge",emoji:"🧼",action:"You were trying to wash a very muddy dog.",pt:"Você estava tentando dar banho em um cachorro muito sujo.",extra:"The dog shook its body. → I was washing the dog when it shook its body."},
+  {id:30,level:"challenge",emoji:"🧛",action:"You were pretending to be a vampire.",pt:"Você estava fingindo ser um vampiro.",extra:"Someone turned on the lights. → I was pretending to be a vampire when someone turned on the lights."}
+];
+
+const teamNames=["Team Red","Team Blue","Team Green","Team Yellow"];
+let scores=[0,0,0,0], deck=[], current=null, revealed=false, seconds=45, timerId=null;
+const $=id=>document.getElementById(id);
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function selectedCards(){
+  const level=$("difficulty").value;
+  return cards.filter(c=>level==="all"||c.level===level);
+}
+function refillDeck(){deck=shuffle(selectedCards());}
+function updateCounter(){
+  const total=selectedCards().length;
+  $("counter").textContent=`Cartão ${current ? total-deck.length : 0} de ${total}`;
+}
+function drawCard(){
+  stopTimer(); resetTimer();
+  if(deck.length===0) refillDeck();
+  current=deck.pop(); revealed=false;
+  $("emoji").textContent=current.emoji;
+  $("prompt").textContent="REPRESENTE A AÇÃO!";
+  $("hint").textContent="Faça a mímica sem falar. A equipe deve adivinhar usando uma frase completa em inglês.";
+  $("answerBox").classList.remove("show");
+  $("answerText").textContent=current.action;
+  $("extraText").textContent=`${current.pt}  |  Desafio extra: ${current.extra}`;
+  $("revealBtn").disabled=false;
+  $("nextBtn").disabled=false;
+  $("status").textContent="Valendo! Inicie o cronômetro e faça a mímica.";
+  const levelNames={easy:"FÁCIL",medium:"MÉDIO",challenge:"DESAFIO"};
+  $("categoryLabel").textContent=levelNames[current.level];
+  updateCounter();
+}
+function reveal(){
+  if(!current)return;
+  revealed=true;
+  $("answerBox").classList.add("show");
+  $("prompt").textContent=current.action;
+  $("hint").textContent="Agora crie uma frase usando Past Continuous. Para ganhar mais pontos, use também Simple Past.";
+  $("status").textContent="Resposta revelada! Peça à equipe para criar a frase completa.";
+  $("revealBtn").disabled=true;
+}
+function renderScores(){
+  $("scoreList").innerHTML="";
+  teamNames.forEach((name,i)=>{
+    const row=document.createElement("div");row.className="score-row";
+    row.innerHTML=`<span class="score-name">${name}</span><span class="score-value">${scores[i]}</span><span class="score-buttons"><button aria-label="Adicionar 5 pontos" data-add="${i}">+5</button><button aria-label="Retirar 5 pontos" data-sub="${i}">−5</button></span>`;
+    $("scoreList").appendChild(row);
+  });
+  $("scoreList").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{scores[+b.dataset.add]+=5;renderScores();});
+  $("scoreList").querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{let i=+b.dataset.sub;scores[i]=Math.max(0,scores[i]-5);renderScores();});
+}
+function activeTeam(){return +$("teamSelect").value;}
+function setTime(){const m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;$("timer").classList.toggle("warning",seconds<=10);}
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
+function resetTimer(){stopTimer();seconds=45;setTime();}
+function startTimer(){
+  if(timerId)return;
+  if(seconds===0)resetTimer();
+  timerId=setInterval(()=>{seconds--;setTime();if(seconds<=0){stopTimer();$("status").textContent="⏰ Tempo esgotado! Hora de revelar e conferir a resposta.";}},1000);
+}
+$("drawBtn").onclick=drawCard;
+$("nextBtn").onclick=drawCard;
+$("revealBtn").onclick=reveal;
+$("startTimer").onclick=startTimer;
+$("resetTimer").onclick=resetTimer;
+$("addPoint").onclick=()=>{scores[activeTeam()]+=5;renderScores();};
+$("removePoint").onclick=()=>{let i=activeTeam();scores[i]=Math.max(0,scores[i]-5);renderScores();};
+$("difficulty").onchange=()=>{deck=[];current=null;stopTimer();resetTimer();$("prompt").textContent="Categoria alterada! Sorteie uma nova mímica."; $("emoji").textContent="🎭";$("answerBox").classList.remove("show");$("revealBtn").disabled=true;$("nextBtn").disabled=true;$("categoryLabel").textContent=$("difficulty").selectedOptions[0].text.toUpperCase();updateCounter();};
+$("resetGame").onclick=()=>{scores=[0,0,0,0];deck=[];current=null;revealed=false;stopTimer();resetTimer();renderScores();$("prompt").textContent="Clique em “Sortear mímica” para começar!";$("emoji").textContent="🎭";$("hint").textContent="Faça a mímica sem falar. Sua equipe deve adivinhar em inglês.";$("answerBox").classList.remove("show");$("revealBtn").disabled=true;$("nextBtn").disabled=true;$("status").textContent="Jogo reiniciado. Boa sorte!";$("categoryLabel").textContent="TODAS AS CATEGORIAS";updateCounter();};
+renderScores();setTime();refillDeck();updateCounter();
+</script>
+</body>
+</html>
