@@ -799,161 +799,317 @@ const EVENTS={
 
 orcamento:[
 {
-title:"Você recebeu seu dinheiro!",
-text:"Você recebeu R$ 800 e precisa organizar seus gastos do mês. Qual é a melhor atitude?",
+title:"Seu salário chegou",
+text:"Você recebeu R$ 1.200 para passar o mês. Precisa reservar R$ 450 para ajudar nas despesas de casa, R$ 180 para transporte e R$ 220 para alimentação. Quanto sobra e como você pretende organizar esse valor?",
 choices:[
-["Separar dinheiro para as despesas e guardar uma parte",{saldo:100,saude:8,felicidade:2},"Muito bem! Planejar os gastos ajuda a evitar dívidas e permite guardar dinheiro."],
-["Gastar tudo com coisas que deseja",{saldo:-150,saude:-5,felicidade:5},"Comprar algo desejado pode ser legal, mas gastar tudo pode deixar você sem dinheiro para necessidades."]
+["Separar primeiro as despesas e planejar o uso dos R$ 350 restantes",{saude:9,felicidade:2},"Boa organização! Você identificou os compromissos antes de decidir como usar o restante."],
+["Usar o dinheiro restante sem acompanhar os gastos",{saldo:-100,saude:-5,felicidade:3},"Sem planejamento, os pequenos gastos podem consumir o dinheiro reservado para outras prioridades."]
 ]
 },
 {
-title:"Você gastou mais do que planejou",
-text:"No mercado, você comprou vários produtos que não estavam na lista. O que fazer?",
+title:"Monte seu orçamento semanal",
+text:"Você tem R$ 160 para a semana. Precisa considerar transporte (R$ 40), lanche (R$ 35), material escolar (R$ 25) e deseja guardar uma parte. Como dividiria o dinheiro? Explique sua organização.",
 choices:[
-["Rever a lista e planejar melhor a próxima compra",{saude:7,felicidade:2},"Ótima escolha! Uma lista ajuda a evitar compras desnecessárias."],
-["Continuar comprando sem conferir os preços",{saldo:-100,saude:-5},"Sem acompanhar os gastos, fica mais fácil ultrapassar o orçamento."]
+["Planejar os quatro itens e reservar o que sobrar",{saude:8,felicidade:3},"Você priorizou os compromissos e ainda considerou a importância de poupar."],
+["Gastar primeiro com desejos e tentar resolver o restante depois",{saldo:-40,saude:-5},"O ideal é separar as despesas importantes antes de gastar com desejos."]
 ]
 },
 {
-title:"Assinatura esquecida",
-text:"Você descobriu que paga por um aplicativo que quase nunca usa.",
+title:"Duas contas no mesmo mês",
+text:"Você tem R$ 500 disponíveis. A conta de água é R$ 90 e a de energia é R$ 160. Além disso, precisa comprar material escolar de R$ 85. Organize esses pagamentos e diga quanto restará.",
 choices:[
-["Cancelar a assinatura",{saldo:100,saude:5},"Muito bem! Revisar gastos recorrentes ajuda a economizar."],
-["Continuar pagando sem usar",{saldo:-100,felicidade:0},"É importante saber para onde seu dinheiro está indo."]
+["Pagar as três despesas e conferir o saldo restante",{saude:8,felicidade:2},"Muito bem! Somar os compromissos evita gastar um dinheiro que já tem destino."],
+["Adiar tudo e usar o dinheiro em compras pessoais",{saldo:-120,saude:-7},"Deixar compromissos sem planejamento pode gerar multas e dificuldades."]
+]
+},
+{
+title:"Parcelas acumuladas",
+text:"Você quer comprar um produto de R$ 600 em 6 parcelas de R$ 100. Já possui outras parcelas de R$ 180 por mês. O que deve analisar antes de assumir mais esse compromisso?",
+choices:[
+["Verificar se R$ 280 cabem no orçamento mensal sem prejudicar necessidades",{saude:9,felicidade:2},"Correto! Parcelas pequenas também comprometem a renda futura."],
+["Aceitar porque a parcela parece barata",{saldo:-100,saude:-6},"O valor da parcela precisa ser analisado junto com todas as outras despesas."]
+]
+},
+{
+title:"Organize as prioridades",
+text:"Neste mês você precisa escolher como usar R$ 300: repor um material necessário, pagar uma conta atrasada ou comprar um acessório desejado. Como definiria a ordem de prioridade?",
+choices:[
+["Priorizar a conta e o material necessário, avaliando o que sobra",{saude:8,felicidade:2},"Você considerou necessidades e compromissos antes dos desejos."],
+["Comprar o acessório primeiro e deixar as obrigações para depois",{saldo:-100,saude:-6},"É importante evitar que uma compra por desejo prejudique compromissos."]
+]
+},
+{
+title:"Revise seus gastos invisíveis",
+text:"Ao conferir o extrato, você percebeu pequenos gastos frequentes com aplicativos, jogos e lanches. Qual atitude ajuda a descobrir onde economizar?",
+choices:[
+["Anotar os gastos por categoria durante algumas semanas",{saude:8,felicidade:2},"Registrar os gastos mostra padrões e ajuda a fazer ajustes reais."],
+["Ignorar os valores porque são pequenos",{saldo:-60,saude:-4},"Pequenos gastos repetidos podem representar uma quantia significativa."]
 ]
 }
 ],
 
 consumo:[
 {
-title:"Tênis em promoção",
-text:"Você viu um tênis em promoção, mas já tem um em boas condições. O que fazer?",
+title:"Desconto que parece imperdível",
+text:"Uma loja anuncia 50% de desconto em um produto que você não estava planejando comprar. O que deve considerar antes de aproveitar?",
 choices:[
-["Pensar se realmente precisa de outro",{saude:6,felicidade:2},"Consumir conscientemente significa pensar antes de comprar."],
-["Comprar só porque está em promoção",{saldo:-150,felicidade:5,saude:-3},"Uma promoção não é economia quando você compra algo de que não precisa."]
+["Avaliar se precisa do produto e comparar o preço final",{saude:8,felicidade:2},"Desconto só representa economia quando a compra faz sentido."],
+["Comprar imediatamente para não perder a promoção",{saldo:-130,felicidade:3,saude:-5},"A urgência da promoção pode incentivar uma compra por impulso."]
 ]
 },
 {
-title:"Celular novo",
-text:"Seu celular funciona bem, mas você quer comprar um modelo mais novo.",
+title:"Compra parcelada ou à vista?",
+text:"Um fone custa R$ 180 à vista ou 3 parcelas de R$ 70. Qual informação você precisa comparar antes de decidir?",
 choices:[
-["Pesquisar preços e avaliar se a troca é necessária",{saude:6,felicidade:2},"Comparar preços e avaliar a necessidade são atitudes responsáveis."],
-["Comprar imediatamente sem pesquisar",{saldo:-250,felicidade:5,saude:-4},"Uma compra por impulso pode comprometer seu dinheiro."]
+["Comparar o total pago e verificar se a parcela cabe no orçamento",{saude:8,felicidade:2},"Ótimo! Três parcelas de R$ 70 totalizam R$ 210."],
+["Escolher as parcelas sem calcular o total",{saldo:-30,saude:-4},"Parcelar pode esconder um custo final maior."]
 ]
 },
 {
-title:"Lanche na escola",
-text:"Você tem dinheiro para comprar um lanche todos os dias, mas também quer economizar.",
+title:"Produto de marca",
+text:"Dois produtos têm a mesma função: um custa R$ 45 e outro R$ 80. O mais caro é de uma marca famosa. Como decidir?",
 choices:[
-["Organizar os gastos e levar lanche alguns dias",{saldo:60,saude:5},"Pequenas escolhas podem ajudar a economizar ao longo do mês."],
-["Gastar todo o dinheiro com lanches",{saldo:-80,felicidade:4},"É importante equilibrar os pequenos gastos com outras prioridades."]
+["Comparar qualidade, durabilidade, necessidade e preço",{saude:7,felicidade:2},"Uma escolha consciente considera o conjunto, não apenas a marca."],
+["Escolher o mais caro porque a marca é conhecida",{saldo:-35,saude:-4},"Preço maior não significa automaticamente melhor custo-benefício."]
+]
+},
+{
+title:"Troca de celular",
+text:"Seu celular ainda funciona, mas você deseja um modelo novo. A troca exigiria comprometer boa parte do dinheiro guardado.",
+choices:[
+["Adiar a compra e estabelecer uma meta de economia",{saude:8,felicidade:2},"Planejar uma compra evita comprometer objetivos importantes."],
+["Comprar agora e usar toda a reserva",{saldo:-250,saude:-8},"Usar toda a reserva para um desejo deixa você vulnerável a imprevistos."]
+]
+},
+{
+title:"Consumo sustentável",
+text:"Você precisa de uma mochila. Uma opção nova custa R$ 140; uma usada, em ótimo estado, custa R$ 55. O que pode orientar sua escolha?",
+choices:[
+["Avaliar conservação, utilidade, preço e impacto do consumo",{saude:7,felicidade:3},"Reutilizar pode reduzir gastos e desperdício quando o produto atende à necessidade."],
+["Comprar a nova sem avaliar a outra opção",{saldo:-85,saude:-3},"Pesquisar alternativas também faz parte de consumir conscientemente."]
 ]
 }
 ],
 
 reserva:[
 {
-title:"Dinheiro guardado",
-text:"Você recebeu um dinheiro extra. Qual atitude ajuda a se preparar para o futuro?",
+title:"Meta para uma emergência",
+text:"Você consegue guardar R$ 40 por mês. Qual é a vantagem de manter esse hábito por vários meses?",
 choices:[
-["Guardar uma parte para emergências",{saldo:-100,saude:9},"Excelente! A reserva ajuda quando aparece uma despesa inesperada."],
-["Gastar todo o dinheiro imediatamente",{felicidade:6,saude:-5},"Aproveitar o dinheiro pode ser bom, mas guardar uma parte também é importante."]
+["Construir aos poucos um valor para despesas inesperadas",{saude:9,felicidade:2},"A constância ajuda a formar uma reserva, mesmo com valores pequenos."],
+["Esperar sobrar muito dinheiro para começar",{saude:-4,felicidade:1},"Não é necessário começar com grandes quantias."]
 ]
 },
 {
-title:"Quebrou um objeto importante",
-text:"Um objeto que você usa todos os dias quebrou e precisa ser consertado.",
+title:"Conserto inesperado",
+text:"Sua bicicleta, usada para ir à escola, precisa de um conserto de R$ 120. Você possui uma reserva de R$ 200.",
 choices:[
-["Usar parte da reserva e planejar como repor",{saldo:-100,saude:7},"A reserva serve para ajudar em situações inesperadas."],
-["Pegar dinheiro emprestado sem planejar",{saldo:-150,saude:-6},"Antes de assumir uma dívida, é importante pensar em como pagar."]
+["Usar parte da reserva e planejar sua reposição",{saldo:-120,saude:8},"A reserva existe para ajudar em situações necessárias e inesperadas."],
+["Pedir empréstimo sem verificar o dinheiro disponível",{saldo:-160,saude:-5},"Antes de assumir uma dívida, verifique os recursos que já possui."]
+]
+},
+{
+title:"Objetivo de curto prazo",
+text:"Você quer comprar um livro de R$ 90 daqui a três meses. Quanto precisa guardar por mês para alcançar a meta, sem considerar juros?",
+choices:[
+["Guardar R$ 30 por mês",{saude:8,felicidade:3},"Isso mesmo: R$ 30 durante três meses totalizam R$ 90."],
+["Deixar para pensar apenas no último mês",{saude:-4,felicidade:-2},"Dividir a meta em partes facilita o planejamento."]
+]
+},
+{
+title:"Reserva não é dinheiro para qualquer desejo",
+text:"Você guardou R$ 300 para emergências e encontrou um videogame em promoção por R$ 280. O que fazer?",
+choices:[
+["Manter a reserva e planejar o videogame separadamente",{saude:9,felicidade:2},"Você protegeu o dinheiro destinado à segurança financeira."],
+["Usar quase toda a reserva na compra",{saldo:-280,saude:-8,felicidade:4},"Uma reserva perde sua função quando é usada em compras não urgentes."]
 ]
 }
 ],
 
 invest:[
 {
-title:"O que fazer com o dinheiro?",
-text:"Você conseguiu guardar um pouco de dinheiro. Antes de investir, o que deve fazer?",
+title:"Antes de investir",
+text:"Você juntou R$ 500 e encontrou uma aplicação que não conhece. Qual deve ser seu primeiro passo?",
 choices:[
-["Pesquisar e entender como funciona o investimento",{saude:8,felicidade:2},"Muito bem! É importante entender os riscos antes de investir."],
-["Colocar o dinheiro em qualquer lugar que promete lucro",{saldo:-100,saude:-6},"Promessas de lucro fácil podem esconder riscos ou golpes."]
+["Pesquisar funcionamento, riscos, taxas e possibilidade de resgate",{saude:9,felicidade:2},"Conhecer as condições é essencial antes de aplicar dinheiro."],
+["Investir tudo porque alguém recomendou",{saldo:-100,saude:-7},"A recomendação de outra pessoa não substitui sua própria análise."]
 ]
 },
 {
-title:"Aprendendo sobre investimentos",
-text:"Um colega disse que todo investimento dá lucro. Essa informação está correta?",
+title:"Retorno garantido?",
+text:"Uma pessoa afirma que consegue dobrar seu dinheiro em uma semana, sem risco. Como avaliar essa promessa?",
 choices:[
-["Não. É preciso conhecer os riscos de cada investimento",{saude:8},"Correto! Investimentos podem ter riscos e resultados diferentes."],
-["Sim. Todo investimento garante lucro",{saude:-6,felicidade:2},"Nem todo investimento garante retorno. Pesquisar é essencial."]
+["Desconfiar, pesquisar e não enviar dinheiro sem verificar",{saude:10},"Promessas de lucro alto e rápido com risco zero são um forte sinal de alerta."],
+["Transferir uma quantia para testar a oportunidade",{saldo:-150,saude:-9},"Mesmo um valor pequeno pode ser perdido em uma fraude."]
+]
+},
+{
+title:"Objetivos diferentes",
+text:"Você pretende usar parte do dinheiro em seis meses e outra parte somente daqui a cinco anos. Por que não deve escolher automaticamente o mesmo investimento para tudo?",
+choices:[
+["Porque prazo, liquidez e risco precisam combinar com cada objetivo",{saude:9,felicidade:2},"Muito bem! O prazo para usar o dinheiro influencia a escolha."],
+["Porque qualquer investimento serve para qualquer prazo",{saude:-6},"Cada objetivo exige avaliar quando o dinheiro será necessário."]
+]
+},
+{
+title:"Diversificar é importante",
+text:"Você tem R$ 600 para investir e pensa em colocar todo o valor em uma única opção que não conhece bem. Qual cuidado deve tomar?",
+choices:[
+["Estudar as opções e evitar concentrar tudo sem entender os riscos",{saude:8,felicidade:2},"Conhecimento e diversificação podem ajudar a administrar riscos."],
+["Colocar tudo na primeira opção indicada",{saldo:-120,saude:-7},"Concentrar dinheiro em algo desconhecido aumenta a exposição ao risco."]
 ]
 }
 ],
 
 oportunidade:[
 {
-title:"Curso gratuito",
-text:"Você encontrou um curso gratuito que pode ajudar nos estudos e no futuro profissional.",
+title:"Curso que pode abrir portas",
+text:"Você encontrou um curso gratuito de informática com certificado. Ele exige organização de horários, mas pode ajudar em oportunidades futuras.",
 choices:[
-["Aproveitar a oportunidade e organizar o tempo",{saude:7,felicidade:5},"Aprender novas habilidades pode abrir oportunidades."],
-["Ignorar sem conhecer o conteúdo",{felicidade:-2},"Conhecer novas oportunidades pode ajudar no desenvolvimento pessoal."]
+["Verificar a qualidade e organizar um horário para participar",{saude:7,felicidade:5},"Investir em conhecimento também é uma forma de preparar o futuro."],
+["Desistir sem conhecer o conteúdo",{felicidade:-2},"Vale avaliar oportunidades antes de descartá-las."]
 ]
 },
 {
-title:"Economizar energia",
-text:"Sua família percebeu que a conta de energia aumentou. O que pode ajudar?",
+title:"Venda de algo que você produziu",
+text:"Você fez chaveiros artesanais e recebeu uma encomenda de R$ 90. Para saber se teve lucro, o que precisa considerar?",
 choices:[
-["Apagar as luzes e desligar aparelhos sem uso",{saldo:70,saude:4},"Pequenas atitudes podem reduzir despesas da casa."],
-["Deixar tudo ligado sem necessidade",{saldo:-70,saude:-3},"O desperdício pode aumentar os gastos da família."]
+["Calcular os materiais, o tempo e outros custos antes de definir o lucro",{saldo:30,saude:7},"Receita não é a mesma coisa que lucro: é preciso descontar os custos."],
+["Considerar todo o valor recebido como lucro",{saude:-5},"Sem descontar os custos, você não sabe quanto realmente ganhou."]
+]
+},
+{
+title:"Conta de energia mais alta",
+text:"A conta de energia aumentou. Que atitudes podem reduzir o consumo sem prejudicar as necessidades da família?",
+choices:[
+["Evitar desperdício, apagar luzes e desligar aparelhos sem uso",{saldo:60,saude:5},"Hábitos conscientes podem diminuir despesas recorrentes."],
+["Ignorar o consumo porque a conta será paga de qualquer forma",{saldo:-60,saude:-3},"A falta de atenção pode manter gastos desnecessários."]
+]
+},
+{
+title:"Planejamento para uma viagem",
+text:"Você recebeu a oportunidade de participar de uma excursão daqui a quatro meses. Como se preparar financeiramente?",
+choices:[
+["Pesquisar o custo total e dividir a meta de economia pelos meses",{saude:8,felicidade:4},"Planejar com antecedência permite avaliar se a meta é possível."],
+["Confirmar sem verificar os custos adicionais",{saldo:-100,saude:-5},"Transporte, alimentação e taxas também podem fazer parte do custo."]
 ]
 }
 ],
 
 golpe:[
 {
-title:"Mensagem de prêmio",
-text:"Você recebeu uma mensagem dizendo que ganhou um prêmio, mas precisa pagar uma taxa para receber.",
+title:"Proposta de dinheiro fácil",
+text:"Uma pessoa nas redes sociais promete R$ 500 em troca de um Pix de R$ 50 para liberar seu cadastro. Você aceita ou recusa? Explique o que faria para verificar a proposta.",
 choices:[
-["Não pagar e verificar a informação por um canal oficial",{saude:9,felicidade:2},"Muito bem! Desconfie de cobranças antecipadas para liberar prêmios."],
-["Pagar a taxa imediatamente",{saldo:-100,saude:-9},"Atenção! Essa é uma estratégia comum em tentativas de golpe."]
+["Recusar e verificar a empresa por canais oficiais",{saude:10},"Boa decisão! Pagamento antecipado para liberar dinheiro é um sinal de alerta."],
+["Enviar o Pix para receber o valor prometido",{saldo:-50,saude:-10},"A promessa pode ser uma tentativa de golpe. Não transfira dinheiro sem verificar."]
 ]
 },
 {
-title:"Pedido de senha",
-text:"Uma pessoa liga dizendo ser do banco e pede sua senha para resolver um problema.",
+title:"Falso funcionário do banco",
+text:"Alguém liga dizendo que sua conta está em risco e pede um código recebido por SMS. Você aceita ou recusa? Justifique.",
 choices:[
-["Não informar a senha e procurar o banco pelo canal oficial",{saude:10},"Correto! Nunca compartilhe sua senha ou códigos de segurança."],
-["Informar a senha para resolver rapidamente",{saldo:-200,saude:-10},"Bancos não devem pedir sua senha por telefone. Proteja seus dados."]
+["Recusar e entrar em contato com o banco pelo aplicativo ou telefone oficial",{saude:10},"Correto! Códigos de autenticação são pessoais e não devem ser compartilhados."],
+["Informar o código para resolver rapidamente",{saldo:-180,saude:-10},"O código pode permitir que outra pessoa acesse sua conta."]
 ]
 },
 {
-title:"Link desconhecido",
-text:"Você recebeu um link dizendo que precisa atualizar seus dados bancários.",
+title:"Investimento secreto",
+text:"Um conhecido oferece uma oportunidade exclusiva: você deposita R$ 100 e recebe R$ 1.000 em poucos dias. Ele diz para não contar a ninguém. O que faria?",
 choices:[
-["Não clicar e confirmar diretamente com o banco",{saude:8},"Excelente! Links desconhecidos podem ser usados para roubar informações."],
-["Clicar e preencher todos os dados",{saldo:-150,saude:-8},"Cuidado! Nunca informe dados pessoais em páginas suspeitas."]
+["Não aceitar e pesquisar a proposta com alguém de confiança",{saude:10},"Lucro exagerado, segredo e pressão são sinais de alerta."],
+["Aceitar antes que a oportunidade acabe",{saldo:-100,saude:-10},"Golpistas usam urgência e exclusividade para impedir a reflexão."]
+]
+},
+{
+title:"Compra pela internet",
+text:"Você encontrou um videogame muito abaixo do preço de mercado. O vendedor exige pagamento por Pix antes de mostrar informações da loja. Como agir?",
+choices:[
+["Não pagar e verificar reputação, CNPJ e canais oficiais da loja",{saude:9},"Pesquisar o vendedor e desconfiar de condições incomuns ajuda a evitar fraudes."],
+["Pagar imediatamente para garantir o desconto",{saldo:-200,saude:-9},"Preço muito baixo e pressão por Pix podem indicar fraude."]
+]
+},
+{
+title:"Pedido de ajuda suspeito",
+text:"Uma mensagem de um perfil conhecido pede dinheiro com urgência e diz que você não deve ligar para confirmar. O que fazer?",
+choices:[
+["Confirmar por outro meio, como uma ligação, antes de qualquer transferência",{saude:9},"Perfis podem ser invadidos. Confirme a identidade por outro canal."],
+["Transferir porque reconheceu a foto do perfil",{saldo:-100,saude:-8},"Fotos e nomes podem ser copiados por golpistas."]
+]
+},
+{
+title:"Prêmio inesperado",
+text:"Você recebe um aviso de que ganhou um celular, mas precisa informar CPF, endereço, dados bancários e pagar uma taxa. Qual sua decisão?",
+choices:[
+["Não fornecer dados nem pagar; verificar a promoção em canais oficiais",{saude:9},"Prêmios falsos podem ser usados para coletar dados e dinheiro."],
+["Enviar tudo porque a mensagem parece profissional",{saldo:-100,saude:-9},"A aparência de uma mensagem não comprova sua legitimidade."]
 ]
 }
 ]
 };
 
 /* =====================================
-   4. DESAFIOS FÁCEIS
+   4. DESAFIOS ABERTOS - SEM ALTERNATIVAS
 ===================================== */
 
 const CHALLENGES=[
-"Explique por que é importante pensar antes de comprar.",
-"Cite uma necessidade e um desejo.",
-"Diga uma forma de economizar dinheiro no dia a dia.",
-"Por que devemos comparar preços antes de comprar?",
-"O que é uma reserva de emergência?",
-"Dê um exemplo de gasto que pode ser evitado.",
-"Por que não devemos compartilhar senhas bancárias?",
-"O que significa fazer um orçamento?",
-"Qual é a diferença entre poupar e gastar?",
-"Diga uma atitude que ajuda a evitar compras por impulso.",
-"Por que é importante guardar dinheiro para o futuro?",
-"Como podemos identificar uma possível tentativa de golpe?"
+"Você recebeu R$ 300 para passar o mês. Quais seriam suas três primeiras decisões para organizar esse dinheiro? Explique a ordem de prioridade.",
+"Explique com suas palavras a diferença entre necessidade, desejo e prioridade. Dê um exemplo de cada.",
+"Uma pessoa ganha R$ 1.500 e gasta R$ 1.650. O que está acontecendo com o orçamento dela e que mudanças você sugeriria?",
+"Como você organizaria R$ 200 para transporte, alimentação, lazer e economia durante uma semana? Apresente uma divisão possível.",
+"Imagine que você quer comprar um computador de R$ 1.800 em seis meses. Quanto precisaria guardar por mês? Explique o cálculo.",
+"Quais informações você verificaria antes de comprar um produto pela internet?",
+"Uma loja oferece um produto por R$ 240 à vista ou 4 parcelas de R$ 70. Qual é o valor total parcelado e qual decisão você tomaria? Justifique.",
+"Explique por que pagar apenas o valor mínimo de uma fatura pode causar problemas financeiros.",
+"Você recebeu R$ 100 inesperados. Como dividiria esse valor entre uso imediato, economia e algum objetivo pessoal? Justifique.",
+"Conte uma situação em que comparar preços pode evitar desperdício de dinheiro.",
+"Quais são três sinais que podem indicar uma tentativa de golpe financeiro?",
+"Uma pessoa desconhecida pede sua senha bancária para ajudar a resolver um problema. O que você faria e por quê?",
+"Explique o que é uma reserva de emergência e dê dois exemplos de situações em que ela poderia ser utilizada.",
+"Se você tivesse uma dívida e recebesse um dinheiro extra, como decidiria o que fazer com esse valor?",
+"Qual é a diferença entre salário, renda extra, receita e lucro? Dê um exemplo.",
+"Você quer começar a vender doces. Quais custos precisa calcular antes de definir o preço de venda?",
+"Por que não é correto considerar todo o dinheiro recebido por uma venda como lucro?",
+"Explique por que uma promessa de rendimento muito alto e sem risco merece desconfiança.",
+"Quais cuidados você teria antes de fazer um Pix para uma pessoa ou loja desconhecida?",
+"Se sua família precisasse reduzir os gastos do mês, quais despesas você analisaria primeiro? Explique sem deixar de considerar as necessidades básicas.",
+"Imagine que você perdeu uma fonte de renda. Quais seriam suas primeiras atitudes para reorganizar o orçamento?",
+"Explique a diferença entre poupar e investir. Dê um exemplo de quando cada atitude pode ser útil.",
+"Por que é importante conhecer as taxas, os riscos e o prazo de resgate antes de investir?",
+"Uma pessoa compra algo porque todos os amigos têm o mesmo produto. Que reflexão financeira ela deveria fazer antes de comprar?",
+"Crie uma regra simples que ajudaria um adolescente a controlar o dinheiro recebido durante o mês.",
+"Se você tivesse que ensinar uma criança a economizar, qual seria a primeira orientação e por quê?",
+"Como pequenas despesas diárias podem comprometer uma meta de economia ao longo do mês?",
+"Explique o que significa consumir de forma consciente e apresente uma atitude prática.",
+"Uma pessoa recebeu R$ 800, tem R$ 500 em despesas e quer guardar dinheiro. Quanto sobra antes da economia e como você organizaria esse valor?",
+"Quais são as consequências de assumir várias compras parceladas ao mesmo tempo?",
+"Se você recebesse uma proposta de trabalho temporário, o que deveria combinar e verificar antes de aceitar?",
+"Como o planejamento financeiro pode ajudar alguém a realizar um objetivo sem precisar fazer uma dívida?",
+"Explique por que é importante guardar comprovantes e acompanhar o extrato da conta.",
+"Qual é a diferença entre uma compra planejada e uma compra por impulso? Dê um exemplo de cada.",
+"Se uma oferta exige que você decida imediatamente e não permite pesquisar, qual deve ser sua postura? Justifique.",
+"Imagine que você precisa escolher entre consertar um item essencial e comprar algo que deseja muito. Como tomaria essa decisão?",
+"Que informações devem aparecer em um orçamento pessoal para que ele seja útil?",
+"Explique como dividir uma meta grande em pequenas metas mensais pode facilitar a economia.",
+"Qual cuidado você teria ao emprestar dinheiro a um amigo ou familiar? Como evitar conflitos?",
+"Se você identificasse uma cobrança desconhecida no extrato, quais passos tomaria?",
+"Por que educação financeira não significa apenas ganhar muito dinheiro?",
+"Imagine que sua equipe precisa organizar uma festa com orçamento limitado. Como definiria prioridades e controlaria os gastos?",
+"Qual decisão financeira você considera importante aprender antes de começar a trabalhar? Explique."
 ];
+
+/* Sorteio sem repetição até que todas as cartas daquele grupo sejam usadas. */
+const drawHistory={};
+function drawUnique(key,items){
+    if(!drawHistory[key]||drawHistory[key].length===0){
+        drawHistory[key]=items.map((_,index)=>index);
+        for(let i=drawHistory[key].length-1;i>0;i--){
+            const j=Math.floor(Math.random()*(i+1));
+            [drawHistory[key][i],drawHistory[key][j]]=[drawHistory[key][j],drawHistory[key][i]];
+        }
+    }
+    return items[drawHistory[key].pop()];
+}
 
 /* =====================================
    5. ESTADO DO JOGO
@@ -1437,19 +1593,29 @@ function handleTile(player){
     const type=tiles[player.pos].type;
 
     if(type==="salario"||type==="bonus"){
+        const bonusEvents=[
+            {text:"Você trabalhou um dia a mais e recebeu R$ 150 pelo serviço extra.",value:150},
+            {text:"Você ajudou um colega em um trabalho remunerado e recebeu R$ 100.",value:100},
+            {text:"Você fez entregas durante o fim de semana e ganhou R$ 180.",value:180},
+            {text:"Você vendeu um objeto que não utilizava mais e recebeu R$ 120.",value:120},
+            {text:"Você cuidou do animal de estimação de um vizinho e recebeu R$ 80.",value:80},
+            {text:"Você produziu e vendeu alguns itens artesanais, recebendo R$ 200. Considere que os custos já foram descontados.",value:200},
+            {text:"Você recebeu um pagamento por ajudar em um evento durante algumas horas: R$ 130.",value:130}
+        ];
+        const bonus=type==="salario"?null:drawUnique("bonus",bonusEvents);
         const effects=type==="salario"
             ?{saldo:300,saude:2}
-            :{saldo:150,saude:2};
+            :{saldo:bonus.value,saude:2};
 
         applyEffects(player,effects);
 
         phase="resolved";
 
         setPanel(
-            type==="salario"?"Salário recebido!":"Bônus!",
+            type==="salario"?"Salário recebido!":"💰 Renda extra!",
             type==="salario"
-                ?`${player.name} recebeu R$ 300. Aproveite para organizar seu orçamento.`
-                :`${player.name} ganhou R$ 150 de bônus!`,
+                ?`${player.name} recebeu R$ 300 de salário. Aproveite para organizar seu orçamento.`
+                :`${player.name}: ${bonus.text} Pense em como utilizar esse dinheiro de maneira consciente.`,
             "#0d9488"
         );
 
@@ -1532,9 +1698,7 @@ function handleTile(player){
     }
 
     if(type==="desafio"){
-        const challenge=CHALLENGES[
-            Math.floor(Math.random()*CHALLENGES.length)
-        ];
+        const challenge=drawUnique("desafio",CHALLENGES);
 
         phase="resolved";
 
@@ -1574,7 +1738,7 @@ function handleTile(player){
         return;
     }
 
-    showEvent(player,deck[Math.floor(Math.random()*deck.length)]);
+    showEvent(player,drawUnique(type,deck));
 }
 
 /* =====================================
@@ -1808,6 +1972,7 @@ function resetGame(count=players.length){
     stopClock();
 
     rolling=false;
+    Object.keys(drawHistory).forEach(key=>delete drawHistory[key]);
     players=makePlayers(count);
 
     current=0;
