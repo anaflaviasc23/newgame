@@ -1,0 +1,2254 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanças em Jogo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+:root{
+    --navy:#1f2a5c;
+    --pink:#e6197a;
+    --pink-light:#ff4fa3;
+    --pink-dark:#b10f5c;
+    --teal:#087d83;
+    --line:#e3e7f3;
+    --tile-gap:clamp(4px,.65vw,9px);
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:"Nunito",sans-serif;
+    color:var(--navy);
+    background:
+        radial-gradient(circle at 10% 0%,#ffe6f2,transparent 42%),
+        radial-gradient(circle at 90% 100%,#e2ecff,transparent 45%),
+        linear-gradient(150deg,#fdf8fb,#f2f5fd);
+}
+
+button,select{font:inherit}
+
+.app{
+    min-height:100vh;
+    padding:20px clamp(10px,2vw,30px);
+}
+
+.topbar{
+    max-width:1650px;
+    margin:0 auto 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.brand h1{
+    margin:0;
+    font-size:clamp(1.5rem,2.5vw,2.2rem);
+    font-weight:900;
+    line-height:1.1;
+}
+
+.brand h1 span{color:var(--pink)}
+
+.brand p{
+    margin:5px 0 0;
+    color:#727b98;
+    font-weight:800;
+    font-size:.85rem;
+}
+
+.top-badge{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 17px;
+    border:1px solid var(--line);
+    border-radius:30px;
+    background:#fff;
+    font-size:.8rem;
+    font-weight:900;
+    box-shadow:0 5px 15px #1f2a5c12;
+}
+
+.top-badge i{color:var(--pink)}
+
+.game-layout{
+    max-width:1650px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 350px;
+    gap:20px;
+}
+
+.board-column{min-width:0}
+
+.board-shell{
+    padding:clamp(10px,1.5vw,22px);
+    background:#fff;
+    border:2px solid var(--line);
+    border-radius:25px;
+    box-shadow:0 15px 40px #1f2a5c12;
+}
+
+.board{
+    position:relative;
+    width:100%;
+    height:clamp(520px,75vh,800px);
+    display:grid;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    grid-template-rows:repeat(8,minmax(0,1fr));
+    gap:var(--tile-gap);
+    isolation:isolate;
+}
+
+.tile{
+    position:relative;
+    z-index:1;
+    min-width:0;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:5px;
+    padding:5px;
+    border:2px solid #1f2a5c18;
+    border-radius:13px;
+    text-align:center;
+    box-shadow:0 4px 0 #1f2a5c12;
+}
+
+.tile-num{
+    position:absolute;
+    top:5px;
+    left:7px;
+    font-size:clamp(.55rem,.7vw,.72rem);
+    font-weight:900;
+    opacity:.8;
+}
+
+.tile-icon{
+    font-size:clamp(17px,2vw,30px);
+    line-height:1;
+}
+
+.tile-label{
+    font-size:clamp(.48rem,.72vw,.72rem);
+    font-weight:900;
+    line-height:1.05;
+    text-transform:uppercase;
+    overflow-wrap:anywhere;
+}
+
+.tile.terminal{
+    border:3px solid #fff;
+    box-shadow:0 4px 0 #1f2a5c25,0 0 0 2px #1f2a5c30;
+}
+
+.path-arrow{
+    position:absolute;
+    z-index:3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    filter:drop-shadow(0 1px 2px #1f2a5c55);
+    pointer-events:none;
+}
+
+.path-arrow svg{width:100%;height:100%}
+
+.pawn{
+    position:absolute;
+    z-index:10;
+    width:clamp(23px,2.1vw,32px);
+    height:clamp(23px,2.1vw,32px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:2px solid white;
+    border-radius:50%;
+    box-shadow:0 3px 7px #1f2a5c66;
+    font-size:.52rem;
+    font-weight:900;
+    transition:left .45s ease,top .45s ease;
+    pointer-events:none;
+}
+
+.blue{background:#3b82f6;color:white}
+.yellow{background:#facc15;color:#3a2c00}
+.red{background:#ef4444;color:white}
+.green{background:#22c55e;color:white}
+
+.pawn.finished{
+    outline:3px solid #facc15;
+    outline-offset:2px;
+}
+
+.legend{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:9px 15px;
+    padding:15px 5px 0;
+    font-size:.72rem;
+    font-weight:900;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.legend-color{
+    width:11px;
+    height:11px;
+    border-radius:4px;
+}
+
+.sidebar{
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+    min-width:0;
+}
+
+.panel{
+    background:white;
+    border:2px solid var(--line);
+    border-radius:19px;
+    box-shadow:0 10px 25px #1f2a5c0d;
+}
+
+.decision-panel{
+    padding:16px;
+    min-height:290px;
+    display:flex;
+    flex-direction:column;
+}
+
+.panel-heading{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding-bottom:11px;
+    border-bottom:1px solid var(--line);
+}
+
+.panel-heading h2{
+    margin:0;
+    font-size:1rem;
+    font-weight:900;
+}
+
+.turn-label{
+    font-size:.73rem;
+    color:var(--teal);
+    font-weight:900;
+}
+
+.decision-content{
+    flex:1;
+    padding:15px 0;
+}
+
+.decision-content h3{
+    margin:0 0 8px;
+    color:var(--pink);
+    font-size:1rem;
+    line-height:1.3;
+    font-weight:900;
+}
+
+.decision-content p{
+    margin:0;
+    color:#596383;
+    font-size:.84rem;
+    line-height:1.5;
+    white-space:pre-line;
+}
+
+.options{
+    display:grid;
+    gap:8px;
+    margin-top:13px;
+}
+
+.option-btn{
+    width:100%;
+    padding:11px;
+    border:1px solid #e5e9f4;
+    border-radius:11px;
+    background:#f4f6fc;
+    color:var(--navy);
+    text-align:left;
+    font-size:.8rem;
+    line-height:1.4;
+    font-weight:900;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.option-btn:hover:not(:disabled){
+    background:#e9edf9;
+    transform:translateY(-1px);
+}
+
+.option-btn:disabled{opacity:.55;cursor:default}
+
+.option-btn.continue{
+    background:linear-gradient(180deg,var(--pink-light),var(--pink));
+    color:white;
+    border:0;
+    text-align:center;
+    box-shadow:0 4px 0 var(--pink-dark);
+}
+
+.feedback{
+    color:#596383;
+    font-size:.77rem;
+    line-height:1.5;
+}
+
+.deltas{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:center;
+    margin-top:9px;
+}
+
+.delta{
+    padding:4px 8px;
+    border-radius:20px;
+    background:#f1f3fa;
+    font-size:.67rem;
+    font-weight:900;
+}
+
+.positive{color:#168346}
+.negative{color:#c92c45}
+
+.control-panel,.score-panel,.timer-panel{padding:14px}
+
+.control-panel h3,.score-panel h3,.timer-panel h3{
+    margin:0 0 11px;
+    font-size:.88rem;
+    font-weight:900;
+}
+
+.dice-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.dice{
+    flex:0 0 55px;
+    width:55px;
+    height:55px;
+    display:grid;
+    place-items:center;
+    border:2px solid var(--line);
+    border-radius:14px;
+    background:#fff;
+    color:var(--pink);
+    box-shadow:0 4px 0 #e6e9f4;
+    font-size:1.9rem;
+}
+
+.dice-info{flex:1;min-width:0}
+
+.dice-result{
+    min-height:20px;
+    margin:0 0 6px;
+    color:#737b97;
+    font-size:.75rem;
+    font-weight:900;
+}
+
+.btn{
+    width:100%;
+    padding:10px 12px;
+    border:0;
+    border-radius:11px;
+    background:linear-gradient(180deg,var(--pink-light),var(--pink));
+    color:white;
+    box-shadow:0 4px 0 var(--pink-dark);
+    font-size:.81rem;
+    font-weight:900;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.btn:hover:not(:disabled){transform:translateY(-2px)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{
+    background:#c9cee0;
+    box-shadow:0 4px 0 #aab1c7;
+    cursor:default;
+}
+
+.select-row{display:flex;gap:8px}
+
+.select-row select{
+    flex:1;
+    min-width:0;
+    padding:9px;
+    border:1px solid #d8ddec;
+    border-radius:10px;
+    background:white;
+    color:var(--navy);
+    font-weight:800;
+}
+
+.select-row .btn{width:auto}
+
+.team-list{display:grid;gap:7px}
+
+.team-card{
+    padding:8px 10px;
+    border-left:4px solid #ccd2e4;
+    border-radius:9px;
+    background:#f6f8fd;
+}
+
+.team-card.active{
+    border-left-color:var(--pink);
+    background:#fff1f7;
+}
+
+.team-card.done{opacity:.7}
+
+.team-name{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    font-size:.75rem;
+    font-weight:900;
+}
+
+.team-stats{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:4px;
+    color:#626b8b;
+    font-size:.68rem;
+    font-weight:900;
+}
+
+.score-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-top:11px;
+}
+
+.btn-outline{
+    background:white;
+    color:var(--navy);
+    border:2px solid var(--line);
+    box-shadow:0 4px 0 #e6e9f4;
+}
+
+.btn-soft{
+    background:white;
+    color:var(--pink);
+    border:2px solid #ffd3e7;
+    box-shadow:0 4px 0 #ffd3e7;
+}
+
+.timer-display{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.timer-number{
+    font-size:1.8rem;
+    font-weight:900;
+    letter-spacing:1px;
+    color:var(--teal);
+}
+
+.timer-number.warning{color:#d97706}
+.timer-number.danger{color:#dc2626}
+
+.timer-status{
+    color:#737b97;
+    font-size:.7rem;
+    font-weight:800;
+}
+
+.progress-track{
+    height:8px;
+    overflow:hidden;
+    margin-top:9px;
+    border-radius:20px;
+    background:#edf0f8;
+}
+
+.progress-fill{
+    height:100%;
+    width:100%;
+    border-radius:20px;
+    background:linear-gradient(90deg,#0d9488,#22c55e);
+    transition:width .3s;
+}
+
+.ranking{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+    font-size:.66rem;
+}
+
+.ranking th,.ranking td{
+    padding:6px 3px;
+    border-bottom:1px solid var(--line);
+    text-align:left;
+}
+
+.ranking th{color:#8189a0}
+.ranking .winner{color:var(--pink);font-weight:900}
+
+.help-text{
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
+    background:#f5f7fc;
+    color:#66708e;
+    font-size:.72rem;
+    line-height:1.5;
+}
+
+@media(max-width:1100px){
+    .game-layout{grid-template-columns:minmax(0,1fr) 310px}
+}
+
+@media(max-width:850px){
+    .game-layout{grid-template-columns:1fr}
+    .board{height:clamp(460px,75vw,680px)}
+    .sidebar{display:grid;grid-template-columns:1fr 1fr}
+    .decision-panel{grid-column:1/-1}
+}
+
+@media(max-width:580px){
+    .app{padding:12px 8px}
+    .top-badge{display:none}
+    .board-shell{padding:7px;border-radius:16px}
+    .board{
+        height:clamp(350px,110vw,470px);
+        gap:4px;
+    }
+    .tile{border-radius:8px;padding:2px;gap:3px}
+    .tile-icon{font-size:clamp(13px,4vw,19px)}
+    .tile-label{display:none}
+    .tile-num{top:3px;left:4px;font-size:.48rem}
+    .pawn{
+        width:clamp(19px,5vw,24px);
+        height:clamp(19px,5vw,24px);
+        font-size:.43rem;
+    }
+    .legend{font-size:.62rem;gap:7px 10px}
+    .sidebar{display:flex}
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        transition:none!important;
+        animation:none!important;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header class="topbar">
+    <div class="brand">
+        <h1>Finanças <span>em Jogo</span></h1>
+        <p>Jogue • Aprenda • Evolua</p>
+    </div>
+
+    <div class="top-badge">
+        <i class="bi bi-dice-5-fill"></i>
+        Tabuleiro de decisões financeiras
+    </div>
+</header>
+
+<main class="game-layout">
+
+<section class="board-column">
+    <div class="board-shell">
+        <div class="board" id="board" aria-label="Tabuleiro com 48 casas"></div>
+    </div>
+
+    <div class="legend">
+        <span class="legend-item"><i class="legend-color" style="background:#0d9488"></i>Salário</span>
+        <span class="legend-item"><i class="legend-color" style="background:#0284c7"></i>Orçamento</span>
+        <span class="legend-item"><i class="legend-color" style="background:#facc15"></i>Consumo</span>
+        <span class="legend-item"><i class="legend-color" style="background:#84cc16"></i>Reserva</span>
+        <span class="legend-item"><i class="legend-color" style="background:#7c3aed"></i>Investir</span>
+        <span class="legend-item"><i class="legend-color" style="background:#f1f5f9"></i>Oportunidade</span>
+        <span class="legend-item"><i class="legend-color" style="background:#ef4444"></i>Imprevisto</span>
+        <span class="legend-item"><i class="legend-color" style="background:#991b1b"></i>Golpe</span>
+        <span class="legend-item"><i class="legend-color" style="background:#f59e0b"></i>Bônus</span>
+        <span class="legend-item"><i class="legend-color" style="background:#db2777"></i>Desafio</span>
+    </div>
+</section>
+
+<aside class="sidebar">
+
+<section class="panel decision-panel">
+    <div class="panel-heading">
+        <h2><i class="bi bi-lightbulb-fill"></i> Central de decisões</h2>
+        <span class="turn-label" id="turn-label">Vez: Azul</span>
+    </div>
+
+    <div class="decision-content">
+        <h3 id="card-title">Pronto para jogar?</h3>
+        <p id="card-text">Role o dado para começar. Cada equipe deverá tomar decisões para cuidar do próprio dinheiro.</p>
+        <div class="options" id="options"></div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+</section>
+
+<section class="panel timer-panel">
+    <h3><i class="bi bi-stopwatch-fill"></i> Tempo da partida</h3>
+    <div class="timer-display">
+        <div>
+            <div class="timer-number" id="timer">30:00</div>
+            <div class="timer-status" id="timer-status">O cronômetro começa na primeira jogada.</div>
+        </div>
+        <i class="bi bi-clock-history" style="font-size:2rem;color:#e6197a"></i>
+    </div>
+    <div class="progress-track">
+        <div class="progress-fill" id="timer-progress"></div>
+    </div>
+</section>
+
+<section class="panel control-panel">
+    <h3><i class="bi bi-dice-5"></i> Dado e equipes</h3>
+
+    <div class="dice-row">
+        <div class="dice" id="dice">
+            <i class="bi bi-dice-5"></i>
+        </div>
+
+        <div class="dice-info">
+            <p class="dice-result" id="dice-result">Clique para rolar</p>
+            <button class="btn" id="roll-btn" type="button">Rolar o dado</button>
+        </div>
+    </div>
+
+    <div style="height:13px"></div>
+
+    <div class="select-row">
+        <select id="pawn-count" aria-label="Quantidade de equipes">
+            <option value="1">1 equipe</option>
+            <option value="2">2 equipes</option>
+            <option value="3">3 equipes</option>
+            <option value="4" selected>4 equipes</option>
+        </select>
+        <button class="btn" id="apply-count" type="button">Aplicar</button>
+    </div>
+</section>
+
+<section class="panel score-panel">
+    <h3><i class="bi bi-bar-chart-fill"></i> Placar das equipes</h3>
+
+    <div class="team-list" id="team-list"></div>
+
+    <div class="score-actions">
+        <button class="btn btn-outline" id="ranking-btn" type="button">Ver ranking</button>
+        <button class="btn btn-soft" id="reset-btn" type="button">Reiniciar</button>
+    </div>
+
+    <div class="help-text">
+        <b>Como vencer?</b><br>
+        O jogo considera o equilíbrio entre dinheiro, saúde financeira e felicidade. Não basta apenas acumular dinheiro!
+    </div>
+</section>
+
+</aside>
+</main>
+</div>
+
+<script>
+/* =====================================
+   1. CONFIGURAÇÕES
+===================================== */
+
+const ROWS = 8;
+const COLS = 6;
+const TOTAL = 48;
+const LAST = TOTAL - 1;
+
+const GAME_DURATION = 30 * 60;
+
+const TEAM_INFO = [
+    {name:"Azul",cls:"blue",mark:"AZ"},
+    {name:"Amarela",cls:"yellow",mark:"AM"},
+    {name:"Vermelha",cls:"red",mark:"VM"},
+    {name:"Verde",cls:"green",mark:"VD"}
+];
+
+function getCell(index){
+    const col=Math.floor(index/ROWS);
+    const n=index%ROWS;
+
+    return {
+        row:col%2===0?n+1:ROWS-n,
+        col:col+1
+    };
+}
+
+/* =====================================
+   2. CASAS DO TABULEIRO
+===================================== */
+
+const TYPES = [
+    "start","salario","consumo","bonus","reserva","desafio","invest","sorte",
+    "imprevisto","consumo","bloqueio","orcamento","golpe","reserva","cilada","invest",
+    "desafio","oportunidade","consumo","imprevisto","cilada","salario","reserva","bonus",
+    "sorte","invest","oportunidade","desafio","golpe","orcamento","bloqueio","consumo",
+    "imprevisto","cilada","reserva","bonus","salario","oportunidade","invest","desafio",
+    "golpe","reserva","consumo","orcamento","imprevisto","invest","bonus","finish"
+];
+
+const COLORS = {
+    start:["#0f766e","#fff"],
+    finish:["#4338ca","#fff"],
+    salario:["#0d9488","#fff"],
+    orcamento:["#0284c7","#fff"],
+    consumo:["#facc15","#2b3308"],
+    reserva:["#84cc16","#25320a"],
+    invest:["#7c3aed","#fff"],
+    oportunidade:["#f1f5f9","#0f766e"],
+    imprevisto:["#ef4444","#fff"],
+    golpe:["#991b1b","#fff"],
+    bonus:["#f59e0b","#3a2a00"],
+    sorte:["#22c55e","#fff"],
+    cilada:["#ea580c","#fff"],
+    bloqueio:["#64748b","#fff"],
+    desafio:["#db2777","#fff"]
+};
+
+const LABELS = {
+    start:"Começo",
+    finish:"Chegada",
+    salario:"Salário",
+    orcamento:"Orçamento",
+    consumo:"Consumo",
+    reserva:"Reserva",
+    invest:"Investir",
+    oportunidade:"Oportunidade",
+    imprevisto:"Imprevisto",
+    golpe:"Golpe",
+    bonus:"Bônus",
+    sorte:"Sorte",
+    cilada:"Cilada",
+    bloqueio:"Bloqueio",
+    desafio:"Desafio"
+};
+
+const ICONS = {
+    start:"bi-flag-fill",
+    finish:"bi-trophy-fill",
+    salario:"bi-cash-coin",
+    orcamento:"bi-clipboard2-check-fill",
+    consumo:"bi-bag-fill",
+    reserva:"bi-shield-fill-check",
+    invest:"bi-graph-up-arrow",
+    oportunidade:"bi-lightbulb-fill",
+    imprevisto:"bi-exclamation-triangle-fill",
+    golpe:"bi-incognito",
+    bonus:"bi-star-fill",
+    sorte:"bi-arrow-up-circle-fill",
+    cilada:"bi-arrow-down-circle-fill",
+    bloqueio:"bi-pause-fill",
+    desafio:"bi-mic-fill"
+};
+
+const tiles=TYPES.map((type,index)=>({
+    index,
+    type,
+    ...getCell(index)
+}));
+
+/* =====================================
+   3. ENGLISH QUESTIONS - GRAMMAR
+===================================== */
+
+const EVENTS={
+
+orcamento:[
+{
+title:"Verb To Be",
+text:"Choose the correct alternative: My friends _____ at school today.",
+choices:[
+["are",{saude:8,felicidade:2},"Correct! We use ARE with YOU, WE and THEY."],
+["is",{saude:-3},"Incorrect. IS is used with HE, SHE and IT."]
+]
+},
+{
+title:"Simple Present",
+text:"Complete the sentence: She _____ English every day.",
+choices:[
+["studies",{saude:8,felicidade:2},"Correct! With HE, SHE and IT, we usually add -S or -ES to the verb."],
+["study",{saude:-3},"Incorrect. In the third person singular, STUDY becomes STUDIES."]
+]
+},
+{
+title:"Present Continuous",
+text:"Choose the correct sentence.",
+choices:[
+["They are playing soccer now.",{saude:8,felicidade:2},"Correct! Present Continuous uses AM, IS or ARE + verb-ing."],
+["They play soccer now.",{saude:-3},"Incorrect. NOW indicates an action happening at this moment."]
+]
+},
+{
+title:"Articles: A, AN or THE",
+text:"Complete the sentence: I have _____ umbrella in my bag.",
+choices:[
+["an",{saude:8,felicidade:2},"Correct! We use AN before a vowel sound."],
+["a",{saude:-3},"Incorrect. UMBRELLA begins with a vowel sound."]
+]
+},
+{
+title:"Demonstratives",
+text:"You are holding a book in your hands. Complete: _____ is my book.",
+choices:[
+["This",{saude:8,felicidade:2},"Correct! THIS refers to one thing that is near."],
+["Those",{saude:-3},"Incorrect. THOSE refers to plural things that are far away."]
+]
+},
+{
+title:"Days of the Week",
+text:"Complete: The day after Tuesday is _____.",
+choices:[
+["Wednesday",{saude:8,felicidade:2},"Correct! Wednesday comes after Tuesday."],
+["Thursday",{saude:-3},"Incorrect. Thursday comes after Wednesday."]
+]
+},
+{
+title:"Months of the Year",
+text:"Which month comes before September?",
+choices:[
+["August",{saude:8,felicidade:2},"Correct! August comes before September."],
+["October",{saude:-3},"Incorrect. October comes after September."]
+]
+},
+{
+title:"Prepositions: IN, ON, AT",
+text:"Complete: My birthday is _____ July.",
+choices:[
+["in",{saude:8,felicidade:2},"Correct! We use IN with months."],
+["on",{saude:-3},"Incorrect. We generally use ON with specific dates and days."]
+]
+},
+{
+title:"Simple Past",
+text:"Complete: Yesterday, I _____ a movie.",
+choices:[
+["watched",{saude:8,felicidade:2},"Correct! WATCH is a regular verb. In the Simple Past, it becomes WATCHED."],
+["watch",{saude:-3},"Incorrect. YESTERDAY indicates the past."]
+]
+},
+{
+title:"Past Continuous",
+text:"Complete: At 8 p.m. yesterday, she _____ TV.",
+choices:[
+["was watching",{saude:8,felicidade:2},"Correct! Past Continuous uses WAS or WERE + verb-ing."],
+["is watching",{saude:-3},"Incorrect. IS WATCHING is Present Continuous."]
+]
+}
+],
+
+consumo:[
+{
+title:"Verb To Be",
+text:"Choose the correct option: My parents _____ doctors.",
+choices:[
+["are",{saude:8,felicidade:2},"Correct! PARENTS is plural, so we use ARE."],
+["is",{saude:-3},"Incorrect. IS is used with HE, SHE and IT."]
+]
+},
+{
+title:"Simple Present",
+text:"Complete: He _____ breakfast at 7 a.m. every day.",
+choices:[
+["has",{saude:8,felicidade:2},"Correct! HAVE becomes HAS with HE, SHE and IT."],
+["have",{saude:-3},"Incorrect. The third person singular uses HAS."]
+]
+},
+{
+title:"Present Continuous",
+text:"Choose the correct option: Look! The children _____ in the park.",
+choices:[
+["are running",{saude:8,felicidade:2},"Correct! ARE + RUNNING describes an action happening now."],
+["runs",{saude:-3},"Incorrect. The sentence describes an action happening at this moment."]
+]
+},
+{
+title:"Demonstratives",
+text:"There are three books far away from you. Which demonstrative should you use?",
+choices:[
+["Those",{saude:8,felicidade:2},"Correct! THOSE refers to plural things that are far away."],
+["These",{saude:-3},"Incorrect. THESE refers to plural things that are near."]
+]
+},
+{
+title:"Articles",
+text:"Complete: She is _____ teacher.",
+choices:[
+["a",{saude:8,felicidade:2},"Correct! We use A before a consonant sound."],
+["an",{saude:-3},"Incorrect. TEACHER begins with a consonant sound."]
+]
+},
+{
+title:"IN, ON or AT",
+text:"Complete: The class starts _____ 8 o'clock.",
+choices:[
+["at",{saude:8,felicidade:2},"Correct! We use AT with specific times."],
+["in",{saude:-3},"Incorrect. AT is used with specific times."]
+]
+},
+{
+title:"Simple Past",
+text:"Choose the correct sentence.",
+choices:[
+["They went to Canada last year.",{saude:8,felicidade:2},"Correct! GO is irregular. Its past form is WENT."],
+["They goed to Canada last year.",{saude:-3},"Incorrect. GO is irregular. We use WENT."]
+]
+},
+{
+title:"Past Continuous",
+text:"Complete: We _____ dinner when the phone rang.",
+choices:[
+["were having",{saude:8,felicidade:2},"Correct! WERE HAVING describes an ongoing past action."],
+["are having",{saude:-3},"Incorrect. The sentence refers to a past situation."]
+]
+},
+{
+title:"Days and Months",
+text:"Complete: Christmas is in _____.",
+choices:[
+["December",{saude:8,felicidade:2},"Correct! Christmas is celebrated in December."],
+["February",{saude:-3},"Incorrect. Christmas is celebrated in December."]
+]
+},
+{
+title:"Grammar Challenge",
+text:"Choose the correct question in Simple Present.",
+choices:[
+["Does she like music?",{saude:8,felicidade:2},"Correct! We use DOES with HE, SHE and IT."],
+["Do she likes music?",{saude:-3},"Incorrect. After DOES, the main verb stays in its base form."]
+]
+}
+],
+
+reserva:[
+{
+title:"Verb To Be",
+text:"Complete: I _____ very happy today.",
+choices:[
+["am",{saude:8,felicidade:2},"Correct! We use AM with I."],
+["are",{saude:-3},"Incorrect. AM is used with I."]
+]
+},
+{
+title:"Simple Present",
+text:"Complete: They _____ English at school.",
+choices:[
+["study",{saude:8,felicidade:2},"Correct! With THEY, we use the base form of the verb."],
+["studies",{saude:-3},"Incorrect. STUDIES is used with HE, SHE and IT."]
+]
+},
+{
+title:"Present Continuous",
+text:"Complete: I _____ my homework right now.",
+choices:[
+["am doing",{saude:8,felicidade:2},"Correct! AM + DOING forms the Present Continuous."],
+["do",{saude:-3},"Incorrect. RIGHT NOW indicates an action happening now."]
+]
+},
+{
+title:"Articles",
+text:"Complete: He wants to buy _____ new car.",
+choices:[
+["a",{saude:8,felicidade:2},"Correct! A is used before a consonant sound."],
+["an",{saude:-3},"Incorrect. NEW begins with a consonant sound."]
+]
+},
+{
+title:"Demonstratives",
+text:"You are pointing to one object far away. Complete: _____ is my house.",
+choices:[
+["That",{saude:8,felicidade:2},"Correct! THAT refers to one thing that is far away."],
+["This",{saude:-3},"Incorrect. THIS refers to something near."]
+]
+},
+{
+title:"IN, ON or AT",
+text:"Complete: I usually study _____ the morning.",
+choices:[
+["in",{saude:8,felicidade:2},"Correct! We use IN with parts of the day, such as IN THE MORNING."],
+["at",{saude:-3},"Incorrect. IN is used with parts of the day."]
+]
+},
+{
+title:"Simple Past",
+text:"Complete: Last weekend, we _____ our grandparents.",
+choices:[
+["visited",{saude:8,felicidade:2},"Correct! VISIT is a regular verb. Its past form is VISITED."],
+["visit",{saude:-3},"Incorrect. LAST WEEKEND indicates the past."]
+]
+},
+{
+title:"Past Continuous",
+text:"Complete: He _____ sleeping at midnight.",
+choices:[
+["was",{saude:8,felicidade:2},"Correct! We use WAS with HE, SHE and IT."],
+["were",{saude:-3},"Incorrect. WERE is used with YOU, WE and THEY."]
+]
+}
+],
+
+invest:[
+{
+title:"Simple Present",
+text:"Choose the correct sentence.",
+choices:[
+["My brother plays basketball every Saturday.",{saude:8,felicidade:2},"Correct! PLAYS is used with the third person singular."],
+["My brother play basketball every Saturday.",{saude:-3},"Incorrect. With HE, SHE and IT, we add -S or -ES."]
+]
+},
+{
+title:"Present Continuous",
+text:"Complete: Listen! Someone _____ the piano.",
+choices:[
+["is playing",{saude:8,felicidade:2},"Correct! IS PLAYING describes an action happening now."],
+["plays",{saude:-3},"Incorrect. LISTEN indicates something happening at this moment."]
+]
+},
+{
+title:"Simple Past",
+text:"Choose the correct past form of the verb BUY.",
+choices:[
+["Bought",{saude:8,felicidade:2},"Correct! BUY is irregular. Its past form is BOUGHT."],
+["Buyed",{saude:-3},"Incorrect. BUY is an irregular verb."]
+]
+},
+{
+title:"Past Continuous",
+text:"Complete: They _____ studying when I arrived.",
+choices:[
+["were",{saude:8,felicidade:2},"Correct! We use WERE with THEY."],
+["was",{saude:-3},"Incorrect. WERE is used with THEY."]
+]
+},
+{
+title:"IN, ON or AT",
+text:"Complete: My birthday is _____ Monday.",
+choices:[
+["on",{saude:8,felicidade:2},"Correct! We use ON with days of the week."],
+["in",{saude:-3},"Incorrect. ON is used with specific days."]
+]
+},
+{
+title:"Verb To Be - Past",
+text:"Complete: She _____ at home yesterday.",
+choices:[
+["was",{saude:8,felicidade:2},"Correct! WAS is the past form of AM and IS."],
+["were",{saude:-3},"Incorrect. WERE is used with YOU, WE and THEY."]
+]
+}
+],
+
+oportunidade:[
+{
+title:"Grammar in Real Life",
+text:"You meet a new student. Which question is correct to ask about their name?",
+choices:[
+["What is your name?",{saude:8,felicidade:3},"Correct! WHAT IS YOUR NAME? is the correct question."],
+["What your name is?",{saude:-3},"Incorrect. In a direct question, we use the verb before the subject."]
+]
+},
+{
+title:"Simple Present - Routine",
+text:"Complete: I _____ to school every morning.",
+choices:[
+["go",{saude:8,felicidade:3},"Correct! GO is used with I."],
+["goes",{saude:-3},"Incorrect. GOES is used with HE, SHE and IT."]
+]
+},
+{
+title:"Present Continuous",
+text:"Your friend is talking on the phone now. Complete: He _____ on the phone.",
+choices:[
+["is talking",{saude:8,felicidade:3},"Correct! IS TALKING describes what he is doing now."],
+["talks",{saude:-3},"Incorrect. The sentence describes an action happening now."]
+]
+},
+{
+title:"Months and Seasons",
+text:"Which season comes after winter?",
+choices:[
+["Spring",{saude:8,felicidade:3},"Correct! Spring comes after winter."],
+["Autumn",{saude:-3},"Incorrect. Spring comes after winter."]
+]
+},
+{
+title:"Demonstratives",
+text:"You are holding two pencils. Complete: _____ are my pencils.",
+choices:[
+["These",{saude:8,felicidade:3},"Correct! THESE refers to plural objects that are near."],
+["This",{saude:-3},"Incorrect. THIS is singular."]
+]
+},
+{
+title:"Simple Past",
+text:"Complete: Yesterday, she _____ a delicious cake.",
+choices:[
+["made",{saude:8,felicidade:3},"Correct! MAKE is irregular. Its past form is MADE."],
+["maked",{saude:-3},"Incorrect. MAKE is an irregular verb."]
+]
+},
+{
+title:"English Around the World",
+text:"Which country has English as one of its official languages?",
+choices:[
+["Canada",{saude:8,felicidade:3},"Correct! English and French are official languages in Canada."],
+["Brazil",{saude:-3},"Incorrect. Portuguese is the official language of Brazil."]
+]
+},
+{
+title:"Past Continuous",
+text:"Complete: I _____ walking to school when it started to rain.",
+choices:[
+["was",{saude:8,felicidade:3},"Correct! WAS WALKING describes an ongoing past action."],
+["were",{saude:-3},"Incorrect. We use WAS with I."]
+]
+}
+],
+
+golpe:[
+{
+title:"Verb To Be - Attention!",
+text:"Someone says: 'You is my friend.' Is this sentence grammatically correct?",
+choices:[
+["No. The correct sentence is 'You are my friend.'",{saude:9},"Correct! YOU is always followed by ARE."],
+["Yes. The sentence is correct.",{saude:-5},"Incorrect. YOU ARE is the correct form."]
+]
+},
+{
+title:"Simple Present - Attention!",
+text:"Identify the correct negative sentence.",
+choices:[
+["She doesn't like coffee.",{saude:9},"Correct! We use DOESN'T with HE, SHE and IT."],
+["She don't likes coffee.",{saude:-5},"Incorrect. Use DOESN'T + base form of the verb."]
+]
+},
+{
+title:"Present Continuous - Attention!",
+text:"Which sentence is grammatically correct?",
+choices:[
+["They aren't studying now.",{saude:9},"Correct! AREN'T + verb-ing forms the negative Present Continuous."],
+["They isn't studying now.",{saude:-5},"Incorrect. We use ARE with THEY."]
+]
+},
+{
+title:"Articles - Attention!",
+text:"Choose the correct sentence.",
+choices:[
+["I saw an elephant at the zoo.",{saude:9},"Correct! AN is used before the vowel sound in ELEPHANT."],
+["I saw a elephant at the zoo.",{saude:-5},"Incorrect. We use AN before a vowel sound."]
+]
+},
+{
+title:"IN, ON or AT - Attention!",
+text:"Complete: The meeting is _____ Friday _____ 3 p.m.",
+choices:[
+["on / at",{saude:9},"Correct! ON is used with days and AT with specific times."],
+["in / on",{saude:-5},"Incorrect. The correct combination is ON FRIDAY AT 3 P.M."]
+]
+},
+{
+title:"Simple Past - Attention!",
+text:"Choose the correct negative sentence in the Simple Past.",
+choices:[
+["I didn't see him yesterday.",{saude:9},"Correct! DIDN'T is followed by the base form of the verb."],
+["I didn't saw him yesterday.",{saude:-5},"Incorrect. After DIDN'T, use SEE, not SAW."]
+]
+},
+{
+title:"Past Continuous - Attention!",
+text:"Complete: While I _____ studying, my sister was listening to music.",
+choices:[
+["was",{saude:9},"Correct! I WAS STUDYING is the correct form."],
+["were",{saude:-5},"Incorrect. We use WAS with I."]
+]
+},
+{
+title:"Grammar Mix",
+text:"Which sentence is correct?",
+choices:[
+["We were watching TV when the lights went out.",{saude:9},"Correct! Past Continuous describes the ongoing action, while Simple Past describes the interruption."],
+["We was watching TV when the lights went out.",{saude:-5},"Incorrect. WE is followed by WERE."]
+]
+}
+]
+};
+
+/* =====================================
+   4. OPEN ENGLISH CHALLENGES
+===================================== */
+
+const CHALLENGES=[
+"Introduce yourself in English. Say your name, age and where you are from.",
+"Describe your daily routine using at least four sentences in the Simple Present.",
+"Make three sentences using the verb TO BE: one with AM, one with IS and one with ARE.",
+"Describe what you are doing right now using the Present Continuous.",
+"Create two affirmative sentences and two negative sentences in the Simple Present.",
+"Ask another team three questions using DO or DOES.",
+"Describe a family member using the verb TO BE and three adjectives.",
+"Say the seven days of the week in English and spell one of them.",
+"Say the twelve months of the year in English.",
+"What month is your birthday? Answer in a complete English sentence.",
+"Create three sentences using A, AN and THE correctly.",
+"Explain the difference between THIS, THAT, THESE and THOSE. Give an example of each.",
+"Look around the classroom and describe three objects using THIS, THAT, THESE or THOSE.",
+"Complete orally: I study English _____ Monday _____ the morning. Explain your choices.",
+"Create one sentence using IN, one using ON and one using AT.",
+"Say three activities you usually do on weekends using the Simple Present.",
+"Describe what your classmates are doing now using the Present Continuous.",
+"Change this sentence into the negative form: She likes chocolate.",
+"Change this sentence into a question: They play soccer every day.",
+"Complete orally: He _____ (watch) TV every evening. Explain the verb form.",
+"Say five regular verbs in English and give their Simple Past forms.",
+"Say five irregular verbs in English and give their Simple Past forms.",
+"Tell the team three things you did yesterday using the Simple Past.",
+"Describe your last weekend using at least three sentences in the Simple Past.",
+"Change this sentence into the negative form: I went to school yesterday.",
+"Make a question in the Simple Past using DID.",
+"Complete orally: Last night, we _____ (eat) pizza.",
+"Explain the difference between WAS and WERE. Give two examples.",
+"Create three sentences using the Past Continuous.",
+"Describe what you were doing at 8 p.m. yesterday.",
+"Complete orally: She _____ (sleep) when the phone rang.",
+"Explain the difference between Simple Past and Past Continuous.",
+"Create a sentence using the Simple Past and the Past Continuous together.",
+"Complete: While they _____ (play), it started to rain.",
+"Correct the mistake: He don't like English.",
+"Correct the mistake: I am study English now.",
+"Correct the mistake: They was at school yesterday.",
+"Correct the mistake: She didn't went to the party.",
+"Correct the mistake: I have an apple and a banana. Identify the articles.",
+"Translate into English: Eu estou estudando inglês agora.",
+"Translate into English: Ela foi ao cinema ontem.",
+"Translate into English: Nós estávamos assistindo televisão.",
+"Translate into English: Meu aniversário é em novembro.",
+"Create a short dialogue between two students meeting for the first time. Use the verb TO BE.",
+"Create a short dialogue about daily routines using the Simple Present.",
+"Ask a classmate what they are doing now. Use the Present Continuous.",
+"Ask a classmate what they did last weekend. Use the Simple Past.",
+"Describe a picture or an imaginary scene using at least three Present Continuous sentences.",
+"Tell a short story about something that happened yesterday. Use the Simple Past.",
+"Imagine you were walking in the park when it started raining. Describe the situation using the Past Continuous and Simple Past.",
+"Your team has 30 seconds to create one correct sentence for each topic: Verb To Be, Simple Present and Present Continuous.",
+"Your team has 30 seconds to create one sentence using A, AN and THE.",
+"Your team has 30 seconds to create one sentence using THIS, THAT, THESE and THOSE.",
+"Your team has 30 seconds to create sentences using IN, ON and AT.",
+"Your team has 30 seconds to say five verbs in the Simple Past.",
+"Your team has 30 seconds to create a sentence using WAS or WERE.",
+"Your team has 30 seconds to create a sentence combining Simple Past and Past Continuous.",
+"Describe your favorite day of the week and explain why in English.",
+"Talk about your favorite month and an activity you usually do during that month.",
+"Describe your favorite sport using the Simple Present.",
+"Say three things you are doing this week using the Present Continuous.",
+"Tell the team about a memorable day in your life using the Simple Past.",
+"Imagine you are on vacation in Canada. Say three things you are doing there.",
+"Describe what your family was doing at home yesterday evening.",
+"Create a question using WHERE, a question using WHEN and a question using WHY.",
+"Your team must say one affirmative, one negative and one interrogative sentence in the Simple Present.",
+"Your team must say one affirmative, one negative and one interrogative sentence in the Simple Past.",
+"Explain when we use the Simple Present and give two examples.",
+"Explain when we use the Present Continuous and give two examples.",
+"Explain when we use the Simple Past and give two examples.",
+"Explain when we use the Past Continuous and give two examples.",
+"Create a sentence using a day of the week, a month and a preposition of time.",
+"Describe three objects in the classroom using articles and demonstratives.",
+"Your team has 30 seconds to name ten irregular verbs in English.",
+"Your team has 30 seconds to name ten regular verbs in English.",
+"Create a mini-story using at least one verb in the Simple Past and one in the Past Continuous."
+];
+
+/* =====================================
+   5. ESTADO DO JOGO
+===================================== */
+
+let players=[];
+let current=0;
+let phase="idle";
+let gameOver=false;
+let rolling=false;
+let rollTimer=null;
+
+let timeLeft=GAME_DURATION;
+let gameStarted=false;
+let clockTimer=null;
+
+function makePlayers(count){
+    return TEAM_INFO.slice(0,count).map((team,id)=>({
+        id,
+        name:team.name,
+        cls:team.cls,
+        mark:team.mark,
+        pos:0,
+        saldo:800,
+        saude:60,
+        felicidade:70,
+        blocked:false,
+        finished:false
+    }));
+}
+
+function clamp(value){
+    return Math.max(0,Math.min(100,value));
+}
+
+function money(value){
+    return "R$ "+value.toLocaleString("pt-BR");
+}
+
+function equilibrium(player){
+    const bonus=player.saldo<0
+        ?-20
+        :Math.min(20,Math.floor(player.saldo/150));
+
+    return player.saude+player.felicidade+bonus;
+}
+
+function getActivePlayer(){
+    return players[current];
+}
+
+/* =====================================
+   6. CRONÔMETRO
+===================================== */
+
+function startClock(){
+    if(gameStarted||gameOver)return;
+
+    gameStarted=true;
+
+    document.getElementById("timer-status").textContent=
+        "Partida em andamento";
+
+    clockTimer=setInterval(()=>{
+        if(gameOver)return;
+
+        timeLeft--;
+
+        updateTimer();
+
+        if(timeLeft<=0){
+            timeLeft=0;
+            updateTimer();
+            finishGame("O tempo de 30 minutos terminou!");
+        }
+    },1000);
+}
+
+function updateTimer(){
+    const minutes=Math.floor(timeLeft/60);
+    const seconds=timeLeft%60;
+
+    const timer=document.getElementById("timer");
+
+    timer.textContent=
+        `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+
+    timer.classList.remove("warning","danger");
+
+    if(timeLeft<=300){
+        timer.classList.add("danger");
+    }else if(timeLeft<=600){
+        timer.classList.add("warning");
+    }
+
+    document.getElementById("timer-progress").style.width=
+        `${(timeLeft/GAME_DURATION)*100}%`;
+
+    if(timeLeft<=300){
+        document.getElementById("timer-status").textContent=
+            "Atenção: faltam poucos minutos!";
+    }
+}
+
+function stopClock(){
+    if(clockTimer){
+        clearInterval(clockTimer);
+        clockTimer=null;
+    }
+}
+
+/* =====================================
+   7. CRIAÇÃO DO TABULEIRO
+===================================== */
+
+function createBoard(){
+    const board=document.getElementById("board");
+    board.innerHTML="";
+
+    tiles.forEach(tile=>{
+        const element=document.createElement("div");
+
+        element.id=`tile-${tile.index}`;
+        element.className="tile";
+
+        if(tile.type==="start"||tile.type==="finish"){
+            element.classList.add("terminal");
+        }
+
+        element.style.gridRow=tile.row;
+        element.style.gridColumn=tile.col;
+        element.style.background=COLORS[tile.type][0];
+        element.style.color=COLORS[tile.type][1];
+
+        element.innerHTML=`
+            <span class="tile-num">${tile.index+1}</span>
+            <i class="tile-icon bi ${ICONS[tile.type]}"></i>
+            <span class="tile-label">${LABELS[tile.type]}</span>
+        `;
+
+        board.appendChild(element);
+    });
+
+    players.forEach((player,index)=>{
+        const pawn=document.createElement("div");
+
+        pawn.className=`pawn ${player.cls}`;
+        pawn.id=`pawn-${index}`;
+        pawn.textContent=player.mark;
+
+        board.appendChild(pawn);
+    });
+
+    createArrows();
+    updatePawns();
+    updateScoreboard();
+
+    requestAnimationFrame(()=>{
+        createArrows();
+        updatePawns();
+    });
+}
+
+/* =====================================
+   8. SETAS DO CAMINHO
+===================================== */
+
+function createArrows(){
+    const board=document.getElementById("board");
+
+    board.querySelectorAll(".path-arrow").forEach(a=>a.remove());
+
+    const boardRect=board.getBoundingClientRect();
+
+    for(let i=0;i<TOTAL-1;i++){
+        const from=document.getElementById(`tile-${i}`);
+        const to=document.getElementById(`tile-${i+1}`);
+
+        if(!from||!to)continue;
+
+        const a=from.getBoundingClientRect();
+        const b=to.getBoundingClientRect();
+
+        const vertical=Math.abs(a.left-b.left)<3;
+
+        const size=Math.max(10,Math.min(18,vertical?a.width*.17:a.height*.23));
+
+        const arrow=document.createElement("div");
+        arrow.className="path-arrow";
+
+        arrow.style.width=`${size}px`;
+        arrow.style.height=`${size}px`;
+
+        arrow.style.left=
+            `${(a.left+a.width/2+b.left+b.width/2)/2-boardRect.left-size/2}px`;
+
+        arrow.style.top=
+            `${(a.top+a.height/2+b.top+b.height/2)/2-boardRect.top-size/2}px`;
+
+        let rotation;
+
+        if(vertical){
+            rotation=b.top>a.top?0:180;
+        }else{
+            rotation=b.left>a.left?-90:90;
+        }
+
+        arrow.style.transform=`rotate(${rotation}deg)`;
+
+        arrow.innerHTML=`
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6"/>
+            </svg>
+        `;
+
+        board.appendChild(arrow);
+    }
+}
+
+/* =====================================
+   9. POSIÇÃO DOS PEÕES
+===================================== */
+
+function updatePawns(){
+    const board=document.getElementById("board");
+    if(!board)return;
+
+    const boardRect=board.getBoundingClientRect();
+
+    const offsets=[
+        [-.22,-.22],
+        [.22,-.22],
+        [-.22,.22],
+        [.22,.22]
+    ];
+
+    players.forEach((player,index)=>{
+        const pawn=document.getElementById(`pawn-${index}`);
+        const tile=document.getElementById(`tile-${player.pos}`);
+
+        if(!pawn||!tile)return;
+
+        const rect=tile.getBoundingClientRect();
+        const size=pawn.offsetWidth;
+        const offset=offsets[index]||[0,0];
+
+        pawn.style.left=
+            `${rect.left-boardRect.left+rect.width/2-size/2+rect.width*offset[0]}px`;
+
+        pawn.style.top=
+            `${rect.top-boardRect.top+rect.height/2-size/2+rect.height*offset[1]}px`;
+
+        pawn.classList.toggle("finished",player.finished);
+    });
+}
+
+/* =====================================
+   10. PAINEL DE DECISÕES
+===================================== */
+
+function setPanel(title,text,color="#e6197a"){
+    document.getElementById("card-title").textContent=title;
+    document.getElementById("card-title").style.color=color;
+    document.getElementById("card-text").textContent=text;
+    document.getElementById("options").innerHTML="";
+    document.getElementById("feedback").innerHTML="";
+}
+
+function addContinue(label="Continuar",callback=nextTurn){
+    const button=document.createElement("button");
+
+    button.className="option-btn continue";
+    button.textContent=label;
+    button.onclick=callback;
+
+    document.getElementById("options").appendChild(button);
+}
+
+function updateTurnLabel(){
+    if(!players.length)return;
+
+    const player=getActivePlayer();
+
+    document.getElementById("turn-label").textContent=
+        player.finished
+            ? "Equipe na chegada"
+            : `Vez: ${player.name}`;
+}
+
+/* =====================================
+   11. PLACAR
+===================================== */
+
+function updateScoreboard(){
+    const list=document.getElementById("team-list");
+    list.innerHTML="";
+
+    players.forEach((player,index)=>{
+        const card=document.createElement("div");
+
+        card.className="team-card";
+
+        if(index===current&&!gameOver&&!player.finished){
+            card.classList.add("active");
+        }
+
+        if(player.finished){
+            card.classList.add("done");
+        }
+
+        card.innerHTML=`
+            <div class="team-name">
+                <span>
+                    ${player.name}
+                    ${player.blocked?" ⏳":""}
+                    ${player.finished?" 🏁":""}
+                </span>
+                <span>${player.finished?"Finalizou":`Casa ${player.pos+1}/48`}</span>
+            </div>
+
+            <div class="team-stats">
+                <span>💰 ${money(player.saldo)}</span>
+                <span>🛡️ ${player.saude}</span>
+                <span>😊 ${player.felicidade}</span>
+            </div>
+        `;
+
+        list.appendChild(card);
+    });
+}
+
+/* =====================================
+   12. EFEITOS FINANCEIROS
+===================================== */
+
+function applyEffects(player,effects){
+    if(effects.saldo!==undefined){
+        player.saldo+=effects.saldo;
+    }
+
+    if(effects.saude!==undefined){
+        player.saude=clamp(player.saude+effects.saude);
+    }
+
+    if(effects.felicidade!==undefined){
+        player.felicidade=clamp(player.felicidade+effects.felicidade);
+    }
+}
+
+function showDeltas(effects){
+    const entries=[];
+
+    if(effects.saldo){
+        entries.push(`
+            <span class="delta ${effects.saldo>0?"positive":"negative"}">
+                Saldo ${effects.saldo>0?"+":""}${money(effects.saldo)}
+            </span>
+        `);
+    }
+
+    if(effects.saude){
+        entries.push(`
+            <span class="delta ${effects.saude>0?"positive":"negative"}">
+                Saúde ${effects.saude>0?"+":""}${effects.saude}
+            </span>
+        `);
+    }
+
+    if(effects.felicidade){
+        entries.push(`
+            <span class="delta ${effects.felicidade>0?"positive":"negative"}">
+                Felicidade ${effects.felicidade>0?"+":""}${effects.felicidade}
+            </span>
+        `);
+    }
+
+    document.getElementById("feedback").innerHTML=
+        `<div class="deltas">${entries.join("")}</div>`;
+}
+
+/* =====================================
+   13. DADO
+===================================== */
+
+function rollDice(){
+    if(gameOver||phase!=="idle"||rolling)return;
+
+    const player=getActivePlayer();
+
+    if(!player||player.finished){
+        nextTurn();
+        return;
+    }
+
+    startClock();
+
+    if(player.blocked){
+        player.blocked=false;
+        phase="resolved";
+
+        setPanel(
+            "Rodada perdida",
+            `${player.name} estava bloqueada e perdeu esta rodada. Agora está liberada.`,
+            "#64748b"
+        );
+
+        addContinue();
+        updateScoreboard();
+        return;
+    }
+
+    rolling=true;
+
+    const button=document.getElementById("roll-btn");
+    const dice=document.getElementById("dice");
+    const result=document.getElementById("dice-result");
+
+    button.disabled=true;
+
+    let ticks=0;
+
+    rollTimer=setInterval(()=>{
+        const random=Math.floor(Math.random()*6)+1;
+
+        dice.innerHTML=`<i class="bi bi-dice-${random}-fill"></i>`;
+
+        ticks++;
+
+        if(ticks>=12){
+            clearInterval(rollTimer);
+            rollTimer=null;
+
+            const value=Math.floor(Math.random()*6)+1;
+
+            dice.innerHTML=`<i class="bi bi-dice-${value}-fill"></i>`;
+            result.textContent=`${player.name} tirou ${value}`;
+
+            rolling=false;
+
+            movePlayer(player,value);
+        }
+    },65);
+}
+
+/* =====================================
+   14. MOVIMENTAÇÃO
+===================================== */
+
+function movePlayer(player,steps){
+    player.pos=Math.min(LAST,player.pos+steps);
+
+    updatePawns();
+    updateScoreboard();
+
+    if(player.pos===LAST){
+        player.finished=true;
+
+        phase="resolved";
+
+        setPanel(
+            "🏆 Equipe na chegada!",
+            `${player.name} chegou à casa 48! Parabéns! As outras equipes continuarão jogando até chegarem ou até o tempo acabar.`,
+            "#4338ca"
+        );
+
+        addContinue("Continuar partida");
+        updateScoreboard();
+
+        return;
+    }
+
+    handleTile(player);
+}
+
+/* =====================================
+   15. AÇÕES DAS CASAS
+===================================== */
+
+function handleTile(player){
+    const type=tiles[player.pos].type;
+
+    if(type==="salario"||type==="bonus"){
+        const bonusEvents=[
+            {text:"Você trabalhou um dia a mais e recebeu R$ 150 pelo serviço extra.",value:150},
+            {text:"Você ajudou um colega em um trabalho remunerado e recebeu R$ 100.",value:100},
+            {text:"Você fez entregas durante o fim de semana e ganhou R$ 180.",value:180},
+            {text:"Você vendeu um objeto que não utilizava mais e recebeu R$ 120.",value:120},
+            {text:"Você cuidou do animal de estimação de um vizinho e recebeu R$ 80.",value:80},
+            {text:"Você produziu e vendeu alguns itens artesanais, recebendo R$ 200. Considere que os custos já foram descontados.",value:200},
+            {text:"Você recebeu um pagamento por ajudar em um evento durante algumas horas: R$ 130.",value:130}
+        ];
+        const bonus=type==="salario"?null:drawUnique("bonus",bonusEvents);
+        const effects=type==="salario"
+            ?{saldo:300,saude:2}
+            :{saldo:bonus.value,saude:2};
+
+        applyEffects(player,effects);
+
+        phase="resolved";
+
+        setPanel(
+            type==="salario"?"Salário recebido!":"💰 Renda extra!",
+            type==="salario"
+                ?`${player.name} recebeu R$ 300 de salário. Aproveite para organizar seu orçamento.`
+                :`${player.name}: ${bonus.text} Pense em como utilizar esse dinheiro de maneira consciente.`,
+            "#0d9488"
+        );
+
+        showDeltas(effects);
+        addContinue();
+        updateScoreboard();
+        return;
+    }
+
+    if(type==="sorte"||type==="cilada"){
+        player.pos=type==="sorte"
+            ?Math.min(LAST-1,player.pos+1)
+            :Math.max(0,player.pos-2);
+
+        updatePawns();
+
+        phase="resolved";
+
+        setPanel(
+            type==="sorte"?"🍀 Sorte!":"⚠️ Cilada!",
+            type==="sorte"
+                ?`${player.name} avançou mais uma casa!`
+                :`${player.name} voltou duas casas. Algumas escolhas podem trazer consequências.`,
+            type==="sorte"?"#168346":"#c92c45"
+        );
+
+        addContinue();
+        updateScoreboard();
+        return;
+    }
+
+    if(type==="bloqueio"){
+        player.blocked=true;
+
+        phase="resolved";
+
+        setPanel(
+            "⏳ Bloqueio",
+            `${player.name} perderá a próxima rodada. Depois poderá jogar normalmente.`,
+            "#64748b"
+        );
+
+        addContinue();
+        updateScoreboard();
+        return;
+    }
+
+    if(type==="imprevisto"){
+        const events=[
+            {
+                text:"Uma despesa inesperada apareceu e você precisou comprar um item importante.",
+                effects:{saldo:-100,saude:-3}
+            },
+            {
+                text:"Foi necessário consertar um objeto da sua casa.",
+                effects:{saldo:-80,felicidade:-2}
+            },
+            {
+                text:"Você encontrou dinheiro que havia guardado e esquecido.",
+                effects:{saldo:80,felicidade:3}
+            }
+        ];
+
+        const event=events[Math.floor(Math.random()*events.length)];
+
+        applyEffects(player,event.effects);
+
+        phase="resolved";
+
+        setPanel(
+            "Imprevisto!",
+            `${event.text} Ter uma reserva pode ajudar a lidar com situações inesperadas.`,
+            "#c92c45"
+        );
+
+        showDeltas(event.effects);
+        addContinue();
+        updateScoreboard();
+        return;
+    }
+
+    if(type==="desafio"){
+        const challenge=drawUnique("desafio",CHALLENGES);
+
+        phase="resolved";
+
+        setPanel(
+            "🎯 Desafio da equipe",
+            `${challenge}\n\nConversem e respondam antes de continuar.`,
+            "#db2777"
+        );
+
+        addContinue("Desafio cumprido!");
+        return;
+    }
+
+    if(type==="start"||type==="finish"){
+        phase="resolved";
+
+        setPanel(
+            LABELS[type],
+            `${player.name} está na casa ${LABELS[type]}.`
+        );
+
+        addContinue();
+        return;
+    }
+
+    const deck=EVENTS[type];
+
+    if(!deck){
+        phase="resolved";
+
+        setPanel(
+            "Casa educativa",
+            "Conversem sobre uma escolha financeira consciente."
+        );
+
+        addContinue();
+        return;
+    }
+
+    showEvent(player,drawUnique(type,deck));
+}
+
+/* =====================================
+   16. CARTAS E ESCOLHAS
+===================================== */
+
+function showEvent(player,event){
+    phase="card";
+
+    document.getElementById("card-title").textContent=event.title;
+    document.getElementById("card-title").style.color="#e6197a";
+    document.getElementById("card-text").textContent=event.text;
+    document.getElementById("feedback").innerHTML="";
+
+    const options=document.getElementById("options");
+    options.innerHTML="";
+
+    event.choices.forEach(([label,effects,feedback])=>{
+        const button=document.createElement("button");
+
+        button.className="option-btn";
+        button.textContent=label;
+
+        button.onclick=()=>{
+            if(phase!=="card")return;
+            resolveChoice(player,effects,feedback);
+        };
+
+        options.appendChild(button);
+    });
+}
+
+function resolveChoice(player,effects,feedback){
+    if(phase!=="card")return;
+
+    applyEffects(player,effects);
+
+    document.querySelectorAll("#options .option-btn").forEach(button=>{
+        button.disabled=true;
+    });
+
+    document.getElementById("feedback").innerHTML=
+        `<p>${feedback}</p>`;
+
+    showDeltas(effects);
+
+    phase="resolved";
+
+    addContinue();
+    updateScoreboard();
+}
+
+/* =====================================
+   17. CONTROLE DE TURNOS
+===================================== */
+
+function nextTurn(){
+    if(gameOver)return;
+
+    if(players.every(player=>player.finished)){
+        finishGame("Todas as equipes chegaram ao final do tabuleiro!");
+        return;
+    }
+
+    let attempts=0;
+
+    do{
+        current=(current+1)%players.length;
+        attempts++;
+    }while(
+        players[current].finished&&
+        attempts<players.length
+    );
+
+    if(players.every(player=>player.finished)){
+        finishGame("Todas as equipes chegaram ao final do tabuleiro!");
+        return;
+    }
+
+    phase="idle";
+
+    document.getElementById("roll-btn").disabled=false;
+
+    document.getElementById("dice").innerHTML=
+        `<i class="bi bi-dice-5"></i>`;
+
+    document.getElementById("dice-result").textContent="Clique para rolar";
+
+    setPanel(
+        "Central de decisões",
+        `${players[current].name}, é sua vez! Role o dado e descubra qual será seu próximo desafio.`,
+        "#087d83"
+    );
+
+    updateTurnLabel();
+    updateScoreboard();
+}
+
+/* =====================================
+   18. RANKING
+===================================== */
+
+function buildRanking(){
+    return [...players].sort((a,b)=>{
+        if(a.finished!==b.finished){
+            return Number(b.finished)-Number(a.finished);
+        }
+
+        return equilibrium(b)-equilibrium(a);
+    });
+}
+
+function showRanking(final=false){
+    if(final){
+        gameOver=true;
+        phase="over";
+        stopClock();
+        document.getElementById("roll-btn").disabled=true;
+    }
+
+    const ranked=buildRanking();
+
+    const rows=ranked.map((player,index)=>`
+        <tr class="${index===0?"winner":""}">
+            <td>${index+1}º</td>
+            <td>${player.name}</td>
+            <td>${player.finished?"🏁":player.pos+1+"/48"}</td>
+            <td>${money(player.saldo)}</td>
+            <td>${player.saude}</td>
+            <td>${player.felicidade}</td>
+            <td><b>${equilibrium(player)}</b></td>
+        </tr>
+    `).join("");
+
+    document.getElementById("card-title").textContent=
+        final?"🏆 Resultado final":"📊 Ranking parcial";
+
+    document.getElementById("card-title").style.color="#e6197a";
+
+    document.getElementById("card-text").textContent=
+        final
+            ?`Equipe em destaque: ${ranked[0].name}, com Índice de Equilíbrio ${equilibrium(ranked[0])}.`
+            :"Este é o ranking atualizado. A partida ainda pode continuar!";
+
+    document.getElementById("options").innerHTML=`
+        <div style="overflow-x:auto">
+            <table class="ranking">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Equipe</th>
+                        <th>Casa</th>
+                        <th>Saldo</th>
+                        <th>Saúde</th>
+                        <th>Felic.</th>
+                        <th>Índice</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+    `;
+
+    if(final){
+        addContinue("Jogar novamente",()=>resetGame(players.length));
+    }else{
+        addContinue("Voltar à partida",resumeGame);
+    }
+
+    document.getElementById("feedback").textContent=
+        "Índice de equilíbrio = saúde + felicidade + bônus de saldo. Equipes que chegaram ao final recebem prioridade no desempate.";
+
+    updateScoreboard();
+}
+
+function resumeGame(){
+    if(gameOver)return;
+
+    phase="idle";
+
+    setPanel(
+        "Partida em andamento",
+        `${players[current].name}, continue sua jogada!`,
+        "#087d83"
+    );
+
+    updateTurnLabel();
+    updateScoreboard();
+
+    document.getElementById("roll-btn").disabled=false;
+}
+
+/* =====================================
+   19. ENCERRAMENTO DA PARTIDA
+===================================== */
+
+function finishGame(reason){
+    if(gameOver)return;
+
+    gameOver=true;
+    phase="over";
+
+    stopClock();
+
+    if(rollTimer){
+        clearInterval(rollTimer);
+        rollTimer=null;
+    }
+
+    rolling=false;
+
+    document.getElementById("roll-btn").disabled=true;
+    document.getElementById("timer-status").textContent="Partida encerrada";
+
+    showRanking(true);
+
+    document.getElementById("card-text").textContent=
+        `${reason} ${document.getElementById("card-text").textContent}`;
+}
+
+/* =====================================
+   20. REINICIAR PARTIDA
+===================================== */
+
+function resetGame(count=players.length){
+    if(rollTimer){
+        clearInterval(rollTimer);
+        rollTimer=null;
+    }
+
+    stopClock();
+
+    rolling=false;
+    Object.keys(drawHistory).forEach(key=>delete drawHistory[key]);
+    players=makePlayers(count);
+
+    current=0;
+    phase="idle";
+    gameOver=false;
+
+    timeLeft=GAME_DURATION;
+    gameStarted=false;
+
+    document.getElementById("pawn-count").value=count;
+
+    document.getElementById("roll-btn").disabled=false;
+
+    document.getElementById("dice").innerHTML=
+        `<i class="bi bi-dice-5"></i>`;
+
+    document.getElementById("dice-result").textContent="Clique para rolar";
+
+    document.getElementById("timer-status").textContent=
+        "O cronômetro começa na primeira jogada.";
+
+    updateTimer();
+
+    setPanel(
+        "Pronto para jogar?",
+        "Role o dado para começar. Cada equipe deverá tomar decisões para cuidar do próprio dinheiro.",
+        "#e6197a"
+    );
+
+    createBoard();
+    updateTurnLabel();
+    updateScoreboard();
+}
+
+/* =====================================
+   21. EVENTOS E CONTROLES
+===================================== */
+
+document.getElementById("roll-btn").addEventListener("click",rollDice);
+
+document.getElementById("apply-count").addEventListener("click",()=>{
+    const count=Number(document.getElementById("pawn-count").value);
+
+    if(count===players.length)return;
+
+    if(confirm("Alterar a quantidade de equipes reiniciará a partida. Deseja continuar?")){
+        resetGame(count);
+    }else{
+        document.getElementById("pawn-count").value=players.length;
+    }
+});
+
+document.getElementById("ranking-btn").addEventListener("click",()=>{
+    if(gameOver){
+        showRanking(true);
+    }else{
+        showRanking(false);
+    }
+});
+
+document.getElementById("reset-btn").addEventListener("click",()=>{
+    if(confirm("Deseja reiniciar a partida e zerar todas as posições e indicadores?")){
+        resetGame(players.length);
+    }
+});
+
+let resizeTimer;
+
+window.addEventListener("resize",()=>{
+    clearTimeout(resizeTimer);
+
+    resizeTimer=setTimeout(()=>{
+        createArrows();
+        updatePawns();
+    },120);
+});
+
+/* =====================================
+   22. INICIALIZAÇÃO
+===================================== */
+
+players=makePlayers(4);
+
+createBoard();
+updateTurnLabel();
+updateScoreboard();
+updateTimer();
+
+</script>
+</body>
+</html>
