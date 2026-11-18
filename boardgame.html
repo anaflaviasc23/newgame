@@ -1,606 +1,1593 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Board Game - Multiplayer</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Challenge - Board Game</title>
 
-        body {
-            background: linear-gradient(135deg, #0f172a, #1e1b4b);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-        header {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        header h1 {
-            font-size: 2rem;
-            color: #38bdf8;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        header p {
-            color: #94a3b8;
-            font-size: 0.95rem;
-        }
-
-        .game-layout {
-            display: flex;
-            gap: 20px;
-            max-width: 1250px;
-            width: 100%;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        /* Tabuleiro em Grid 9x9 */
-        .board {
-            display: grid;
-            grid-template-columns: repeat(9, 70px);
-            grid-template-rows: repeat(9, 70px);
-            gap: 5px;
-            background: #090d16;
-            padding: 12px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            position: relative;
-        }
-
-        .tile {
-            background: #334155;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4px;
-            text-align: center;
-            font-size: 0.65rem;
-            font-weight: bold;
-            color: #f8fafc;
-            position: relative;
-            box-shadow: inset 0 2px 4px rgba(255,255,255,0.1);
-            transition: transform 0.2s;
-        }
-
-        /* Cores das categorias */
-        .cat-tobe { background: #0284c7; }
-        .cat-present { background: #16a34a; }
-        .cat-continuous { background: #d97706; }
-        .cat-past { background: #dc2626; }
-        .cat-pastcont { background: #7c3aed; }
-        .cat-vocab { background: #db2777; }
-        .cat-start { background: #0d9488; font-size: 0.8rem; }
-        .cat-finish { background: #4f46e5; font-size: 0.8rem; }
-
-        .tile-number {
-            position: absolute;
-            top: 2px;
-            left: 4px;
-            font-size: 0.55rem;
-            opacity: 0.8;
-        }
-
-        /* Painel Central do Tabuleiro (Área de Desafios no Meio) */
-        .center-panel {
-            grid-column: 2 / 9;
-            grid-row: 2 / 9;
-            background: rgba(15, 23, 42, 0.92);
-            border: 2px solid #38bdf8;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-            z-index: 10;
-            box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.2);
-        }
-
-        .center-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 8px;
-        }
-
-        .center-header h2 {
-            font-size: 1.2rem;
-            color: #38bdf8;
-        }
-
-        .challenge-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .challenge-content h3 {
-            color: #f43f5e;
-            font-size: 1rem;
-        }
-
-        .challenge-content p {
-            font-size: 0.9rem;
-            line-height: 1.4;
-            color: #e2e8f0;
-        }
-
-        .options-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 6px;
-        }
-
-        .option-btn {
-            background: #334155;
-            border: none;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-align: left;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: background 0.2s;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            background: #475569;
-        }
-
-        .option-btn.correct {
-            background: #16a34a !important;
-        }
-
-        .option-btn.wrong {
-            background: #dc2626 !important;
-        }
-
-        /* Painel Lateral de Controle */
-        .sidebar {
-            background: #1e293b;
-            padding: 15px;
-            border-radius: 16px;
-            width: 280px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .section-box {
-            background: #0f172a;
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .section-box h3 {
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-            color: #cbd5e1;
-        }
-
-        /* Seleção de Peões */
-        .pawns-select {
-            display: flex;
-            justify-content: space-around;
-            gap: 5px;
-        }
-
-        .pawn-option {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 3px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.75rem;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .pawn-option.selected {
-            border-color: #fff;
-            transform: scale(1.15);
-            box-shadow: 0 0 10px rgba(255,255,255,0.6);
-        }
-
-        /* Cores dos Peões */
-        .p-blue { background: #3b82f6; color: #1e3a8a; }
-        .p-yellow { background: #eab308; color: #713f12; }
-        .p-red { background: #ef4444; color: #7f1d1d; }
-        .p-green { background: #22c55e; color: #064e3b; }
-
-        /* Estilo do Dado */
-        .dice {
-            width: 60px;
-            height: 60px;
-            background: #fff;
-            color: #0f172a;
-            font-size: 1.8rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 8px auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .btn {
-            background: #0284c7;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-            width: 100%;
-        }
-
-        .btn:hover {
-            background: #0369a1;
-        }
-
-        /* Peões físicos no tabuleiro */
-        .pawn-marker {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            position: absolute;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            z-index: 20;
-            transition: all 0.4s ease-in-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            font-weight: bold;
-        }
-
-        .scoreboard {
-            font-size: 0.85rem;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .score-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 3px 6px;
-            background: #1e293b;
-            border-radius: 4px;
-        }
-    </style>
+<style>
+:root{
+    --navy:#1f2a5c;
+    --pink:#e6197a;
+    --pink-light:#ff4fa3;
+    --pink-dark:#b10f5c;
+    --teal:#087d83;
+    --line:#e3e7f3;
+    --tile-gap:clamp(4px,.65vw,9px);
+}
+*{box-sizing:border-box}
+body{
+    margin:0;min-height:100vh;font-family:"Nunito",sans-serif;color:var(--navy);
+    background:radial-gradient(circle at 10% 0%,#ffe6f2,transparent 42%),
+    radial-gradient(circle at 90% 100%,#e2ecff,transparent 45%),
+    linear-gradient(150deg,#fdf8fb,#f2f5fd);
+}
+button{font:inherit}
+.app{min-height:100vh;padding:20px clamp(10px,2vw,30px)}
+.topbar{
+    max-width:1650px;margin:0 auto 18px;display:flex;
+    justify-content:space-between;align-items:center;gap:15px;
+}
+.brand h1{margin:0;font-size:clamp(1.5rem,2.5vw,2.2rem);font-weight:900;line-height:1.1}
+.brand h1 span{color:var(--pink)}
+.brand p{margin:5px 0 0;color:#727b98;font-weight:800;font-size:.85rem}
+.top-badge{
+    display:flex;align-items:center;gap:8px;padding:10px 17px;
+    border:1px solid var(--line);border-radius:30px;background:#fff;
+    font-size:.8rem;font-weight:900;box-shadow:0 5px 15px #1f2a5c12;
+}
+.top-badge i{color:var(--pink)}
+.game-layout{
+    max-width:1650px;margin:auto;display:grid;
+    grid-template-columns:minmax(0,1fr) 350px;gap:20px;
+}
+.board-column{min-width:0}
+.board-shell{
+    padding:clamp(10px,1.5vw,22px);background:#fff;
+    border:2px solid var(--line);border-radius:25px;
+    box-shadow:0 15px 40px #1f2a5c12;
+}
+.board{
+    position:relative;width:100%;height:clamp(520px,75vh,800px);
+    display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+    grid-template-rows:repeat(8,minmax(0,1fr));
+    gap:var(--tile-gap);isolation:isolate;
+}
+.tile{
+    position:relative;z-index:1;min-width:0;min-height:0;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    gap:5px;padding:5px;border:2px solid #1f2a5c18;border-radius:13px;
+    text-align:center;box-shadow:0 4px 0 #1f2a5c12;
+}
+.tile-num{position:absolute;top:5px;left:7px;font-size:clamp(.55rem,.7vw,.72rem);font-weight:900;opacity:.8}
+.tile-icon{font-size:clamp(17px,2vw,30px);line-height:1}
+.tile-label{
+    font-size:clamp(.48rem,.72vw,.72rem);font-weight:900;line-height:1.05;
+    text-transform:uppercase;overflow-wrap:anywhere;
+}
+.tile.terminal{border:3px solid #fff;box-shadow:0 4px 0 #1f2a5c25,0 0 0 2px #1f2a5c30}
+.path-arrow{
+    position:absolute;z-index:3;display:flex;align-items:center;
+    justify-content:center;color:#fff;filter:drop-shadow(0 1px 2px #1f2a5c55);
+    pointer-events:none;
+}
+.path-arrow svg{width:100%;height:100%}
+.pawn{
+    position:absolute;z-index:10;width:clamp(23px,2.1vw,32px);
+    height:clamp(23px,2.1vw,32px);display:flex;align-items:center;
+    justify-content:center;border:2px solid white;border-radius:50%;
+    box-shadow:0 3px 7px #1f2a5c66;font-size:.52rem;font-weight:900;
+    transition:left .45s ease,top .45s ease;pointer-events:none;
+}
+.blue{background:#3b82f6;color:white}
+.red{background:#ef4444;color:white}
+.pawn.finished{outline:3px solid #facc15;outline-offset:2px}
+.legend{display:flex;justify-content:center;flex-wrap:wrap;gap:9px 15px;padding:15px 5px 0;font-size:.72rem;font-weight:900}
+.legend-item{display:flex;align-items:center;gap:6px}
+.legend-color{width:11px;height:11px;border-radius:4px}
+.sidebar{display:flex;flex-direction:column;gap:13px;min-width:0}
+.panel{background:white;border:2px solid var(--line);border-radius:19px;box-shadow:0 10px 25px #1f2a5c0d}
+.decision-panel{padding:16px;min-height:290px;display:flex;flex-direction:column}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:11px;border-bottom:1px solid var(--line)}
+.panel-heading h2{margin:0;font-size:1rem;font-weight:900}
+.turn-label{font-size:.73rem;color:var(--teal);font-weight:900}
+.decision-content{flex:1;padding:15px 0}
+.decision-content h3{margin:0 0 8px;color:var(--pink);font-size:1rem;line-height:1.3;font-weight:900}
+.decision-content p{margin:0;color:#596383;font-size:.84rem;line-height:1.5;white-space:pre-line}
+.options{display:grid;gap:8px;margin-top:13px}
+.option-btn{
+    width:100%;padding:11px;border:1px solid #e5e9f4;border-radius:11px;
+    background:#f4f6fc;color:var(--navy);text-align:left;font-size:.8rem;
+    line-height:1.4;font-weight:900;cursor:pointer;transition:.15s;
+}
+.option-btn:hover:not(:disabled){background:#e9edf9;transform:translateY(-1px)}
+.option-btn:disabled{opacity:.65;cursor:default}
+.option-btn.continue{
+    background:linear-gradient(180deg,var(--pink-light),var(--pink));
+    color:white;border:0;text-align:center;box-shadow:0 4px 0 var(--pink-dark);
+}
+.option-btn.correct{border:2px solid #16a34a;background:#f0fdf4}
+.option-btn.wrong{border:2px solid #dc2626;background:#fef2f2}
+.feedback{color:#596383;font-size:.77rem;line-height:1.5}
+.dice-row{display:flex;align-items:center;gap:12px}
+.dice{
+    flex:0 0 55px;width:55px;height:55px;display:grid;place-items:center;
+    border:2px solid var(--line);border-radius:14px;background:#fff;
+    color:var(--pink);box-shadow:0 4px 0 #e6e9f4;font-size:1.9rem;
+}
+.dice-info{flex:1;min-width:0}
+.dice-result{min-height:20px;margin:0 0 6px;color:#737b97;font-size:.75rem;font-weight:900}
+.btn{
+    width:100%;padding:10px 12px;border:0;border-radius:11px;
+    background:linear-gradient(180deg,var(--pink-light),var(--pink));
+    color:white;box-shadow:0 4px 0 var(--pink-dark);
+    font-size:.81rem;font-weight:900;cursor:pointer;transition:.15s;
+}
+.btn:hover:not(:disabled){transform:translateY(-2px)}
+.btn:active:not(:disabled){transform:translateY(2px)}
+.btn:disabled{background:#c9cee0;box-shadow:0 4px 0 #aab1c7;cursor:default}
+.team-list{display:grid;gap:7px}
+.team-card{padding:9px 10px;border-left:4px solid #ccd2e4;border-radius:9px;background:#f6f8fd}
+.team-card.active{border-left-color:var(--pink);background:#fff1f7}
+.team-card.done{opacity:.7}
+.team-name{display:flex;justify-content:space-between;gap:8px;font-size:.75rem;font-weight:900}
+.team-stats{display:flex;flex-wrap:wrap;gap:9px;margin-top:4px;color:#626b8b;font-size:.68rem;font-weight:900}
+.score-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+.btn-outline{background:white;color:var(--navy);border:2px solid var(--line);box-shadow:0 4px 0 #e6e9f4}
+.btn-soft{background:white;color:var(--pink);border:2px solid #ffd3e7;box-shadow:0 4px 0 #ffd3e7}
+.ranking{width:100%;border-collapse:collapse;margin-top:12px;font-size:.72rem}
+.ranking th,.ranking td{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left}
+.ranking th{color:#8189a0}
+.ranking .winner{color:var(--pink);font-weight:900}
+.help-text{margin-top:10px;padding:10px;border-radius:10px;background:#f5f7fc;color:#66708e;font-size:.72rem;line-height:1.5}
+@media(max-width:1100px){.game-layout{grid-template-columns:minmax(0,1fr) 310px}}
+@media(max-width:850px){
+    .game-layout{grid-template-columns:1fr}
+    .board{height:clamp(460px,75vw,680px)}
+    .sidebar{display:grid;grid-template-columns:1fr 1fr}
+    .decision-panel{grid-column:1/-1}
+}
+@media(max-width:580px){
+    .app{padding:12px 8px}.top-badge{display:none}
+    .board-shell{padding:7px;border-radius:16px}
+    .board{height:clamp(350px,110vw,470px);gap:4px}
+    .tile{border-radius:8px;padding:2px;gap:3px}
+    .tile-icon{font-size:clamp(13px,4vw,19px)}
+    .tile-label{display:none}
+    .tile-num{top:3px;left:4px;font-size:.48rem}
+    .pawn{width:clamp(19px,5vw,24px);height:clamp(19px,5vw,24px);font-size:.43rem}
+    .legend{font-size:.62rem;gap:7px 10px}
+    .sidebar{display:flex}
+}
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{transition:none!important;animation:none!important}
+}
+</style>
 </head>
+
 <body>
+<div class="app">
 
-    <header>
-        <h1>English Board Game - Multijogador</h1>
-        <p>Escolha seu peão, role o dado e vença os desafios de inglês no centro do tabuleiro!</p>
-    </header>
+<header class="topbar">
+    <div class="brand">
+        <h1>English <span>Challenge</span></h1>
+        <p>Play • Learn • Improve</p>
+    </div>
+    <div class="top-badge">
+        <i class="bi bi-dice-5-fill"></i>
+        English Grammar Board Game
+    </div>
+</header>
 
-    <div class="game-layout">
-        <!-- Tabuleiro 9x9 com Trilha Serpentheada -->
-        <div class="board" id="board">
-            <!-- Área de Desafio Centralizada -->
-            <div class="center-panel">
-                <div class="center-header">
-                    <h2>Área de Desafio</h2>
-                    <span id="active-turn-label" style="font-size: 0.85rem; color: #38bdf8;">Vez de: Azul</span>
-                </div>
-                <div class="challenge-content">
-                    <h3 id="category-title">Pronto para jogar?</h3>
-                    <p id="question-text">Selecione seu peão ao lado, role o dado e comece a avançar pelas casas do tabuleiro!</p>
-                    <div class="options-list" id="options-list"></div>
-                </div>
-                <p id="feedback-text" style="font-weight: bold; font-size: 0.85rem; text-align: center;"></p>
-            </div>
-        </div>
+<main class="game-layout">
 
-        <!-- Painel Lateral -->
-        <div class="sidebar">
-            <!-- Seleção de Jogador/Peão -->
-            <div class="section-box">
-                <h3>Escolher Peão</h3>
-                <div class="pawns-select">
-                    <div class="pawn-option p-blue selected" onclick="selectPlayer(0)">Az</div>
-                    <div class="pawn-option p-yellow" onclick="selectPlayer(1)">Am</div>
-                    <div class="pawn-option p-red" onclick="selectPlayer(2)">Vm</div>
-                    <div class="pawn-option p-green" onclick="selectPlayer(3)">Vd</div>
-                </div>
-            </div>
-
-            <!-- Dado -->
-            <div class="section-box">
-                <h3>Dado</h3>
-                <div class="dice" id="dice" onclick="rollDice()">🎲</div>
-                <p id="dice-result" style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 8px;">Clique para girar</p>
-                <button class="btn" onclick="rollDice()">Girar Dado</button>
-            </div>
-
-            <!-- Posições / Placar -->
-            <div class="section-box">
-                <h3>Posição dos Peões</h3>
-                <div class="scoreboard" id="scoreboard">
-                    <!-- Gerado via JS -->
-                </div>
-            </div>
-        </div>
+<section class="board-column">
+    <div class="board-shell">
+        <div class="board" id="board" aria-label="Tabuleiro com 48 casas"></div>
     </div>
 
-    <script>
-        // Caminho em zigue-zague/curvas por um Grid 9x9 (total de 32 casinhas)
-        const tileCoords = [
-            {r: 9, c: 1}, {r: 9, c: 2}, {r: 9, c: 3}, {r: 9, c: 4}, {r: 9, c: 5}, {r: 9, c: 6}, {r: 9, c: 7}, {r: 9, c: 8}, {r: 9, c: 9}, // Baixo (E->D) -> 0 a 8
-            {r: 8, c: 9}, {r: 7, c: 9}, {r: 6, c: 9}, {r: 5, c: 9}, {r: 4, c: 9}, {r: 3, c: 9}, {r: 2, c: 9}, {r: 1, c: 9},          // Direita (B->T) -> 9 a 16
-            {r: 1, c: 8}, {r: 1, c: 7}, {r: 1, c: 6}, {r: 1, c: 5}, {r: 1, c: 4}, {r: 1, c: 3}, {r: 1, c: 2}, {r: 1, c: 1},          // Topo (D->E) -> 17 a 24
-            {r: 2, c: 1}, {r: 3, c: 1}, {r: 4, c: 1}, {r: 5, c: 1}, {r: 6, c: 1}, {r: 7, c: 1}, {r: 8, c: 1}                           // Esquerda (T->B) -> 25 a 31
-        ];
+    <div class="legend">
+        <span class="legend-item"><i class="legend-color" style="background:#0d9488"></i>Verb To Be</span>
+        <span class="legend-item"><i class="legend-color" style="background:#0284c7"></i>Simple Present</span>
+        <span class="legend-item"><i class="legend-color" style="background:#facc15"></i>Present Continuous</span>
+        <span class="legend-item"><i class="legend-color" style="background:#84cc16"></i>Demonstratives</span>
+        <span class="legend-item"><i class="legend-color" style="background:#7c3aed"></i>Articles</span>
+        <span class="legend-item"><i class="legend-color" style="background:#f1f5f9"></i>Days & Months</span>
+        <span class="legend-item"><i class="legend-color" style="background:#ef4444"></i>Prepositions</span>
+        <span class="legend-item"><i class="legend-color" style="background:#991b1b"></i>Simple Past</span>
+        <span class="legend-item"><i class="legend-color" style="background:#f59e0b"></i>Past Continuous</span>
+        <span class="legend-item"><i class="legend-color" style="background:#db2777"></i>Open Challenge</span>
+    </div>
+</section>
 
-        const tileTypesDef = [
-            { name: "START", cat: "start", label: "START" },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Simple Present", cat: "present", label: "Present" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
-            { name: "Simple Past", cat: "past", label: "Past" },
-            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Simple Present", cat: "present", label: "Present" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
-            { name: "Simple Past", cat: "past", label: "Past" },
-            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Simple Present", cat: "present", label: "Present" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
-            { name: "Simple Past", cat: "past", label: "Past" },
-            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Simple Present", cat: "present", label: "Present" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Present Continuous", cat: "continuous", label: "Continuous" },
-            { name: "Simple Past", cat: "past", label: "Past" },
-            { name: "Past Continuous", cat: "pastcont", label: "Past Cont." },
-            { name: "Verbo To Be", cat: "tobe", label: "To Be" },
-            { name: "Vocabulário", cat: "vocab", label: "Vocab" },
-            { name: "Simple Present", cat: "present", label: "Present" },
-            { name: "Safe Zone", cat: "start", label: "Safe Zone" },
-            { name: "FINISH", cat: "finish", label: "FINISH" }
-        ];
+<aside class="sidebar">
 
-        // Definição dos Jogadores
-        let players = [
-            { id: 0, name: "Azul", class: "p-blue", pos: 0, symbol: "Az" },
-            { id: 1, name: "Amarelo", class: "p-yellow", pos: 0, symbol: "Am" },
-            { id: 2, name: "Vermelho", class: "p-red", pos: 0, symbol: "Vm" },
-            { id: 3, name: "Verde", class: "p-green", pos: 0, symbol: "Vd" }
-        ];
+<section class="panel decision-panel">
+    <div class="panel-heading">
+        <h2><i class="bi bi-lightbulb-fill"></i> English Challenge</h2>
+        <span class="turn-label" id="turn-label">Turn: Blue</span>
+    </div>
+    <div class="decision-content">
+        <h3 id="card-title">Ready to play?</h3>
+        <p id="card-text">Roll the dice to start. Answer the English questions and earn points for your team!</p>
+        <div class="options" id="options"></div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+</section>
 
-        let selectedPlayerIndex = 0;
-        let pawnElements = [];
+<section class="panel" style="padding:14px">
+    <h3 style="margin:0 0 11px;font-size:.88rem;font-weight:900">
+        <i class="bi bi-dice-5"></i> Dice and teams
+    </h3>
+    <div class="dice-row">
+        <div class="dice" id="dice"><i class="bi bi-dice-5"></i></div>
+        <div class="dice-info">
+            <p class="dice-result" id="dice-result">Click to roll</p>
+            <button class="btn" id="roll-btn" type="button">Roll the dice</button>
+        </div>
+    </div>
+    <div style="height:13px"></div>
+    <p style="font-size:.72rem;font-weight:900;color:#737b97;margin:0">
+        2 teams: Blue and Red
+    </p>
+</section>
 
-        // Perguntas por Categoria
-        const challenges = {
-            tobe: [
-                { q: "Qual a forma correta para: 'He ___ a doctor.'", options: ["am", "is", "are"], correct: 1 },
-                { q: "Complete a frase negativa: 'They ___ not happy.'", options: ["is", "am", "are"], correct: 2 },
-                { q: "Forma interrogativa correta para: 'You are ready.'", options: ["Are you ready?", "Is you ready?", "Am you ready?"], correct: 0 }
-            ],
-            present: [
-                { q: "Complete: 'She ___ English every day.'", options: ["study", "studies", "studying"], correct: 1 },
-                { q: "Forma negativa de 'I like coffee':", options: ["I not like coffee", "I don't like coffee", "I doesn't like coffee"], correct: 1 },
-                { q: "Complete: 'He ___ soccer on weekends.'", options: ["play", "plays", "playing"], correct: 1 }
-            ],
-            continuous: [
-                { q: "Complete: 'They are ___ TV right now.'", options: ["watch", "watches", "watching"], correct: 2 },
-                { q: "Qual frase está no Present Continuous?", options: ["I go to school.", "I am going to school.", "I went to school."], correct: 1 },
-                { q: "Complete: 'She is ___ a book.'", options: ["read", "reading", "reads"], correct: 1 }
-            ],
-            past: [
-                { q: "Qual o passado simples (Simple Past) do verbo 'go'?", options: ["goed", "gone", "went"], correct: 2 },
-                { q: "Complete: 'I ___ a movie yesterday.'", options: ["watch", "watched", "watching"], correct: 1 },
-                { q: "Forma negativa no passado: 'He ___ work yesterday.'", options: ["didn't", "don't", "wasn't"], correct: 0 }
-            ],
-            pastcont: [
-                { q: "Complete: 'I ___ sleeping when you called.'", options: ["was", "were", "is"], correct: 0 },
-                { q: "Complete: 'They ___ playing soccer at 8 PM.'", options: ["was", "were", "are"], correct: 1 },
-                { q: "Tradução de 'We were eating':", options: ["Nós comemos", "Nós estávamos comendo", "Nós comeremos"], correct: 1 }
-            ],
-            vocab: [
-                { q: "O que significa a palavra 'Library'?", options: ["Livraria", "Biblioteca", "Laboratório"], correct: 1 },
-                { q: "Qual o significado de 'Expensive'?", options: ["Extensivo", "Barato", "Caro"], correct: 2 },
-                { q: "O que significa 'Building'?", options: ["Construção / Prédio", "Chuva", "Ponte"], correct: 0 }
-            ]
+<section class="panel" style="padding:14px">
+    <h3 style="margin:0 0 11px;font-size:.88rem;font-weight:900">
+        <i class="bi bi-trophy-fill"></i> Team scoreboard
+    </h3>
+    <div class="team-list" id="team-list"></div>
+    <div class="score-actions">
+        <button class="btn btn-outline" id="ranking-btn" type="button">View ranking</button>
+        <button class="btn btn-soft" id="reset-btn" type="button">Restart</button>
+    </div>
+    <div class="help-text">
+        <b>How to score points?</b><br>
+        Correct multiple-choice answer: 1 point.<br>
+        Correct open challenge: 2 points.<br>
+        Correct final challenge: 3 bonus points.<br>
+        Incorrect answer: 0 points and return to the previous space.
+    </div>
+</section>
+
+</aside>
+</main>
+</div>
+
+<script>
+
+/* =====================================
+   1. GAME SETTINGS
+===================================== */
+
+const ROWS=8;
+const COLS=6;
+const TOTAL=48;
+const LAST=TOTAL-1;
+
+const TEAM_INFO=[
+    {name:"Blue",cls:"blue",mark:"BL"},
+    {name:"Red",cls:"red",mark:"RD"}
+];
+
+function getCell(index){
+    const col=Math.floor(index/ROWS);
+    const n=index%ROWS;
+
+    return {
+        row:col%2===0?n+1:ROWS-n,
+        col:col+1
+    };
+}
+
+/* =====================================
+   2. BOARD SPACES
+===================================== */
+
+const TYPES=[
+"start","tobe","simplepresent","presentcontinuous","demonstratives","articles",
+"daysmonths","prepositions","simplepast","pastcontinuous","challenge","tobe",
+"simplepresent","presentcontinuous","demonstratives","articles","daysmonths",
+"prepositions","simplepast","pastcontinuous","challenge","tobe","simplepresent",
+"presentcontinuous","demonstratives","articles","daysmonths","prepositions",
+"simplepast","pastcontinuous","challenge","tobe","simplepresent",
+"presentcontinuous","demonstratives","articles","daysmonths","prepositions",
+"simplepast","pastcontinuous","challenge","tobe","simplepresent",
+"presentcontinuous","demonstratives","articles","challenge","finish"
+];
+
+const COLORS={
+start:["#0f766e","#fff"],
+finish:["#4338ca","#fff"],
+tobe:["#0d9488","#fff"],
+simplepresent:["#0284c7","#fff"],
+presentcontinuous:["#facc15","#2b3308"],
+demonstratives:["#84cc16","#25320a"],
+articles:["#7c3aed","#fff"],
+daysmonths:["#f1f5f9","#0f766e"],
+prepositions:["#ef4444","#fff"],
+simplepast:["#991b1b","#fff"],
+pastcontinuous:["#f59e0b","#3a2a00"],
+challenge:["#db2777","#fff"]
+};
+
+const LABELS={
+start:"Start",
+finish:"Final Boss",
+tobe:"Verb To Be",
+simplepresent:"Simple Present",
+presentcontinuous:"Present Continuous",
+demonstratives:"Demonstratives",
+articles:"Articles",
+daysmonths:"Days & Months",
+prepositions:"IN / ON / AT",
+simplepast:"Simple Past",
+pastcontinuous:"Past Continuous",
+challenge:"Open Challenge"
+};
+
+const ICONS={
+start:"bi-flag-fill",
+finish:"bi-trophy-fill",
+tobe:"bi-person-check-fill",
+simplepresent:"bi-calendar-check-fill",
+presentcontinuous:"bi-arrow-repeat",
+demonstratives:"bi-hand-index-thumb-fill",
+articles:"bi-book-fill",
+daysmonths:"bi-calendar3",
+prepositions:"bi-geo-alt-fill",
+simplepast:"bi-clock-history",
+pastcontinuous:"bi-hourglass-split",
+challenge:"bi-mic-fill"
+};
+
+const tiles=TYPES.map((type,index)=>({
+    index,type,...getCell(index)
+}));
+
+/* =====================================
+   3. MULTIPLE-CHOICE QUESTIONS
+===================================== */
+
+const EVENTS={
+
+tobe:[
+{title:"Verb To Be",text:"Complete the sentence:\nShe _____ my best friend.",choices:["am","is","are"],correct:1,feedback:"She is my best friend. We use IS with he, she and it."},
+{title:"Verb To Be",text:"Choose the correct sentence:",choices:["They is happy.","They am happy.","They are happy."],correct:2,feedback:"They are happy. We use ARE with you, we and they."},
+{title:"Verb To Be",text:"Complete:\nI _____ from Brazil.",choices:["am","is","are"],correct:0,feedback:"I am from Brazil. AM is used with I."},
+{title:"Verb To Be",text:"Choose the negative form:\nHe _____ tired.",choices:["isn't","aren't","am not"],correct:0,feedback:"He isn't tired. IS NOT becomes ISN'T."},
+{title:"Verb To Be",text:"Choose the correct question:",choices:["Are she a teacher?","Is she a teacher?","Am she a teacher?"],correct:1,feedback:"Is she a teacher? Questions with she use IS."},
+{title:"Verb To Be",text:"Complete:\nWe _____ students.",choices:["is","am","are"],correct:2,feedback:"We are students. WE is followed by ARE."},
+{title:"Verb To Be",text:"Choose the correct short answer:\nAre you Brazilian?",choices:["Yes, I am.","Yes, I is.","Yes, I are."],correct:0,feedback:"Yes, I am."},
+{title:"Verb To Be",text:"Complete:\nMy parents _____ at home.",choices:["is","are","am"],correct:1,feedback:"My parents are at home. Parents is plural."}
+],
+
+simplepresent:[
+{title:"Simple Present",text:"Complete:\nMy brother _____ soccer every Saturday.",choices:["play","plays","playing"],correct:1,feedback:"He plays. We add -s with he, she and it."},
+{title:"Simple Present",text:"Choose the correct sentence:",choices:["She don't like coffee.","She doesn't likes coffee.","She doesn't like coffee."],correct:2,feedback:"After DOESN'T, use the base form: like."},
+{title:"Simple Present",text:"Complete:\n_____ they study English?",choices:["Does","Do","Are"],correct:1,feedback:"Do they study English? We use DO with they."},
+{title:"Simple Present",text:"Complete:\nI _____ breakfast at 7 a.m.",choices:["have","has","having"],correct:0,feedback:"I have breakfast."},
+{title:"Simple Present",text:"Choose the correct sentence:",choices:["He go to school.","He goes to school.","He going to school."],correct:1,feedback:"He goes to school. GO changes to GOES."},
+{title:"Simple Present",text:"Complete:\nMy friends _____ video games.",choices:["likes","liking","like"],correct:2,feedback:"My friends like video games."},
+{title:"Simple Present",text:"Choose the correct question:",choices:["Does she work here?","Do she work here?","Is she work here?"],correct:0,feedback:"Does she work here?"},
+{title:"Simple Present",text:"Complete:\nHe never _____ late.",choices:["arrive","arrives","arriving"],correct:1,feedback:"He arrives late."}
+],
+
+presentcontinuous:[
+{title:"Present Continuous",text:"Complete:\nShe _____ watching TV now.",choices:["is","are","am"],correct:0,feedback:"She is watching TV. Use am/is/are + verb-ing."},
+{title:"Present Continuous",text:"Choose the correct sentence:",choices:["They are play soccer.","They playing soccer.","They are playing soccer."],correct:2,feedback:"They are playing soccer."},
+{title:"Present Continuous",text:"Complete:\nI _____ studying English at the moment.",choices:["am","is","are"],correct:0,feedback:"I am studying."},
+{title:"Present Continuous",text:"What is the -ing form of WRITE?",choices:["writting","writing","writeing"],correct:1,feedback:"Writing. Remove the final E before adding -ing."},
+{title:"Present Continuous",text:"Choose the negative sentence:",choices:["He isn't sleeping.","He don't sleeping.","He not is sleeping."],correct:0,feedback:"He isn't sleeping."},
+{title:"Present Continuous",text:"Complete:\nWhat _____ you doing?",choices:["is","am","are"],correct:2,feedback:"What are you doing?"},
+{title:"Present Continuous",text:"Choose the correct sentence:",choices:["The children is running.","The children are running.","The children running."],correct:1,feedback:"The children are running."},
+{title:"Present Continuous",text:"Complete:\nLook! It _____ raining.",choices:["is","are","am"],correct:0,feedback:"It is raining."}
+],
+
+demonstratives:[
+{title:"Demonstratives",text:"You are holding a pencil:\n_____ is my pencil.",choices:["Those","These","This"],correct:2,feedback:"THIS is used for one object that is near."},
+{title:"Demonstratives",text:"The shoes are far away. Choose:",choices:["Those","This","That"],correct:0,feedback:"THOSE is used for plural objects that are far away."},
+{title:"Demonstratives",text:"There are two books next to you:\n_____ are my books.",choices:["That","These","This"],correct:1,feedback:"THESE is used for plural objects that are near."},
+{title:"Demonstratives",text:"There is a house far away:\n_____ is a beautiful house.",choices:["This","These","That"],correct:2,feedback:"THAT is used for one object that is far away."},
+{title:"Demonstratives",text:"Choose the correct sentence:",choices:["These apples are red.","This apples are red.","Those apple are red."],correct:0,feedback:"These apples are red."},
+{title:"Demonstratives",text:"One star is far away. Which word do you use?",choices:["These","That","This"],correct:1,feedback:"THAT is used for one thing that is far away."}
+],
+
+articles:[
+{title:"Articles",text:"Complete:\nI have _____ apple.",choices:["a","an","the"],correct:1,feedback:"AN apple. Use AN before a vowel sound."},
+{title:"Articles",text:"Complete:\nShe is _____ teacher.",choices:["a","an","the"],correct:0,feedback:"A teacher."},
+{title:"Articles",text:"Complete:\nThe sun is in _____ sky.",choices:["a","an","the"],correct:2,feedback:"THE sky."},
+{title:"Articles",text:"Choose the correct phrase:",choices:["an university","a university","the university student"],correct:1,feedback:"A university. The first sound is /y/."},
+{title:"Articles",text:"Complete:\nHe eats _____ orange every day.",choices:["a","an","the"],correct:1,feedback:"AN orange."},
+{title:"Articles",text:"Which sentence is correct?",choices:["I saw a elephant.","I saw an elephant.","I saw the elephant every day. (general)"],correct:1,feedback:"An elephant."}
+],
+
+daysmonths:[
+{title:"Days of the Week",text:"What day comes after Monday?",choices:["Sunday","Wednesday","Tuesday"],correct:2,feedback:"Tuesday comes after Monday."},
+{title:"Days of the Week",text:"What day comes before Friday?",choices:["Thursday","Saturday","Wednesday"],correct:0,feedback:"Thursday comes before Friday."},
+{title:"Months of the Year",text:"Which month comes after June?",choices:["May","July","August"],correct:1,feedback:"July comes after June."},
+{title:"Months of the Year",text:"Which month is the first month of the year?",choices:["January","December","March"],correct:0,feedback:"January is the first month."},
+{title:"Days and Months",text:"How many days are there in a week?",choices:["Five","Seven","Ten"],correct:1,feedback:"There are seven days in a week."},
+{title:"Days and Months",text:"Which month comes before October?",choices:["September","November","August"],correct:0,feedback:"September comes before October."},
+{title:"Days and Months",text:"Which spelling is correct?",choices:["Wensday","Wednesday","Wendsday"],correct:1,feedback:"Wednesday is the correct spelling."}
+],
+
+prepositions:[
+{title:"Prepositions: IN / ON / AT",text:"Complete:\nI was born _____ 2010.",choices:["on","at","in"],correct:2,feedback:"Use IN with years."},
+{title:"Prepositions: IN / ON / AT",text:"Complete:\nMy birthday is _____ May 10th.",choices:["on","in","at"],correct:0,feedback:"Use ON with specific dates."},
+{title:"Prepositions: IN / ON / AT",text:"Complete:\nThe class starts _____ 8 o'clock.",choices:["in","at","on"],correct:1,feedback:"Use AT with specific times."},
+{title:"Prepositions: IN / ON / AT",text:"Complete:\nI study _____ the morning.",choices:["in","on","at"],correct:0,feedback:"Use IN with parts of the day."},
+{title:"Prepositions: IN / ON / AT",text:"Complete:\nWe have English _____ Monday.",choices:["at","in","on"],correct:2,feedback:"Use ON with days."},
+{title:"Prepositions: IN / ON / AT",text:"Complete:\nShe goes to bed _____ midnight.",choices:["at","on","in"],correct:0,feedback:"Use AT with midnight."},
+{title:"Prepositions: IN / ON / AT",text:"Complete:\nMy family travels _____ December.",choices:["on","in","at"],correct:1,feedback:"Use IN with months."},
+{title:"Prepositions: IN / ON / AT",text:"Complete:\nThe meeting is _____ Friday afternoon.",choices:["in","at","on"],correct:2,feedback:"Use ON with a specific day."}
+],
+
+simplepast:[
+{title:"Simple Past",text:"Complete:\nYesterday, I _____ to school.",choices:["go","went","going"],correct:1,feedback:"WENT is the past form of GO."},
+{title:"Simple Past",text:"Choose the correct sentence:",choices:["She watched a movie.","She watch a movie yesterday.","She watching a movie yesterday."],correct:0,feedback:"Watched is the regular past form of WATCH."},
+{title:"Simple Past",text:"Complete:\nThey _____ football last weekend.",choices:["play","plays","played"],correct:2,feedback:"Played is the past form of PLAY."},
+{title:"Simple Past",text:"Complete:\nHe _____ breakfast yesterday.",choices:["didn't eat","didn't ate","doesn't ate"],correct:0,feedback:"After DIDN'T, use the base form."},
+{title:"Simple Past",text:"Choose the correct question:",choices:["Did you see the film?","Did you saw the film?","Do you saw the film?"],correct:0,feedback:"After DID, use the base form."},
+{title:"Simple Past",text:"What is the past form of BUY?",choices:["Buyed","Bought","Buying"],correct:1,feedback:"Bought is the irregular past form of BUY."},
+{title:"Simple Past",text:"Complete:\nWe _____ at home last night.",choices:["was","were","are"],correct:1,feedback:"We were at home."},
+{title:"Simple Past",text:"Choose the correct sentence:",choices:["I goed to the park.","I went to the park.","I gone to the park."],correct:1,feedback:"WENT is the correct past form of GO."}
+],
+
+pastcontinuous:[
+{title:"Past Continuous",text:"Complete:\nI _____ studying at 8 p.m. yesterday.",choices:["was","were","am"],correct:0,feedback:"I was studying."},
+{title:"Past Continuous",text:"Complete:\nThey _____ playing when it started to rain.",choices:["was","were","are"],correct:1,feedback:"They were playing."},
+{title:"Past Continuous",text:"Choose the correct sentence:",choices:["She was sleeping.","She were sleeping.","She sleeping."],correct:0,feedback:"She was sleeping."},
+{title:"Past Continuous",text:"Complete:\nWhat _____ you doing at 9 o'clock?",choices:["was","are","were"],correct:2,feedback:"What were you doing?"},
+{title:"Past Continuous",text:"Choose the correct form:",choices:["We was watching TV.","We were watching TV.","We watching TV."],correct:1,feedback:"We were watching TV."},
+{title:"Past Continuous",text:"Complete:\nHe _____ driving when the phone rang.",choices:["was","were","is"],correct:0,feedback:"He was driving."},
+{title:"Past Continuous",text:"Which sentence describes an action in progress in the past?",choices:["I played yesterday.","I was playing at 6 p.m.","I play every day."],correct:1,feedback:"I was playing at 6 p.m."}
+]
+
+};
+
+/* =====================================
+   4. OPEN CHALLENGES
+===================================== */
+
+const CHALLENGES=[
+"Say three sentences using the verb TO BE: one affirmative, one negative and one question.",
+"Talk about your daily routine using at least three verbs in the Simple Present.",
+"Describe what three people in the classroom are doing now. Use the Present Continuous.",
+"Point to three objects in the classroom and describe them using THIS, THAT, THESE or THOSE.",
+"Say five English words that use the article A or AN correctly.",
+"Name the seven days of the week in English, in the correct order.",
+"Say the twelve months of the year in English.",
+"Create three sentences using IN, ON and AT.",
+"Tell the class what you did yesterday. Use at least three verbs in the Simple Past.",
+"Describe what you were doing at a specific time yesterday using the Past Continuous.",
+"Make a question in the Simple Past and answer it.",
+"Describe your best friend using the verb TO BE and the Simple Present.",
+"Say two things you are doing this week and two things you usually do every week.",
+"Create a sentence using THIS and another sentence using THOSE.",
+"Explain the difference between Simple Present and Present Continuous. Give one example of each.",
+"Tell a short story about last weekend using at least three Simple Past verbs.",
+"Complete orally: Yesterday at 8 p.m., I was... Continue the sentence.",
+"Make a sentence about your family using ARE and another using IS.",
+"Say three activities you like doing and explain how often you do them.",
+"Create a sentence using a day of the week, a month and a time. Use the correct prepositions.",
+"Say five irregular verbs in the Simple Past and their base forms.",
+"Describe a scene using at least two sentences in the Past Continuous.",
+"Make one affirmative and one negative sentence in the Simple Present.",
+"Create a short dialogue with a greeting, a question using TO BE and an answer.",
+"Describe two objects near you and two objects far away using demonstratives."
+];
+
+/* =====================================
+   5. FINAL BOSS CHALLENGES
+===================================== */
+
+const FINAL_CHALLENGES=[
+
+{
+title:"FINAL BOSS – GRAMMAR MASTER",
+text:`Create a short story in English (at least 6 sentences).
+
+Your story MUST include:
+
+1. Two sentences in the Simple Past.
+2. Two sentences in the Past Continuous.
+3. One negative sentence.
+4. One question in the Simple Past.
+5. Correct use of WAS and WERE.
+
+The team must explain why the verb forms are correct.`
+},
+
+{
+title:"FINAL BOSS – THE GRAMMAR TEST",
+text:`Complete this challenge orally:
+
+1. Explain the difference between Simple Present and Present Continuous.
+2. Give two examples of each.
+3. Transform one affirmative sentence into a negative sentence.
+4. Create a question using DOES.
+5. Explain when to use DO and DOES.`
+},
+
+{
+title:"FINAL BOSS – TIME TRAVEL",
+text:`Describe what happened yesterday using at least 8 sentences.
+
+Your answer must include:
+
+1. Four irregular verbs in the Simple Past.
+2. Two regular verbs in the Simple Past.
+3. Two sentences in the Past Continuous.
+4. One sentence using WHEN.
+5. One sentence using WHILE.
+
+The team must tell a connected story.`
+},
+
+{
+title:"FINAL BOSS – ENGLISH EXPERT",
+text:`Create a dialogue between two people.
+
+Requirements:
+
+1. At least 8 lines.
+2. Include questions and answers using TO BE.
+3. Include Simple Present.
+4. Include Present Continuous.
+5. Include Simple Past.
+6. Include Past Continuous.
+7. Use at least three different prepositions.
+
+All team members must participate.`
+},
+
+{
+title:"FINAL BOSS – GRAMMAR CHALLENGE",
+text:`Correct the following sentences and explain your corrections:
+
+1. She don't likes pizza.
+2. They was watching TV.
+3. Did you went to school?
+4. I am study English now.
+5. He were sleeping yesterday.
+6. There is two books on the table.
+
+After correcting them, create two original sentences:
+One in the Simple Past and one in the Past Continuous.`
+}
+
+];
+
+/* =====================================
+   6. DRAW WITHOUT REPETITION
+===================================== */
+
+const drawHistory={};
+
+function drawUnique(key,items){
+
+    if(!drawHistory[key] || drawHistory[key].length===0){
+
+        drawHistory[key]=items.map((_,index)=>index);
+
+        for(let i=drawHistory[key].length-1;i>0;i--){
+
+            const j=Math.floor(Math.random()*(i+1));
+
+            [drawHistory[key][i],drawHistory[key][j]]=
+            [drawHistory[key][j],drawHistory[key][i]];
+
+        }
+    }
+
+    return items[drawHistory[key].pop()];
+}
+
+/* =====================================
+   7. GAME STATE
+===================================== */
+
+let players=[];
+let current=0;
+let phase="idle";
+let gameOver=false;
+let rolling=false;
+let rollTimer=null;
+
+function makePlayers(){
+
+    return TEAM_INFO.map((team,id)=>({
+
+        id,
+        name:team.name,
+        cls:team.cls,
+        mark:team.mark,
+
+        pos:0,
+        turnStartPos:0,
+        points:0,
+
+        finished:false
+
+    }));
+
+}
+
+function getActivePlayer(){
+    return players[current];
+}
+
+/* =====================================
+   8. CREATE BOARD
+===================================== */
+
+function createBoard(){
+
+    const board=document.getElementById("board");
+
+    board.innerHTML="";
+
+    tiles.forEach(tile=>{
+
+        const element=document.createElement("div");
+
+        element.id=`tile-${tile.index}`;
+        element.className="tile";
+
+        if(tile.type==="start" || tile.type==="finish"){
+            element.classList.add("terminal");
+        }
+
+        element.style.gridRow=tile.row;
+        element.style.gridColumn=tile.col;
+
+        element.style.background=COLORS[tile.type][0];
+        element.style.color=COLORS[tile.type][1];
+
+        element.innerHTML=`
+            <span class="tile-num">${tile.index+1}</span>
+            <i class="tile-icon bi ${ICONS[tile.type]}"></i>
+            <span class="tile-label">${LABELS[tile.type]}</span>
+        `;
+
+        board.appendChild(element);
+
+    });
+
+    players.forEach((player,index)=>{
+
+        const pawn=document.createElement("div");
+
+        pawn.className=`pawn ${player.cls}`;
+        pawn.id=`pawn-${index}`;
+        pawn.textContent=player.mark;
+
+        board.appendChild(pawn);
+
+    });
+
+    createArrows();
+    updatePawns();
+    updateScoreboard();
+
+    requestAnimationFrame(()=>{
+
+        createArrows();
+        updatePawns();
+
+    });
+
+}
+
+/* =====================================
+   9. PATH ARROWS
+===================================== */
+
+function createArrows(){
+
+    const board=document.getElementById("board");
+
+    board.querySelectorAll(".path-arrow").forEach(a=>a.remove());
+
+    const boardRect=board.getBoundingClientRect();
+
+    for(let i=0;i<TOTAL-1;i++){
+
+        const from=document.getElementById(`tile-${i}`);
+        const to=document.getElementById(`tile-${i+1}`);
+
+        if(!from || !to)continue;
+
+        const a=from.getBoundingClientRect();
+        const b=to.getBoundingClientRect();
+
+        const vertical=Math.abs(a.left-b.left)<3;
+
+        const size=Math.max(10,Math.min(18,vertical?a.width*.17:a.height*.23));
+
+        const arrow=document.createElement("div");
+
+        arrow.className="path-arrow";
+
+        arrow.style.width=`${size}px`;
+        arrow.style.height=`${size}px`;
+
+        arrow.style.left=`${(a.left+a.width/2+b.left+b.width/2)/2-boardRect.left-size/2}px`;
+
+        arrow.style.top=`${(a.top+a.height/2+b.top+b.height/2)/2-boardRect.top-size/2}px`;
+
+        let rotation;
+
+        if(vertical){
+            rotation=b.top>a.top?0:180;
+        }else{
+            rotation=b.left>a.left?-90:90;
+        }
+
+        arrow.style.transform=`rotate(${rotation}deg)`;
+
+        arrow.innerHTML=`
+            <svg viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="4"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9l6 6 6-6"/>
+            </svg>
+        `;
+
+        board.appendChild(arrow);
+
+    }
+
+}
+
+/* =====================================
+   10. PAWN POSITIONS
+===================================== */
+
+function updatePawns(){
+
+    const board=document.getElementById("board");
+
+    if(!board)return;
+
+    const boardRect=board.getBoundingClientRect();
+
+    const offsets=[[-.22,-.22],[.22,.22]];
+
+    players.forEach((player,index)=>{
+
+        const pawn=document.getElementById(`pawn-${index}`);
+        const tile=document.getElementById(`tile-${player.pos}`);
+
+        if(!pawn || !tile)return;
+
+        const rect=tile.getBoundingClientRect();
+
+        const size=pawn.offsetWidth;
+        const offset=offsets[index]||[0,0];
+
+        pawn.style.left=
+        `${rect.left-boardRect.left+rect.width/2-size/2+rect.width*offset[0]}px`;
+
+        pawn.style.top=
+        `${rect.top-boardRect.top+rect.height/2-size/2+rect.height*offset[1]}px`;
+
+        pawn.classList.toggle("finished",player.finished);
+
+    });
+
+}
+
+/* =====================================
+   11. DECISION PANEL
+===================================== */
+
+function setPanel(title,text,color="#e6197a"){
+
+    document.getElementById("card-title").textContent=title;
+
+    document.getElementById("card-title").style.color=color;
+
+    document.getElementById("card-text").textContent=text;
+
+    document.getElementById("options").innerHTML="";
+
+    document.getElementById("feedback").innerHTML="";
+
+}
+
+function addContinue(label="Continue",callback=nextTurn){
+
+    const button=document.createElement("button");
+
+    button.className="option-btn continue";
+    button.textContent=label;
+    button.onclick=callback;
+
+    document.getElementById("options").appendChild(button);
+
+}
+
+function updateTurnLabel(){
+
+    if(!players.length)return;
+
+    const player=getActivePlayer();
+
+    document.getElementById("turn-label").textContent=
+    player.finished?"Team finished":`Turn: ${player.name}`;
+
+}
+
+/* =====================================
+   12. SCOREBOARD
+===================================== */
+
+function updateScoreboard(){
+
+    const list=document.getElementById("team-list");
+
+    list.innerHTML="";
+
+    players.forEach((player,index)=>{
+
+        const card=document.createElement("div");
+
+        card.className="team-card";
+
+        if(index===current && !gameOver && !player.finished){
+            card.classList.add("active");
+        }
+
+        if(player.finished){
+            card.classList.add("done");
+        }
+
+        card.innerHTML=`
+            <div class="team-name">
+                <span>${player.name} ${player.finished?"🏁":""}</span>
+                <span>${player.finished?"Finished":`Space ${player.pos+1}/48`}</span>
+            </div>
+            <div class="team-stats">
+                <span>⭐ ${player.points} points</span>
+            </div>
+        `;
+
+        list.appendChild(card);
+
+    });
+
+}
+
+/* =====================================
+   13. DICE
+===================================== */
+
+function rollDice(){
+
+    if(gameOver || phase!=="idle" || rolling)return;
+
+    const player=getActivePlayer();
+
+    if(!player || player.finished){
+        nextTurn();
+        return;
+    }
+
+    rolling=true;
+
+    const button=document.getElementById("roll-btn");
+    const dice=document.getElementById("dice");
+    const result=document.getElementById("dice-result");
+
+    button.disabled=true;
+
+    let ticks=0;
+
+    rollTimer=setInterval(()=>{
+
+        const random=Math.floor(Math.random()*6)+1;
+
+        dice.innerHTML=`<i class="bi bi-dice-${random}-fill"></i>`;
+
+        ticks++;
+
+        if(ticks>=12){
+
+            clearInterval(rollTimer);
+            rollTimer=null;
+
+            const value=Math.floor(Math.random()*6)+1;
+
+            dice.innerHTML=`<i class="bi bi-dice-${value}-fill"></i>`;
+
+            result.textContent=`${player.name} rolled ${value}`;
+
+            rolling=false;
+
+            movePlayer(player,value);
+
+        }
+
+    },65);
+
+}
+
+/* =====================================
+   14. MOVEMENT
+===================================== */
+
+function movePlayer(player,steps){
+
+    // Save the position before the dice roll
+    player.turnStartPos=player.pos;
+
+    player.pos=Math.min(LAST,player.pos+steps);
+
+    updatePawns();
+    updateScoreboard();
+
+    // The last space always activates the Final Boss
+    if(player.pos===LAST){
+
+        showFinalChallenge(player);
+
+        return;
+
+    }
+
+    handleTile(player);
+
+}
+
+/* Return to the previous position */
+
+function returnToPreviousPosition(player){
+
+    player.pos=player.turnStartPos;
+
+    updatePawns();
+    updateScoreboard();
+
+}
+
+/* =====================================
+   15. SPACE ACTIONS
+===================================== */
+
+function handleTile(player){
+
+    const type=tiles[player.pos].type;
+
+    if(type==="start" || type==="finish"){
+
+        phase="resolved";
+
+        setPanel(
+            LABELS[type],
+            `${player.name} is on the ${LABELS[type]} space.`
+        );
+
+        addContinue();
+
+        return;
+
+    }
+
+    if(type==="challenge"){
+
+        showChallenge(player);
+
+        return;
+
+    }
+
+    const deck=EVENTS[type];
+
+    if(!deck){
+
+        phase="resolved";
+
+        setPanel("English space","Discuss an English grammar example with your team.");
+
+        addContinue();
+
+        return;
+
+    }
+
+    showEvent(player,drawUnique(type,deck));
+
+}
+
+/* =====================================
+   16. MULTIPLE-CHOICE CARDS
+===================================== */
+
+function showEvent(player,event){
+
+    phase="card";
+
+    document.getElementById("card-title").textContent=event.title;
+
+    document.getElementById("card-title").style.color="#e6197a";
+
+    document.getElementById("card-text").textContent=event.text;
+
+    document.getElementById("feedback").innerHTML="";
+
+    const options=document.getElementById("options");
+
+    options.innerHTML="";
+
+    event.choices.forEach((label,index)=>{
+
+        const button=document.createElement("button");
+
+        button.className="option-btn";
+        button.textContent=label;
+
+        button.onclick=()=>{
+
+            if(phase!=="card")return;
+
+            resolveChoice(player,event,index,button);
+
         };
 
-        function createBoard() {
-            const board = document.getElementById('board');
-            
-            // Criar as casinhas
-            tileCoords.forEach((coord, index) => {
-                const tileData = tileTypesDef[index];
-                const tileDiv = document.createElement('div');
-                tileDiv.className = `tile cat-${tileData.cat}`;
-                tileDiv.style.gridRow = coord.r;
-                tileDiv.style.gridColumn = coord.c;
-                tileDiv.id = `tile-${index}`;
+        options.appendChild(button);
 
-                tileDiv.innerHTML = `
-                    <span class="tile-number">${index + 1}</span>
-                    <span>${tileData.label}</span>
-                `;
-                board.appendChild(tileDiv);
-            });
+    });
 
-            // Criar os marcadores dos peões
-            players.forEach((p, idx) => {
-                const pawn = document.createElement('div');
-                pawn.className = `pawn-marker ${p.class}`;
-                pawn.innerText = p.symbol;
-                pawn.id = `pawn-${idx}`;
-                board.appendChild(pawn);
-            });
+}
 
-            updateAllPawns();
-            updateScoreboard();
+function resolveChoice(player,event,chosenIndex,chosenButton){
+
+    if(phase!=="card")return;
+
+    const correct=chosenIndex===event.correct;
+
+    document.querySelectorAll("#options .option-btn").forEach((button,index)=>{
+
+        button.disabled=true;
+
+        if(index===event.correct){
+            button.classList.add("correct");
         }
 
-        function selectPlayer(index) {
-            selectedPlayerIndex = index;
-            const options = document.querySelectorAll('.pawn-option');
-            options.forEach((opt, idx) => {
-                if (idx === index) opt.classList.add('selected');
-                else opt.classList.remove('selected');
-            });
-            document.getElementById('active-turn-label').innerText = `Vez de: ${players[index].name}`;
+    });
+
+    if(!correct){
+        chosenButton.classList.add("wrong");
+    }
+
+    if(correct){
+
+        player.points+=1;
+
+        document.getElementById("feedback").innerHTML=`
+            <p class="positive">
+            <b>Correct answer! +1 point!</b><br>
+            ${event.feedback}
+            </p>
+        `;
+
+    }else{
+
+        returnToPreviousPosition(player);
+
+        document.getElementById("feedback").innerHTML=`
+            <p class="negative">
+            <b>Incorrect answer! Go back to your previous space!</b><br>
+            Correct answer: ${event.choices[event.correct]}.<br>
+            ${event.feedback}
+            </p>
+        `;
+
+    }
+
+    phase="resolved";
+
+    addContinue();
+
+    updateScoreboard();
+
+}
+
+/* =====================================
+   17. OPEN CHALLENGES
+===================================== */
+
+function showChallenge(player){
+
+    phase="challenge";
+
+    const challenge=drawUnique("challenge",CHALLENGES);
+
+    setPanel(
+        "🎤 Open English Challenge",
+        `${challenge}\n\nDiscuss and answer aloud in English. The teacher decides if the answer is correct.`
+    );
+
+    const options=document.getElementById("options");
+
+    options.innerHTML="";
+
+    const correctButton=document.createElement("button");
+
+    correctButton.className="option-btn";
+
+    correctButton.textContent="✓ Correct answer (+2 points)";
+
+    correctButton.onclick=()=>{
+
+        if(phase!=="challenge")return;
+
+        finishChallenge(player,true);
+
+    };
+
+    const wrongButton=document.createElement("button");
+
+    wrongButton.className="option-btn";
+
+    wrongButton.textContent="✕ Incorrect answer (0 points)";
+
+    wrongButton.onclick=()=>{
+
+        if(phase!=="challenge")return;
+
+        finishChallenge(player,false);
+
+    };
+
+    options.appendChild(correctButton);
+    options.appendChild(wrongButton);
+
+}
+
+function finishChallenge(player,correct){
+
+    phase="resolved";
+
+    document.getElementById("options").innerHTML="";
+
+    if(correct){
+
+        player.points+=2;
+
+        document.getElementById("feedback").innerHTML=`
+            <p class="positive">
+            <b>Excellent! +2 points for ${player.name}!</b><br>
+            The team completed the open challenge.
+            </p>
+        `;
+
+    }else{
+
+        returnToPreviousPosition(player);
+
+        document.getElementById("feedback").innerHTML=`
+            <p class="negative">
+            <b>Incorrect answer!</b><br>
+            Your team returns to the previous space.
+            </p>
+        `;
+
+    }
+
+    addContinue();
+
+    updateScoreboard();
+
+}
+
+/* =====================================
+   18. FINAL BOSS
+===================================== */
+
+function showFinalChallenge(player){
+
+    phase="finalChallenge";
+
+    const challenge=drawUnique(
+        "finalChallenge",
+        FINAL_CHALLENGES
+    );
+
+    setPanel(
+        "🏆 FINAL BOSS!",
+        `${player.name} reached the final space!
+
+This is the last challenge. Your team must complete it correctly to win the game.
+
+${challenge.title}
+
+${challenge.text}
+
+The teacher will evaluate the team's answer.`,
+        "#4338ca"
+    );
+
+    const options=document.getElementById("options");
+
+    options.innerHTML="";
+
+    const correctButton=document.createElement("button");
+
+    correctButton.className="option-btn continue";
+
+    correctButton.textContent="✓ Challenge completed!";
+
+    correctButton.onclick=()=>{
+
+        if(phase!=="finalChallenge")return;
+
+        player.points+=3;
+
+        player.pos=LAST;
+
+        player.finished=true;
+
+        phase="resolved";
+
+        updatePawns();
+        updateScoreboard();
+
+        setPanel(
+            "🏆 FINAL BOSS DEFEATED!",
+            `${player.name} successfully completed the final challenge!
+
+Congratulations! Your team finished the English Challenge and earned 3 bonus points!`,
+            "#4338ca"
+        );
+
+        document.getElementById("feedback").innerHTML=`
+            <p class="positive">
+            <b>Congratulations! +3 bonus points!</b><br>
+            Your team is officially at the finish line!
+            </p>
+        `;
+
+        addContinue("Continue game");
+
+    };
+
+    const wrongButton=document.createElement("button");
+
+    wrongButton.className="option-btn";
+
+    wrongButton.textContent="✕ Challenge not completed";
+
+    wrongButton.onclick=()=>{
+
+        if(phase!=="finalChallenge")return;
+
+        returnToPreviousPosition(player);
+
+        phase="resolved";
+
+        setPanel(
+            "Not yet! Try again!",
+            `${player.name}, your team did not complete the final challenge.
+
+You have returned to your previous position.
+
+Keep playing and try to reach the final space again!`,
+            "#dc2626"
+        );
+
+        document.getElementById("feedback").innerHTML=`
+            <p class="negative">
+            <b>Final challenge failed!</b><br>
+            Your team must reach space 48 again.
+            </p>
+        `;
+
+        addContinue();
+
+    };
+
+    options.appendChild(correctButton);
+    options.appendChild(wrongButton);
+
+}
+
+/* =====================================
+   19. TURN CONTROL
+===================================== */
+
+function nextTurn(){
+
+    if(gameOver)return;
+
+    // Both teams must complete the Final Boss
+    if(players.every(player=>player.finished)){
+
+        finishGame("Both teams completed the final challenge!");
+
+        return;
+
+    }
+
+    let attempts=0;
+
+    do{
+
+        current=(current+1)%players.length;
+
+        attempts++;
+
+    }while(players[current].finished && attempts<players.length);
+
+    if(players.every(player=>player.finished)){
+
+        finishGame("Both teams completed the final challenge!");
+
+        return;
+
+    }
+
+    phase="idle";
+
+    document.getElementById("roll-btn").disabled=false;
+
+    document.getElementById("dice").innerHTML=
+        `<i class="bi bi-dice-5"></i>`;
+
+    document.getElementById("dice-result").textContent="Click to roll";
+
+    setPanel(
+        "English Challenge",
+        `${players[current].name}, it is your turn! Roll the dice and answer the English questions.`,
+        "#087d83"
+    );
+
+    updateTurnLabel();
+    updateScoreboard();
+
+}
+
+/* =====================================
+   20. RANKING
+===================================== */
+
+function buildRanking(){
+
+    return [...players].sort((a,b)=>{
+
+        if(a.finished!==b.finished){
+            return Number(b.finished)-Number(a.finished);
         }
 
-        function updateAllPawns() {
-            players.forEach((p, idx) => {
-                const pawnEl = document.getElementById(`pawn-${idx}`);
-                const tileEl = document.getElementById(`tile-${p.pos}`);
-                if (tileEl && pawnEl) {
-                    // Offset leve para os peões não ficarem colados exatamente no mesmo pixel se estiverem na mesma casa
-                    const offsetX = (idx % 2) * 12 + 4;
-                    const offsetY = Math.floor(idx / 2) * 12 + 4;
-                    pawnEl.style.top = (tileEl.offsetTop + offsetY) + 'px';
-                    pawnEl.style.left = (tileEl.offsetLeft + offsetX) + 'px';
-                }
-            });
+        if(a.points!==b.points){
+            return b.points-a.points;
         }
 
-        function updateScoreboard() {
-            const sb = document.getElementById('scoreboard');
-            sb.innerHTML = '';
-            players.forEach(p => {
-                const row = document.createElement('div');
-                row.className = 'score-row';
-                row.innerHTML = `<span>${p.name}:</span> <span>Casa ${p.pos + 1}</span>`;
-                sb.appendChild(row);
-            });
-        }
+        return b.pos-a.pos;
 
-        function rollDice() {
-            const diceEl = document.getElementById('dice');
-            const resultText = document.getElementById('dice-result');
-            
-            let rolls = 0;
-            const rollInterval = setInterval(() => {
-                const tempNum = Math.floor(Math.random() * 6) + 1;
-                diceEl.innerText = tempNum;
-                rolls++;
-                if (rolls > 10) {
-                    clearInterval(rollInterval);
-                    const finalRoll = Math.floor(Math.random() * 6) + 1;
-                    diceEl.innerText = finalRoll;
-                    resultText.innerText = `Tirou: ${finalRoll}`;
-                    
-                    moveCurrentPlayer(finalRoll);
-                }
-            }, 40);
-        }
+    });
 
-        function moveCurrentPlayer(steps) {
-            let player = players[selectedPlayerIndex];
-            player.pos += steps;
-            
-            if (player.pos >= tileTypesDef.length - 1) {
-                player.pos = tileTypesDef.length - 1;
-                document.getElementById('question-text').innerText = `🏆 O jogador ${player.name} chegou ao FINISH e venceu o jogo! Parabéns!`;
-                document.getElementById('category-title').innerText = "FIM DE JOGO!";
-                document.getElementById('options-list').innerHTML = '';
-            } else {
-                triggerChallenge(player.pos, player);
-            }
+}
 
-            updateAllPawns();
-            updateScoreboard();
-        }
+function showRanking(final=false){
 
-        function triggerChallenge(pos, player) {
-            const tileData = tileTypesDef[pos];
-            const catTitle = document.getElementById('category-title');
-            const qText = document.getElementById('question-text');
-            const optionsList = document.getElementById('options-list');
-            const feedbackText = document.getElementById('feedback-text');
+    if(final){
 
-            optionsList.innerHTML = '';
-            feedbackText.innerText = '';
+        gameOver=true;
+        phase="over";
 
-            if (tileData.cat === 'start' || tileData.cat === 'finish') {
-                catTitle.innerText = `${player.name} - ${tileData.name}`;
-                qText.innerText = `Você parou em uma zona segura (${tileData.name}). Aguarde a próxima rodada!`;
-                return;
-            }
+        document.getElementById("roll-btn").disabled=true;
 
-            catTitle.innerText = `${player.name} - Desafio: ${tileData.name}`;
-            const pool = challenges[tileData.cat];
-            const challenge = pool[Math.floor(Math.random() * pool.length)];
+    }
 
-            qText.innerText = challenge.q;
+    const ranked=buildRanking();
 
-            challenge.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(btn, idx, challenge.correct);
-                optionsList.appendChild(btn);
-            });
-        }
+    const rows=ranked.map((player,index)=>`
 
-        function checkAnswer(btn, selected, correct) {
-            const options = document.querySelectorAll('.option-btn');
-            options.forEach((b, idx) => {
-                b.disabled = true;
-                if (idx === correct) b.classList.add('correct');
-                else if (idx === selected) b.classList.add('wrong');
-            });
+        <tr class="${index===0?"winner":""}">
+            <td>${index+1}º</td>
+            <td>${player.name}</td>
+            <td>${player.finished?"🏁":player.pos+1+"/48"}</td>
+            <td><b>${player.points}</b></td>
+        </tr>
 
-            const feedbackText = document.getElementById('feedback-text');
-            if (selected === correct) {
-                feedbackText.style.color = '#4ade80';
-                feedbackText.innerText = '✨ Resposta Correta! Excelente!';
-            } else {
-                feedbackText.style.color = '#f87171';
-                feedbackText.innerText = '❌ Resposta Incorreta! Continue tentando na próxima vez.';
-            }
-        }
+    `).join("");
 
-        window.onload = createBoard;
-        window.onresize = updateAllPawns;
-    </script>
+    document.getElementById("card-title").textContent=
+        final?"🏆 Final results":"📊 Current ranking";
+
+    document.getElementById("card-title").style.color="#e6197a";
+
+    document.getElementById("card-text").textContent=
+        final
+        ?`Winner: ${ranked[0].name}, with ${ranked[0].points} points!`
+        :"This is the current team ranking.";
+
+    document.getElementById("options").innerHTML=`
+
+        <div style="overflow-x:auto">
+            <table class="ranking">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Team</th>
+                        <th>Space</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>
+
+    `;
+
+    if(final){
+
+        addContinue("Play again",()=>resetGame());
+
+    }else{
+
+        addContinue("Back to game",resumeGame);
+
+    }
+
+    document.getElementById("feedback").textContent=
+        "Points: 1 for multiple-choice, 2 for open challenges and 3 bonus points for the Final Boss.";
+
+    updateScoreboard();
+
+}
+
+/* =====================================
+   21. RESUME GAME
+===================================== */
+
+function resumeGame(){
+
+    if(gameOver)return;
+
+    phase="idle";
+
+    setPanel(
+        "Game in progress",
+        `${players[current].name}, continue your turn!`,
+        "#087d83"
+    );
+
+    updateTurnLabel();
+    updateScoreboard();
+
+    document.getElementById("roll-btn").disabled=false;
+
+}
+
+/* =====================================
+   22. END GAME
+===================================== */
+
+function finishGame(reason){
+
+    if(gameOver)return;
+
+    gameOver=true;
+    phase="over";
+
+    if(rollTimer){
+
+        clearInterval(rollTimer);
+
+        rollTimer=null;
+
+    }
+
+    rolling=false;
+
+    document.getElementById("roll-btn").disabled=true;
+
+    showRanking(true);
+
+    document.getElementById("card-text").textContent=
+        `${reason} ${document.getElementById("card-text").textContent}`;
+
+}
+
+/* =====================================
+   23. RESET GAME
+===================================== */
+
+function resetGame(){
+
+    if(rollTimer){
+
+        clearInterval(rollTimer);
+
+        rollTimer=null;
+
+    }
+
+    rolling=false;
+
+    Object.keys(drawHistory).forEach(key=>{
+        delete drawHistory[key];
+    });
+
+    players=makePlayers();
+
+    current=0;
+    phase="idle";
+    gameOver=false;
+
+    document.getElementById("roll-btn").disabled=false;
+
+    document.getElementById("dice").innerHTML=
+        `<i class="bi bi-dice-5"></i>`;
+
+    document.getElementById("dice-result").textContent="Click to roll";
+
+    setPanel(
+        "Ready to play?",
+        "Roll the dice to start. Answer the English questions and earn points for your team!",
+        "#e6197a"
+    );
+
+    createBoard();
+
+    updateTurnLabel();
+    updateScoreboard();
+
+}
+
+/* =====================================
+   24. BUTTONS AND EVENTS
+===================================== */
+
+document.getElementById("roll-btn").addEventListener("click",rollDice);
+
+document.getElementById("ranking-btn").addEventListener("click",()=>{
+
+    if(gameOver){
+        showRanking(true);
+    }else{
+        showRanking(false);
+    }
+
+});
+
+document.getElementById("reset-btn").addEventListener("click",()=>{
+
+    if(confirm("Do you want to restart the game and reset all points and positions?")){
+
+        resetGame();
+
+    }
+
+});
+
+window.addEventListener("resize",()=>{
+
+    createArrows();
+    updatePawns();
+
+});
+
+/* =====================================
+   25. INITIALIZATION
+===================================== */
+
+players=makePlayers();
+
+createBoard();
+
+updateTurnLabel();
+
+updateScoreboard();
+
+</script>
 </body>
 </html>
