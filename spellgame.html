@@ -1,0 +1,1082 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spelling Bee - The English Spelling Challenge</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --purple:#32105c;
+  --purple2:#54218b;
+  --gold:#f6c453;
+  --gold2:#ffe6a0;
+  --pink:#e91e63;
+  --blue:#2478e8;
+  --red:#e84141;
+  --dark:#160c25;
+  --cream:#f7f2e9;
+  --green:#24a36a;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:'Nunito',sans-serif;
+  background:
+    radial-gradient(ellipse at top,#6735a0 0%,#32105c 45%,#160c25 100%);
+  color:white;
+}
+button,select,input{font-family:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+}
+.panel{
+  width:min(950px,100%);
+  background:rgba(20,9,36,.94);
+  border:2px solid var(--gold);
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 0 35px rgba(246,196,83,.18);
+}
+.logo{
+  text-align:center;
+  margin-bottom:24px;
+}
+.logo .bee{
+  font-size:48px;
+}
+.logo h1{
+  margin:0;
+  color:var(--gold);
+  font-size:clamp(30px,6vw,54px);
+  font-weight:900;
+  letter-spacing:3px;
+  text-shadow:0 4px 0 #7a4c10;
+}
+.logo p{
+  margin:5px 0 0;
+  letter-spacing:4px;
+  font-size:12px;
+  color:var(--gold2);
+  font-weight:800;
+}
+.section-title{
+  color:var(--gold);
+  font-size:19px;
+  font-weight:900;
+  margin:20px 0 10px;
+}
+label{
+  display:block;
+  font-weight:800;
+  margin:12px 0 6px;
+}
+input,select{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:2px solid #76529a;
+  background:#28163c;
+  color:white;
+  font-size:16px;
+  outline:none;
+}
+input:focus,select:focus{border-color:var(--gold)}
+.primary,.secondary,.danger,.help-btn{
+  border:2px solid #10091a;
+  border-radius:12px;
+  padding:13px 20px;
+  font-weight:900;
+  font-size:15px;
+  transition:.15s;
+}
+.primary{
+  background:var(--gold);
+  color:#28163c;
+  box-shadow:0 4px 0 #9c6a1c;
+}
+.primary:hover{transform:translateY(-2px)}
+.secondary{
+  background:#4c2872;
+  color:white;
+  border-color:#a17ac5;
+}
+.danger{
+  background:#9e273d;
+  color:white;
+  border-color:#3c0d19;
+}
+button:disabled{opacity:.4;cursor:not-allowed}
+.full{width:100%;margin-top:20px}
+.mode-grid,.difficulty-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.choice{
+  background:#28163c;
+  border:2px solid #76529a;
+  color:white;
+  padding:14px;
+  border-radius:12px;
+  font-weight:900;
+}
+.choice.active{
+  border-color:var(--gold);
+  background:#4b2a6d;
+  color:var(--gold);
+}
+.player-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:12px;
+}
+.player-entry{
+  background:#28163c;
+  border:1px solid #67468b;
+  border-radius:10px;
+  padding:10px;
+}
+.player-entry small{color:#c9b4dc}
+.player-entry input{margin-top:5px}
+.topbar{
+  width:min(1100px,100%);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin:0 auto 14px;
+  flex-wrap:wrap;
+}
+.round-label{
+  color:var(--gold);
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+.stage{
+  width:min(1100px,100%);
+  margin:auto;
+  text-align:center;
+}
+.stage-card{
+  background:linear-gradient(180deg,#32105c,#1b0d2b);
+  border:3px solid var(--gold);
+  border-radius:25px;
+  padding:25px 20px;
+  box-shadow:0 0 30px rgba(246,196,83,.2);
+}
+.spotlights{
+  color:var(--gold);
+  letter-spacing:18px;
+  font-size:24px;
+  margin-bottom:10px;
+}
+.round-heading{
+  font-size:clamp(22px,4vw,34px);
+  font-weight:900;
+  color:var(--gold);
+}
+.word-counter{
+  color:#d9c9eb;
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin:10px 0 20px;
+}
+.contestant{
+  display:inline-block;
+  background:#4c2872;
+  border:2px solid var(--gold);
+  border-radius:50px;
+  padding:9px 22px;
+  font-weight:900;
+  margin-bottom:20px;
+}
+.word-label{
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:4px;
+  color:var(--gold2);
+}
+.word{
+  font-size:clamp(34px,8vw,64px);
+  font-weight:900;
+  letter-spacing:5px;
+  color:white;
+  margin:10px 0 18px;
+  overflow-wrap:anywhere;
+  text-shadow:0 0 20px rgba(246,196,83,.3);
+}
+.help-area{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:18px;
+}
+.help-btn{
+  background:#f4e9d7;
+  color:#32105c;
+  border-color:#1b0d2b;
+  min-width:180px;
+}
+.help-btn.used{
+  background:#777;
+  color:#ddd;
+  text-decoration:line-through;
+}
+.help-result{
+  min-height:45px;
+  max-width:650px;
+  margin:0 auto 15px;
+  padding:10px 14px;
+  background:rgba(255,255,255,.08);
+  border-radius:10px;
+  color:var(--gold2);
+  font-weight:800;
+}
+.answer-display{
+  min-height:65px;
+  padding:12px;
+  margin:12px auto 18px;
+  max-width:700px;
+  background:#10091a;
+  border:2px solid #79549a;
+  border-radius:12px;
+  color:var(--gold);
+  font-size:clamp(24px,5vw,36px);
+  font-weight:900;
+  letter-spacing:6px;
+  overflow-wrap:anywhere;
+}
+.keyboard{
+  max-width:760px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:7px;
+}
+.key{
+  min-height:53px;
+  background:#f5eddf;
+  border:2px solid #120a1b;
+  border-radius:9px;
+  color:#27123c;
+  font-size:20px;
+  font-weight:900;
+  box-shadow:0 3px 0 #a99b88;
+}
+.key:active{transform:translateY(2px);box-shadow:none}
+.key.backspace{
+  background:#d9a4b6;
+  font-size:15px;
+}
+.key.clear{
+  background:#d5c2e9;
+  font-size:14px;
+}
+.key.submit{
+  grid-column:span 7;
+  background:var(--gold);
+  color:#28163c;
+  font-size:17px;
+  margin-top:8px;
+}
+.scoreboard{
+  margin:18px auto 0;
+  background:rgba(0,0,0,.25);
+  border:1px solid #67468b;
+  border-radius:15px;
+  padding:14px;
+}
+.scoreboard h3{
+  color:var(--gold);
+  margin:0 0 10px;
+}
+.score-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:8px;
+}
+.score-item{
+  background:#321c49;
+  padding:9px;
+  border-radius:9px;
+  font-size:13px;
+}
+.score-item strong{display:block;color:var(--gold);font-size:19px}
+.feedback{
+  margin:14px auto 0;
+  font-size:19px;
+  font-weight:900;
+  min-height:30px;
+}
+.feedback.correct{color:#6ef0ae}
+.feedback.wrong{color:#ff8797}
+.result-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin:20px 0;
+}
+.result-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:#321c49;
+  border:1px solid #76529a;
+  border-radius:12px;
+  padding:12px 16px;
+  text-align:left;
+}
+.result-row strong{color:var(--gold)}
+.winner{
+  color:var(--gold);
+  font-size:clamp(30px,6vw,48px);
+  font-weight:900;
+  text-align:center;
+}
+.note{
+  color:#cbb9df;
+  font-size:13px;
+  line-height:1.6;
+}
+@media(max-width:600px){
+  .panel{padding:18px}
+  .player-list{grid-template-columns:1fr}
+  .keyboard{gap:5px}
+  .key{min-height:48px;font-size:17px}
+  .help-btn{min-width:145px;font-size:13px}
+  .stage-card{padding:18px 12px}
+  .spotlights{letter-spacing:8px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- CONFIGURAÇÃO -->
+<section class="screen" id="setupScreen">
+<div class="panel">
+  <div class="logo">
+    <div class="bee">🐝</div>
+    <h1>SPELLING BEE</h1>
+    <p>THE ENGLISH SPELLING CHALLENGE</p>
+  </div>
+
+  <div class="section-title">GAME MODE</div>
+  <div class="mode-grid">
+    <button class="choice active" id="individualMode" onclick="setMode('individual')">👤 INDIVIDUAL</button>
+    <button class="choice" id="teamMode" onclick="setMode('teams')">🏆 TEAMS</button>
+  </div>
+
+  <label for="playerCount">NUMBER OF PLAYERS</label>
+  <select id="playerCount" onchange="createPlayerInputs()">
+    <option value="2">2 players</option>
+    <option value="3">3 players</option>
+    <option value="4">4 players</option>
+    <option value="5">5 players</option>
+    <option value="6">6 players</option>
+    <option value="7">7 players</option>
+    <option value="8">8 players</option>
+    <option value="9">9 players</option>
+    <option value="10">10 players</option>
+    <option value="11">11 players</option>
+    <option value="12">12 players</option>
+  </select>
+
+  <div class="section-title">DIFFICULTY</div>
+  <div class="difficulty-grid">
+    <button class="choice" onclick="setDifficulty('medium',this)">MEDIUM</button>
+    <button class="choice active" onclick="setDifficulty('hard',this)">HARD</button>
+    <button class="choice" onclick="setDifficulty('mixed',this)">MIXED</button>
+    <button class="choice" onclick="setDifficulty('expert',this)">EXPERT</button>
+  </div>
+
+  <div class="section-title">CONTESTANTS</div>
+  <div id="playerInputs" class="player-list"></div>
+
+  <p class="note">
+    Each round contains 5 different words. Every contestant gets a turn for each word.
+    No word repeats during the same round.
+  </p>
+
+  <button class="primary full" onclick="startGame()">START THE CHALLENGE</button>
+</div>
+</section>
+
+<!-- JOGO -->
+<section class="screen hidden" id="gameScreen">
+<div class="stage">
+  <div class="topbar">
+    <div class="round-label" id="roundLabel">ROUND 1 — QUALIFIERS</div>
+    <button class="secondary" onclick="confirmExit()">EXIT GAME</button>
+  </div>
+
+  <div class="stage-card">
+    <div class="spotlights">✦ ✧ ✦ ✧ ✦</div>
+    <div class="round-heading" id="roundHeading">THE QUALIFIERS</div>
+    <div class="word-counter" id="wordCounter">WORD 1 OF 5</div>
+    <div class="contestant" id="contestantName">CONTESTANT</div>
+
+    <div class="word-label">YOUR WORD IS...</div>
+    <div class="word" id="currentWord">EXTRAORDINARY</div>
+
+    <div class="help-area">
+      <button class="help-btn" id="meaningBtn" onclick="useHelp('meaning')">🇧🇷 SIGNIFICADO</button>
+      <button class="help-btn" id="definitionBtn" onclick="useHelp('definition')">📖 DEFINITION</button>
+    </div>
+
+    <div class="help-result" id="helpResult"></div>
+
+    <div class="answer-display" id="answerDisplay">_</div>
+
+    <div class="keyboard" id="keyboard"></div>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div class="scoreboard">
+    <h3>🏆 SCOREBOARD</h3>
+    <div class="score-grid" id="scoreboard"></div>
+  </div>
+</div>
+</section>
+
+<!-- RESULTADO DA RODADA -->
+<section class="screen hidden" id="roundResultScreen">
+<div class="panel">
+  <div class="logo">
+    <div class="bee">🏆</div>
+    <h1>ROUND RESULTS</h1>
+    <p id="resultSubtitle">THE QUALIFIERS</p>
+  </div>
+  <div class="result-list" id="roundResults"></div>
+  <button class="primary full" id="nextRoundBtn" onclick="advanceRound()">CONTINUE</button>
+</div>
+</section>
+
+<!-- FINAL -->
+<section class="screen hidden" id="finalScreen">
+<div class="panel">
+  <div class="logo">
+    <div class="bee">🏆🐝🏆</div>
+    <h1>GRAND CHAMPION</h1>
+    <p>THE SPELLING BEE WINNER</p>
+  </div>
+  <div class="winner" id="winnerName"></div>
+  <div class="result-list" id="finalResults"></div>
+  <button class="primary full" onclick="location.reload()">PLAY AGAIN</button>
+</div>
+</section>
+
+<script>
+/* =========================
+   BANCO DE PALAVRAS
+========================= */
+
+const wordBank = {
+medium: [
+ {word:"ACCOMMODATION",meaning:"Acomodação",definition:"A place where someone lives or stays."},
+ {word:"CONSCIOUS",meaning:"Consciente",definition:"Aware of your surroundings and thoughts."},
+ {word:"GUARANTEE",meaning:"Garantia",definition:"A promise that something will happen or work."},
+ {word:"MISCHIEVOUS",meaning:"Travesso",definition:"Causing trouble in a playful way."},
+ {word:"PRIVILEGE",meaning:"Privilégio",definition:"A special advantage or right."},
+ {word:"RECOMMEND",meaning:"Recomendar",definition:"To suggest something as a good choice."},
+ {word:"TEMPERATURE",meaning:"Temperatura",definition:"A measurement of how hot or cold something is."},
+ {word:"THOROUGH",meaning:"Completo / Minucioso",definition:"Careful and complete, with attention to every detail."},
+ {word:"VEGETABLE",meaning:"Vegetal / Verdura",definition:"A plant or part of a plant eaten as food."},
+ {word:"APPARENTLY",meaning:"Aparentemente",definition:"As far as something seems or appears to be true."},
+ {word:"BEGINNING",meaning:"Começo",definition:"The point at which something starts."},
+ {word:"CATEGORY",meaning:"Categoria",definition:"A group of things with similar characteristics."},
+ {word:"EXAGGERATE",meaning:"Exagerar",definition:"To make something seem bigger or more important than it is."},
+ {word:"FOREIGN",meaning:"Estrangeiro",definition:"Coming from or belonging to another country."},
+ {word:"INTELLIGENCE",meaning:"Inteligência",definition:"The ability to learn, understand, and solve problems."}
+],
+hard: [
+ {word:"ENTREPRENEUR",meaning:"Empreendedor",definition:"A person who starts and manages a business."},
+ {word:"PRONUNCIATION",meaning:"Pronúncia",definition:"The way a word or language is spoken."},
+ {word:"CONSCIENTIOUS",meaning:"Consciencioso",definition:"Careful to do things correctly and responsibly."},
+ {word:"INDEFINITE",meaning:"Indefinido",definition:"Not clearly fixed, limited, or decided."},
+ {word:"EMBARRASSMENT",meaning:"Constrangimento",definition:"A feeling of shame or discomfort."},
+ {word:"IRRESISTIBLE",meaning:"Irresistível",definition:"Too attractive or appealing to refuse."},
+ {word:"ACKNOWLEDGE",meaning:"Reconhecer",definition:"To accept or recognize that something is true."},
+ {word:"MAINTENANCE",meaning:"Manutenção",definition:"The process of keeping something in good condition."},
+ {word:"QUESTIONNAIRE",meaning:"Questionário",definition:"A written set of questions used to collect information."},
+ {word:"UNNECESSARY",meaning:"Desnecessário",definition:"Not needed or required."},
+ {word:"PERSISTENCE",meaning:"Persistência",definition:"The quality of continuing despite difficulties."},
+ {word:"ENVIRONMENTAL",meaning:"Ambiental",definition:"Related to the natural world and its protection."},
+ {word:"EXAGGERATION",meaning:"Exagero",definition:"A statement that makes something seem greater than it is."},
+ {word:"INCONVENIENCE",meaning:"Inconveniência",definition:"Something that causes difficulty or trouble."},
+ {word:"SUBSTANTIALLY",meaning:"Consideravelmente",definition:"To a great or important degree."},
+ {word:"PERSEVERANCE",meaning:"Perseverança",definition:"Continued effort despite obstacles or delays."},
+ {word:"ACQUAINTANCE",meaning:"Conhecido",definition:"A person you know, but not very well."},
+ {word:"ARCHAEOLOGY",meaning:"Arqueologia",definition:"The study of human history through objects and remains."},
+ {word:"CONTROVERSIAL",meaning:"Polêmico",definition:"Causing disagreement or public discussion."},
+ {word:"UNBELIEVABLE",meaning:"Inacreditável",definition:"Very difficult or impossible to believe."},
+ {word:"SOPHISTICATED",meaning:"Sofisticado",definition:"Complex, advanced, or developed in style."},
+ {word:"RESPONSIBILITY",meaning:"Responsabilidade",definition:"A duty or obligation to take care of something."},
+ {word:"DETERMINATION",meaning:"Determinação",definition:"The quality of continuing to try to achieve something."},
+ {word:"EXTRAORDINARY",meaning:"Extraordinário",definition:"Very unusual or remarkable."}
+],
+expert: [
+ {word:"FLUORESCENT",meaning:"Fluorescente",definition:"Producing light when exposed to certain forms of energy."},
+ {word:"ONOMATOPOEIA",meaning:"Onomatopeia",definition:"The formation of a word that imitates a sound."},
+ {word:"IDIOSYNCRASY",meaning:"Idiossincrasia",definition:"A particular habit or characteristic of a person."},
+ {word:"INCOMPREHENSIBLE",meaning:"Incompreensível",definition:"Impossible or very difficult to understand."},
+ {word:"RHETORICAL",meaning:"Retórico",definition:"Related to the art of effective or persuasive speaking."},
+ {word:"PHARMACEUTICAL",meaning:"Farmacêutico",definition:"Related to the preparation or sale of medicines."},
+ {word:"HIERARCHICAL",meaning:"Hierárquico",definition:"Organized according to levels of importance or authority."},
+ {word:"SILHOUETTE",meaning:"Silhueta",definition:"The dark shape of something seen against a lighter background."},
+ {word:"ENTHUSIASTIC",meaning:"Entusiasmado",definition:"Showing intense excitement and interest."},
+ {word:"UNPRECEDENTED",meaning:"Sem precedentes",definition:"Never having happened or existed before."},
+ {word:"METICULOUS",meaning:"Meticuloso",definition:"Showing great attention to detail."},
+ {word:"COLLOQUIAL",meaning:"Coloquial",definition:"Used in ordinary informal conversation."},
+ {word:"ECCENTRICITY",meaning:"Excentricidade",definition:"Unusual or strange behavior or appearance."},
+ {word:"CONNOISSEUR",meaning:"Especialista",definition:"An expert judge in matters of art, food, or taste."},
+ {word:"DEOXYRIBONUCLEIC",meaning:"Desoxirribonucleico",definition:"Related to DNA, the molecule carrying genetic information."},
+ {word:"PSYCHOLOGICAL",meaning:"Psicológico",definition:"Related to the human mind and behavior."},
+ {word:"INSTITUTIONAL",meaning:"Institucional",definition:"Related to an organization or established institution."},
+ {word:"MISCELLANEOUS",meaning:"Diversos",definition:"Consisting of many different kinds of things."},
+ {word:"PARALLELISM",meaning:"Paralelismo",definition:"The use of similar grammatical structures or patterns."},
+ {word:"UNQUESTIONABLE",meaning:"Inquestionável",definition:"Impossible to doubt or dispute."},
+ {word:"CIRCUMSTANTIAL",meaning:"Circunstancial",definition:"Depending on or related to particular circumstances."},
+ {word:"DISPROPORTIONATE",meaning:"Desproporcional",definition:"Too large or too small in comparison with something else."},
+ {word:"IRRECONCILABLE",meaning:"Irreconciliável",definition:"Impossible to bring into agreement."},
+ {word:"ACKNOWLEDGMENT",meaning:"Reconhecimento",definition:"The act of accepting or recognizing something."}
+]
+};
+
+/* =========================
+   ESTADO DO JOGO
+========================= */
+
+let mode="individual";
+let difficulty="hard";
+let players=[];
+let activePlayers=[];
+let round=1;
+let wordNumber=0;
+let playerIndex=0;
+let currentWord=null;
+let currentAnswer="";
+let usedMeaning=false;
+let usedDefinition=false;
+let roundWords=[];
+let roundWordIndex=0;
+let feedbackLocked=false;
+let gameFinished=false;
+
+const ROUND_NAMES={
+  1:"THE QUALIFIERS",
+  2:"THE SEMIFINAL",
+  3:"THE GRAND FINAL"
+};
+
+const ROUND_LABELS={
+  1:"ROUND 1 — QUALIFIERS",
+  2:"ROUND 2 — SEMIFINAL",
+  3:"ROUND 3 — GRAND FINAL"
+};
+
+function setMode(value){
+  mode=value;
+  document.getElementById("individualMode").classList.toggle("active",value==="individual");
+  document.getElementById("teamMode").classList.toggle("active",value==="teams");
+  createPlayerInputs();
+}
+
+function setDifficulty(value,button){
+  difficulty=value;
+  document.querySelectorAll(".difficulty-grid .choice").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+}
+
+function createPlayerInputs(){
+  const count=Number(document.getElementById("playerCount").value);
+  const container=document.getElementById("playerInputs");
+  container.innerHTML="";
+
+  for(let i=0;i<count;i++){
+    const entry=document.createElement("div");
+    entry.className="player-entry";
+
+    let teamText="";
+    if(mode==="teams"){
+      teamText=`<small>${i%2===0?"🔵 BLUE TEAM":"🔴 RED TEAM"}</small>`;
+    }else{
+      teamText=`<small>CONTESTANT ${i+1}</small>`;
+    }
+
+    entry.innerHTML=`
+      ${teamText}
+      <input type="text" id="player${i}" maxlength="20"
+        placeholder="Player ${i+1}" value="Player ${i+1}">
+    `;
+    container.appendChild(entry);
+  }
+}
+
+createPlayerInputs();
+
+/* =========================
+   INÍCIO
+========================= */
+
+function startGame(){
+  const count=Number(document.getElementById("playerCount").value);
+  players=[];
+
+  for(let i=0;i<count;i++){
+    const name=document.getElementById("player"+i).value.trim()||"Player "+(i+1);
+    players.push({
+      id:i,
+      name,
+      points:0,
+      team:mode==="teams"?(i%2===0?"BLUE":"RED"):null,
+      eliminated:false
+    });
+  }
+
+  activePlayers=[...players];
+  round=1;
+  wordNumber=0;
+  playerIndex=0;
+  gameFinished=false;
+
+  showScreen("gameScreen");
+  prepareRound();
+}
+
+/* =========================
+   PALAVRAS DA RODADA
+========================= */
+
+function getAvailableWords(){
+  if(difficulty==="mixed"){
+    return [
+      ...wordBank.medium,
+      ...wordBank.hard,
+      ...wordBank.expert
+    ];
+  }
+  return [...wordBank[difficulty]];
+}
+
+function shuffle(array){
+  const copy=[...array];
+  for(let i=copy.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]]=[copy[j],copy[i]];
+  }
+  return copy;
+}
+
+function prepareRound(){
+  wordNumber=0;
+  playerIndex=0;
+
+  // Cinco palavras diferentes são sorteadas para toda a rodada.
+  roundWords=shuffle(getAvailableWords()).slice(0,5);
+
+  document.getElementById("roundLabel").textContent=ROUND_LABELS[round];
+  document.getElementById("roundHeading").textContent=ROUND_NAMES[round];
+
+  renderScoreboard();
+  prepareTurn();
+}
+
+function prepareTurn(){
+  currentAnswer="";
+  usedMeaning=false;
+  usedDefinition=false;
+  feedbackLocked=false;
+
+  currentWord=roundWords[wordNumber];
+
+  document.getElementById("wordCounter").textContent=
+    "WORD "+(wordNumber+1)+" OF 5";
+
+  const player=activePlayers[playerIndex];
+  document.getElementById("contestantName").textContent=
+    player.name+(mode==="teams"?(player.team==="BLUE"?" — 🔵 BLUE TEAM":" — 🔴 RED TEAM"):"");
+
+  document.getElementById("currentWord").textContent=currentWord.word;
+  document.getElementById("answerDisplay").textContent="_";
+  document.getElementById("helpResult").textContent="";
+  document.getElementById("feedback").textContent="";
+  document.getElementById("meaningBtn").classList.remove("used");
+  document.getElementById("definitionBtn").classList.remove("used");
+
+  document.getElementById("meaningBtn").disabled=false;
+  document.getElementById("definitionBtn").disabled=false;
+
+  buildKeyboard();
+  renderScoreboard();
+}
+
+function buildKeyboard(){
+  const keyboard=document.getElementById("keyboard");
+  keyboard.innerHTML="";
+
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(letter=>{
+    const button=document.createElement("button");
+    button.className="key";
+    button.textContent=letter;
+    button.onclick=()=>addLetter(letter);
+    keyboard.appendChild(button);
+  });
+
+  const back=document.createElement("button");
+  back.className="key backspace";
+  back.textContent="⌫";
+  back.onclick=removeLetter;
+  keyboard.appendChild(back);
+
+  const clear=document.createElement("button");
+  clear.className="key clear";
+  clear.textContent="CLEAR";
+  clear.onclick=clearAnswer;
+  keyboard.appendChild(clear);
+
+  const submit=document.createElement("button");
+  submit.className="key submit";
+  submit.textContent="CONFIRM SPELLING";
+  submit.onclick=checkAnswer;
+  keyboard.appendChild(submit);
+}
+
+/* =========================
+   TECLADO VIRTUAL
+========================= */
+
+function addLetter(letter){
+  if(feedbackLocked)return;
+  if(currentAnswer.length>=30)return;
+
+  currentAnswer+=letter;
+  updateAnswerDisplay();
+}
+
+function removeLetter(){
+  if(feedbackLocked)return;
+  currentAnswer=currentAnswer.slice(0,-1);
+  updateAnswerDisplay();
+}
+
+function clearAnswer(){
+  if(feedbackLocked)return;
+  currentAnswer="";
+  updateAnswerDisplay();
+}
+
+function updateAnswerDisplay(){
+  document.getElementById("answerDisplay").textContent=currentAnswer||"_";
+}
+
+/* =========================
+   AJUDAS E PONTUAÇÃO
+========================= */
+
+function getPlayer(){
+  return activePlayers[playerIndex];
+}
+
+function useHelp(type){
+  if(feedbackLocked)return;
+
+  const player=getPlayer();
+
+  if(type==="meaning"){
+    if(usedMeaning)return;
+    usedMeaning=true;
+    player.points-=2;
+    document.getElementById("meaningBtn").classList.add("used");
+    document.getElementById("meaningBtn").disabled=true;
+    document.getElementById("helpResult").textContent=
+      "MEANING: "+currentWord.meaning+"  (−2 POINTS)";
+  }
+
+  if(type==="definition"){
+    if(usedDefinition)return;
+    usedDefinition=true;
+    player.points-=2;
+    document.getElementById("definitionBtn").classList.add("used");
+    document.getElementById("definitionBtn").disabled=true;
+    document.getElementById("helpResult").textContent=
+      "DEFINITION: "+currentWord.definition+"  (−2 POINTS)";
+  }
+
+  renderScoreboard();
+}
+
+/* =========================
+   CORREÇÃO
+========================= */
+
+function checkAnswer(){
+  if(feedbackLocked)return;
+
+  if(!currentAnswer){
+    document.getElementById("feedback").textContent="TYPE YOUR ANSWER FIRST!";
+    document.getElementById("feedback").className="feedback wrong";
+    return;
+  }
+
+  feedbackLocked=true;
+  const player=getPlayer();
+  const feedback=document.getElementById("feedback");
+
+  if(currentAnswer===currentWord.word){
+    const points=round===3?20:10;
+    player.points+=points;
+
+    feedback.textContent="✓ CORRECT! +"+points+" POINTS";
+    feedback.className="feedback correct";
+  }else{
+    player.points-=5;
+
+    feedback.textContent="✗ INCORRECT! −5 POINTS";
+    feedback.className="feedback wrong";
+
+    document.getElementById("helpResult").textContent=
+      "CORRECT SPELLING: "+currentWord.word;
+  }
+
+  renderScoreboard();
+
+  const keyboard=document.getElementById("keyboard");
+  keyboard.querySelectorAll("button").forEach(button=>button.disabled=true);
+
+  const next=document.createElement("button");
+  next.className="primary full";
+  next.textContent="NEXT TURN";
+  next.onclick=nextTurn;
+  keyboard.appendChild(next);
+}
+
+/* =========================
+   PRÓXIMO TURNO
+========================= */
+
+function nextTurn(){
+  playerIndex++;
+
+  // Todos os participantes respondem à palavra atual.
+  if(playerIndex>=activePlayers.length){
+    playerIndex=0;
+    wordNumber++;
+  }
+
+  // Após cinco palavras diferentes, a rodada termina.
+  if(wordNumber>=5){
+    finishRound();
+    return;
+  }
+
+  prepareTurn();
+}
+
+/* =========================
+   PLACAR
+========================= */
+
+function renderScoreboard(){
+  const container=document.getElementById("scoreboard");
+  container.innerHTML="";
+
+  if(mode==="individual"){
+    const ordered=[...players].sort((a,b)=>b.points-a.points);
+    ordered.forEach((player,index)=>{
+      const item=document.createElement("div");
+      item.className="score-item";
+      item.innerHTML=`
+        ${index+1}. ${escapeHTML(player.name)}
+        <strong>${player.points} pts</strong>
+      `;
+      container.appendChild(item);
+    });
+  }else{
+    const blue=players.filter(p=>p.team==="BLUE").reduce((sum,p)=>sum+p.points,0);
+    const red=players.filter(p=>p.team==="RED").reduce((sum,p)=>sum+p.points,0);
+
+    container.innerHTML=`
+      <div class="score-item">🔵 BLUE TEAM<strong>${blue} pts</strong></div>
+      <div class="score-item">🔴 RED TEAM<strong>${red} pts</strong></div>
+    `;
+  }
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,char=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[char]));
+}
+
+/* =========================
+   RESULTADOS DA RODADA
+========================= */
+
+function getTeamScores(){
+  return {
+    BLUE:players.filter(p=>p.team==="BLUE").reduce((sum,p)=>sum+p.points,0),
+    RED:players.filter(p=>p.team==="RED").reduce((sum,p)=>sum+p.points,0)
+  };
+}
+
+function finishRound(){
+  showScreen("roundResultScreen");
+
+  document.getElementById("resultSubtitle").textContent=ROUND_NAMES[round];
+  const container=document.getElementById("roundResults");
+  container.innerHTML="";
+
+  if(mode==="individual"){
+    const ordered=[...players].sort((a,b)=>b.points-a.points);
+
+    ordered.forEach((player,index)=>{
+      const row=document.createElement("div");
+      row.className="result-row";
+      row.innerHTML=`
+        <span>${index+1}º — ${escapeHTML(player.name)}</span>
+        <strong>${player.points} PTS</strong>
+      `;
+      container.appendChild(row);
+    });
+  }else{
+    const scores=getTeamScores();
+    const rows=[
+      {name:"🔵 BLUE TEAM",points:scores.BLUE},
+      {name:"🔴 RED TEAM",points:scores.RED}
+    ].sort((a,b)=>b.points-a.points);
+
+    rows.forEach((team,index)=>{
+      const row=document.createElement("div");
+      row.className="result-row";
+      row.innerHTML=`
+        <span>${index+1}º — ${team.name}</span>
+        <strong>${team.points} PTS</strong>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  const button=document.getElementById("nextRoundBtn");
+
+  if(round===3){
+    button.textContent="SEE THE CHAMPION";
+  }else{
+    button.textContent="NEXT ROUND";
+  }
+}
+
+/* =========================
+   AVANÇO DE FASE
+========================= */
+
+function advanceRound(){
+  if(round===3){
+    showFinal();
+    return;
+  }
+
+  round++;
+
+  if(mode==="individual"){
+    const ordered=[...players].sort((a,b)=>b.points-a.points);
+
+    let qualified;
+
+    if(round===2){
+      qualified=ordered.slice(0,Math.max(2,Math.ceil(ordered.length/2)));
+    }else{
+      qualified=ordered.slice(0,Math.min(2,ordered.length));
+    }
+
+    activePlayers=qualified;
+  }else{
+    // No modo equipes, todos continuam participando.
+    activePlayers=[...players];
+  }
+
+  prepareRound();
+  showScreen("gameScreen");
+}
+
+/* =========================
+   GRANDE FINAL
+========================= */
+
+function showFinal(){
+  showScreen("finalScreen");
+
+  if(mode==="individual"){
+    const ordered=[...players].sort((a,b)=>b.points-a.points);
+    const champion=ordered[0];
+
+    document.getElementById("winnerName").textContent=
+      "🏆 "+champion.name.toUpperCase()+" 🏆";
+
+    const container=document.getElementById("finalResults");
+    container.innerHTML="";
+
+    ordered.forEach((player,index)=>{
+      const row=document.createElement("div");
+      row.className="result-row";
+      row.innerHTML=`
+        <span>${index+1}º — ${escapeHTML(player.name)}</span>
+        <strong>${player.points} PTS</strong>
+      `;
+      container.appendChild(row);
+    });
+  }else{
+    const scores=getTeamScores();
+    const champion=scores.BLUE>=scores.RED?"BLUE TEAM":"RED TEAM";
+
+    document.getElementById("winnerName").textContent=
+      "🏆 "+champion+" 🏆";
+
+    document.getElementById("finalResults").innerHTML=`
+      <div class="result-row">
+        <span>🔵 BLUE TEAM</span><strong>${scores.BLUE} PTS</strong>
+      </div>
+      <div class="result-row">
+        <span>🔴 RED TEAM</span><strong>${scores.RED} PTS</strong>
+      </div>
+    `;
+  }
+}
+
+/* =========================
+   NAVEGAÇÃO
+========================= */
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(screen=>{
+    screen.classList.add("hidden");
+  });
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function confirmExit(){
+  if(confirm("Are you sure you want to leave the game?")){
+    location.reload();
+  }
+}
+</script>
+
+</body>
+</html>
