@@ -1,0 +1,1347 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE DETECTIVE CLUB</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Special+Elite&display=swap" rel="stylesheet">
+
+<style>
+:root{
+ --bg:#101114;--panel:#191a1f;--panel2:#22232a;
+ --gold:#c9a45c;--gold2:#e2c17e;--text:#f3f0e9;
+ --muted:#a7a5a0;--border:#393a40;--red:#a94444;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Nunito,sans-serif}
+button,select{font:inherit}
+button{cursor:pointer}
+header{text-align:center;padding:27px 12px 20px;border-bottom:1px solid var(--border);background:linear-gradient(#202024,#101114)}
+.logo{font-family:"Special Elite";font-size:clamp(27px,5vw,47px);letter-spacing:4px;color:var(--gold2)}
+.subtitle{font-size:10px;letter-spacing:4px;color:var(--muted);margin-top:8px}
+nav{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;padding:13px 8px;border-bottom:1px solid var(--border)}
+.nav-btn{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:10px 13px;font-size:10px;font-weight:900;letter-spacing:1px}
+.nav-btn.active,.nav-btn:hover{background:var(--gold);color:#171717;border-color:var(--gold)}
+main{max-width:1050px;margin:25px auto;padding:0 14px 50px}
+.screen{display:none}.screen.active{display:block}
+h1,h2,h3{font-family:"Special Elite",serif}
+.section-title{color:var(--gold2);font-size:27px;margin:4px 0 8px}
+.description{color:var(--muted);font-size:13px;line-height:1.6}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:19px;margin-bottom:16px}
+.panel h3{color:var(--gold2);margin:0 0 13px;font-size:20px}
+.field{margin-bottom:16px}
+label{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-bottom:7px}
+select{width:100%;background:#111216;color:var(--text);border:1px solid var(--border);padding:12px;border-radius:5px}
+.btn{background:var(--gold);border:1px solid var(--gold);color:#171717;padding:12px 17px;border-radius:5px;font-weight:900;font-size:12px;letter-spacing:.5px}
+.btn:hover{background:var(--gold2)}
+.btn.secondary{background:transparent;color:var(--gold2)}
+.btn.danger{background:var(--red);border-color:var(--red);color:white}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.button-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.case-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.case-option{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:15px;cursor:pointer}
+.case-option.selected{border:2px solid var(--gold);background:#30291d}
+.case-option .icon{font-size:27px}
+.case-option h3{color:var(--gold2);font-size:18px;margin:9px 0}
+.case-option p{color:var(--muted);font-size:12px;margin:0;line-height:1.5}
+.tag{display:inline-block;background:#30291d;color:var(--gold2);border:1px solid #66512e;border-radius:30px;padding:5px 10px;font-size:10px;font-weight:900;letter-spacing:1px;margin:3px}
+.notice{background:#29251d;border:1px solid #66512e;padding:13px;border-radius:6px;color:#e5d4ad;font-size:13px;line-height:1.6;margin:14px 0}
+.story{font-family:"Special Elite",serif;font-size:16px;line-height:1.9;color:#e8dfcf;white-space:pre-line}
+.story p{margin:0 0 14px}
+.suspect-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px}
+.suspect{background:var(--panel2);border:1px solid var(--border);border-radius:7px;padding:12px;text-align:center}
+.avatar{font-size:29px}.suspect strong{display:block;margin:6px 0 3px;font-size:13px}
+.suspect small{color:var(--muted);font-size:11px}
+.clue,.question{background:var(--panel2);border-left:3px solid var(--gold);padding:12px;margin:9px 0;border-radius:4px;font-size:13px;line-height:1.6}
+.clue.locked{border-left-color:#555;color:#858585}
+.clue-number{font-size:10px;letter-spacing:1px;color:var(--gold2);font-weight:900}
+.progress{height:8px;background:#33343a;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress-bar{height:100%;background:var(--gold);transition:.3s}
+.center{text-align:center}
+.big-number{font-family:"Special Elite";font-size:38px;color:var(--gold2)}
+.secret-card{max-width:650px;margin:15px auto;border:1px solid var(--gold);border-radius:9px;overflow:hidden;background:#1b1b1d}
+.secret-header{text-align:center;padding:20px;background:#30291d;border-bottom:1px solid var(--gold)}
+.secret-header h2{color:var(--gold2);margin:8px 0}
+.secret-content{padding:18px}
+.secret-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.secret-item:last-child{border:0}
+.secret-item strong{display:block;color:var(--gold2);font-size:10px;letter-spacing:1px;margin-bottom:5px}
+.secret-item p{margin:0;font-size:13px;line-height:1.65;color:#e7e2d8}
+.private-warning{text-align:center;color:#e3b77b;font-size:12px;margin:13px 0}
+.vote-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:17px 0}
+.vote-option{background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:14px 8px;min-height:105px}
+.vote-option.selected,.vote-option:hover{border:2px solid var(--gold);background:#30291d}
+.vote-option .avatar{display:block;margin-bottom:5px}
+.vote-option strong{font-size:12px}
+.vote-option small{display:block;color:var(--muted);margin-top:4px;font-size:10px}
+.result-row{display:grid;grid-template-columns:1fr 2fr 35px;gap:10px;align-items:center;margin:14px 0}
+.result-name{font-size:12px;font-weight:800}
+.result-bar{height:13px;background:#33343a;border-radius:20px;overflow:hidden}
+.result-fill{height:100%;background:var(--gold)}
+.result-count{text-align:right;color:var(--gold2);font-weight:900}
+.hidden{display:none!important}
+footer{text-align:center;color:#666;font-size:10px;padding:20px;border-top:1px solid var(--border)}
+@media(max-width:600px){
+ nav{gap:5px}.nav-btn{font-size:9px;padding:9px 8px}
+ .panel{padding:14px}.result-row{grid-template-columns:1fr 1.1fr 25px;gap:6px}
+}
+</style>
+</head>
+
+<body>
+<header>
+ <div class="logo">THE DETECTIVE CLUB</div>
+ <div class="subtitle">EVERY SECRET LEAVES A CLUE</div>
+</header>
+
+<nav>
+ <button class="nav-btn active" data-screen="setup">GAME SETUP</button>
+ <button class="nav-btn" data-screen="characters">SECRET CHARACTERS</button>
+ <button class="nav-btn" data-screen="case">THE CASE</button>
+ <button class="nav-btn" data-screen="voting">FINAL VOTING</button>
+ <button class="nav-btn" data-screen="results">VOTING RESULTS</button>
+</nav>
+
+<main>
+
+<section id="setup" class="screen active">
+ <h1 class="section-title">GAME SETUP</h1>
+ <p class="description">Choose a mystery and prepare your detectives.</p>
+
+ <div class="panel">
+  <h3>01 — SELECT YOUR CASE</h3>
+  <div id="caseOptions" class="case-grid"></div>
+ </div>
+
+ <div class="panel">
+  <h3>02 — NUMBER OF PLAYERS</h3>
+  <label for="playerCount">Choose between 4 and 12 participants</label>
+  <select id="playerCount">
+   <option value="4">4 players</option><option value="5">5 players</option>
+   <option value="6">6 players</option><option value="7">7 players</option>
+   <option value="8">8 players</option><option value="9">9 players</option>
+   <option value="10">10 players</option><option value="11">11 players</option>
+   <option value="12">12 players</option>
+  </select>
+ </div>
+
+ <div class="notice">
+  <strong>IMPORTANT:</strong> Every character has a secret, a questionable alibi and a reason to look suspicious. Only one character is the real culprit.
+ </div>
+ <button class="btn" onclick="createGame()">START THE GAME →</button>
+</section>
+
+
+<section id="characters" class="screen">
+ <h1 class="section-title">SECRET CHARACTERS</h1>
+ <p class="description">Each participant receives a private character card. Do not show it to anyone.</p>
+ <div class="panel center" id="distributionStatus"></div>
+ <div id="secretArea"></div>
+</section>
+
+
+<section id="case" class="screen">
+ <h1 class="section-title">THE CASE</h1>
+
+ <div class="panel">
+  <div class="tag">CONFIDENTIAL CASE FILE</div>
+  <h2 id="caseTitle" class="section-title"></h2>
+  <span id="caseLocation" class="tag"></span>
+  <h3>TEACHER'S INTRODUCTION</h3>
+  <p class="description">Read this story aloud before beginning the investigation.</p>
+  <div id="caseStory" class="story"></div>
+ </div>
+
+ <div class="panel">
+  <h3>THE TIMELINE</h3>
+  <div id="timeline"></div>
+ </div>
+
+ <div class="panel">
+  <h3>THE SUSPECTS</h3>
+  <p class="description">Every person has something to hide.</p>
+  <div class="suspect-grid" id="suspectsList"></div>
+ </div>
+
+ <div class="panel">
+  <h3>THE EVIDENCE</h3>
+  <p class="description">The teacher reveals one clue at a time.</p>
+  <div id="cluesList"></div>
+  <div class="button-row">
+   <button class="btn" id="revealClueBtn" onclick="revealClue()">REVEAL NEXT CLUE</button>
+  </div>
+  <p class="description" id="clueProgress"></p>
+ </div>
+
+ <div class="panel">
+  <h3>INTERROGATION QUESTIONS</h3>
+  <p class="description">Use these questions to challenge the suspects in English.</p>
+  <div id="questionsList"></div>
+ </div>
+
+ <div class="panel center">
+  <h3>ARE YOU READY TO ACCUSE?</h3>
+  <p class="description">When the investigation is complete, start the secret voting round.</p>
+  <button class="btn" onclick="startVoting()">GO TO FINAL VOTING →</button>
+ </div>
+</section>
+
+
+<section id="voting" class="screen">
+ <h1 class="section-title">FINAL VOTING</h1>
+ <p class="description">Every detective must secretly choose the person they believe is responsible.</p>
+ <div class="panel center" id="votingStatus"></div>
+ <div id="votingArea"></div>
+</section>
+
+
+<section id="results" class="screen">
+ <h1 class="section-title">VOTING RESULTS</h1>
+ <p class="description">The votes are revealed after everyone has voted.</p>
+ <div class="panel" id="resultsArea"></div>
+
+ <div class="panel center hidden" id="truthPanel">
+  <div class="tag">FINAL CASE REPORT</div>
+  <h2 class="section-title">THE TRUTH IS REVEALED</h2>
+  <div class="big-number" id="truthAvatar"></div>
+  <h2 id="truthName" class="section-title"></h2>
+  <div id="truthExplanation" class="story"></div>
+  <div class="notice" id="truthVoteMessage"></div>
+  <button class="btn secondary" onclick="newGame()">START A NEW GAME</button>
+ </div>
+</section>
+
+</main>
+<footer>THE DETECTIVE CLUB • A CLASSROOM MYSTERY RPG</footer>
+
+
+<script>
+
+/* ======================================================
+   THE 12 POSSIBLE CHARACTERS
+   All characters have suspicious personal information.
+   ====================================================== */
+
+const characters = [
+ {name:"Alex Morgan",emoji:"🕵️",role:"Museum Assistant",alibi:"You claim you were checking the storage room, but nobody remembers seeing you there.",secret:"You secretly copied a restricted key and never explained why.",style:"You become nervous when people ask about keys, doors or restricted rooms."},
+ {name:"Sophie Carter",emoji:"🎭",role:"Event Organizer",alibi:"You say you were organizing the event, but your schedule has a mysterious twenty-minute gap.",secret:"You had a serious argument with the victim or event owner shortly before the incident.",style:"You change the subject whenever someone mentions the argument."},
+ {name:"Daniel Brooks",emoji:"🧑‍🔬",role:"Researcher",alibi:"You claim you were working alone, but your computer activity does not fully support your story.",secret:"You recently discovered information that could damage another person's reputation.",style:"You insist that your research is private and refuse to explain everything."},
+ {name:"Emma Wilson",emoji:"👩‍🎨",role:"Art Collector",alibi:"You say you never entered the restricted area, but someone remembers seeing you nearby.",secret:"You owe a large amount of money and recently made a suspicious financial agreement.",style:"You become defensive whenever anyone mentions money."},
+ {name:"James Parker",emoji:"🧑‍🍳",role:"Chef",alibi:"You claim you were in the kitchen, but you left your station several times.",secret:"You secretly borrowed an important object and have not returned it.",style:"You remember small details but seem to forget important moments."},
+ {name:"Olivia Reed",emoji:"👩‍💻",role:"Technician",alibi:"You say you were fixing a technical problem, but the system records show unusual activity.",secret:"You accessed a private computer account without permission.",style:"You know more about the security system than you admit."},
+ {name:"Lucas Bennett",emoji:"💼",role:"Businessman",alibi:"You claim you were on a private phone call, but nobody can confirm it.",secret:"You were about to lose a valuable contract or business opportunity.",style:"You repeatedly ask what the police have discovered."},
+ {name:"Grace Miller",emoji:"📚",role:"Teacher",alibi:"You say you were reading in a quiet room, but your book was found somewhere else.",secret:"You discovered a secret document and kept it instead of reporting it.",style:"You ask many questions and seem unusually interested in the investigation."},
+ {name:"Henry Collins",emoji:"🛡️",role:"Security Guard",alibi:"You claim you were watching the entrance, but the security cameras do not show you there.",secret:"You have access to restricted areas and recently changed an important security record.",style:"You insist that nobody could enter without your permission."},
+ {name:"Chloe Adams",emoji:"📰",role:"Journalist",alibi:"You say you were interviewing a guest, but your recording has a missing section.",secret:"You were investigating a scandal and planned to publish a damaging story.",style:"You secretly collect information about everyone."},
+ {name:"William Scott",emoji:"🎓",role:"Student",alibi:"You claim you were studying, but someone saw you near the scene.",secret:"You were secretly looking for a document that did not belong to you.",style:"You give different versions of where you were during the incident."},
+ {name:"Isabella Moore",emoji:"🩺",role:"Private Guest",alibi:"You say you arrived late and left early, but the guest list tells a different story.",secret:"You have a personal connection to someone involved and have hidden it.",style:"You avoid talking about your relationship with the other guests."}
+];
+
+
+/* ======================================================
+   11 FIXED CASES
+   Each case has 12 suspicious character connections.
+   ====================================================== */
+
+const cases = [
+
+{
+ id:"diamond",title:"THE MISSING DIAMOND",icon:"💎",type:"THEFT",
+ location:"BLACKWOOD MUSEUM",culprit:"Henry Collins",
+ description:"A priceless diamond disappears during a private exhibition.",
+ story:`Good evening, detectives.
+
+Last night, the prestigious Blackwood Museum hosted its most important exhibition of the year. Collectors, artists, journalists and wealthy guests had gathered to admire a very special object: the Blue Star Diamond, a rare jewel valued at more than ten million dollars.
+
+The diamond belonged to the mysterious collector Richard Blackwood, who had refused to sell it for more than twenty years.
+
+At 8:30 PM, the museum director welcomed the guests. At 8:50 PM, the lights briefly went out. Nobody seemed particularly worried, but several people left their seats and moved around the exhibition hall.
+
+At 9:00 PM, the director returned to the main room to present the diamond. The display case was empty.
+
+The security alarm had been temporarily disabled. The main entrance was locked, and all the guests were still inside the museum. The security cameras had stopped recording for several minutes.
+
+The police discovered that someone had used an employee access code. A second key was also missing from the security office.
+
+There is another problem. The diamond was connected to a family dispute, an unpaid debt and a secret business agreement. Several guests had recently argued about its ownership.
+
+Everyone claims to know nothing. However, the evidence suggests that the thief was familiar with the museum and its security system.
+
+One of the people in this room stole the Blue Star Diamond.
+
+Your investigation starts now.`,
+ timeline:["8:30 PM — The guests arrive at the museum.","8:50 PM — The lights go out briefly.","8:55 PM — Restricted areas are accessed.","9:00 PM — The diamond is discovered missing."],
+ clues:["The alarm was disabled for exactly four minutes.","A second key was missing from the security office.","A piece of dark blue fabric was found near the display case.","An employee access code was used during the blackout.","A witness saw someone near the security corridor.","A recent message mentioned a large unpaid debt."],
+ questions:["Where were you when the lights went out?","Did you enter the security corridor?","Who had access to the display case?","Can anyone confirm your alibi?","Did you know the diamond's value?","Why were you near the exhibition room?"],
+ motive:"Henry wanted to sell the diamond to pay off a large personal debt.",
+ method:"He used his security access to disable the alarm and opened the display case with a copied key.",
+ explanation:"Henry Collins was the security guard. He knew the museum's security system and had access to the exhibition room. He disabled the alarm, used a copied key and stole the diamond during the blackout.",
+ suspicions:[
+ "You were seen examining the display case earlier that evening.",
+ "You argued with the museum director about the event's organization.",
+ "You secretly photographed the diamond's security system.",
+ "You asked how much the diamond was worth and contacted a private buyer.",
+ "You entered the staff kitchen during the blackout.",
+ "You accessed a computer connected to the museum alarm.",
+ "You had a financial disagreement with the museum owner.",
+ "You discovered an old document about the diamond's ownership.",
+ "You were responsible for the security corridor but left your position.",
+ "You were investigating the museum's insurance policy.",
+ "You searched for the diamond's transport records.",
+ "You had access to the security control panel and changed a camera setting."
+ ]
+},
+
+{
+ id:"hotel",title:"MURDER AT BLACKWOOD HOTEL",icon:"🔎",type:"MURDER",
+ location:"BLACKWOOD HOTEL",culprit:"Emma Wilson",
+ description:"A famous businessman is found dead after a private dinner.",
+ story:`Detectives, welcome to the Blackwood Hotel.
+
+Last night, the luxurious hotel hosted a private dinner for twelve guests. The most important person at the event was Victor Blackwood, a successful businessman known for his enormous fortune and difficult personality.
+
+During dinner, Victor announced that he had discovered a serious betrayal. He promised to reveal the name of the person responsible the following morning.
+
+Several guests became uncomfortable. One person left the table. Another received a phone call and immediately turned off the screen.
+
+At 9:40 PM, Victor returned to his private suite. At 10:15 PM, a hotel employee discovered him dead.
+
+The hotel immediately contacted the police. The building was placed under investigation, and nobody was allowed to leave.
+
+A glass was found beside the victim. His briefcase was open, and an important financial document was missing. The hotel cameras also recorded someone entering the corridor shortly before the estimated time of death.
+
+The police discovered that Victor had been involved in a complicated financial dispute. Some guests had lost money because of him. Others were afraid that he would reveal their secrets.
+
+Every person at the dinner had an opportunity to approach Victor.
+
+Someone in this hotel knows what happened. But the question is whether that person is willing to tell the truth.
+
+Your investigation begins now.`,
+ timeline:["8:00 PM — The private dinner begins.","9:10 PM — Victor announces a secret revelation.","9:40 PM — Victor enters his private suite.","10:15 PM — His body is discovered."],
+ clues:["A glass was found beside the victim.","A threatening message was received earlier that day.","A guest left the dining room for several minutes.","The hotel camera recorded someone entering the corridor.","A financial document was missing from the briefcase.","Victor had scheduled an important meeting for the next morning."],
+ questions:["When did you last see Victor?","Were you at the dinner table all evening?","Did Victor have any enemies?","Did you notice anything unusual about his drink?","Who entered the hotel corridor?","What was your relationship with the victim?"],
+ motive:"Emma wanted to prevent Victor from revealing that she had stolen money from his company.",
+ method:"She secretly placed a poisonous substance in his drink during dinner.",
+ explanation:"Emma Wilson had a financial connection to Victor. She knew he planned to expose her actions. During dinner, she contaminated his drink and returned to the table.",
+ suspicions:[
+ "You had a private conversation with Victor about a missing document.",
+ "You argued with the hotel manager about your room.",
+ "You were seen near the victim's suite.",
+ "You had a financial connection to Victor.",
+ "You left the dinner table without explaining where you were going.",
+ "You accessed the hotel's service corridor.",
+ "You had recently lost a business contract because of Victor.",
+ "You knew about Victor's plans for the next morning.",
+ "You were responsible for checking the hotel corridor.",
+ "You recorded part of the dinner without permission.",
+ "You searched Victor's briefcase earlier that evening.",
+ "You had access to the service area and knew the hotel routine."
+ ]
+},
+
+{
+ id:"raven",title:"THE SECRET OF RAVEN HOUSE",icon:"🏚️",type:"THEFT",
+ location:"RAVEN HOUSE",culprit:"Henry Collins",
+ description:"An antique family necklace disappears during a storm.",
+ story:`Welcome to Raven House.
+
+For generations, the Raven family has lived in this enormous old mansion. The house is famous for its strange architecture, hidden rooms and stories about secret passages.
+
+Last night, the family organized a private gathering before the sale of an antique necklace. The necklace had belonged to the family for more than two hundred years and was expected to be sold at an important auction.
+
+At 8:00 PM, the guests gathered in the main hall. The owner announced that the necklace would be displayed before the auction. Several people immediately questioned the decision.
+
+At 8:45 PM, a powerful storm hit the house. The lights flickered, and the guests were asked to remain inside.
+
+At 9:10 PM, the necklace disappeared from the library.
+
+The display box was open, but there was no sign of forced entry. A bookshelf had been moved slightly, and muddy footprints were found near the back entrance.
+
+The police discovered that someone had searched for the original house plans. There were also rumors about an inheritance dispute and an old family secret.
+
+Everyone inside the mansion had a reason to be interested in the necklace.
+
+Someone knew the house better than the others. Someone also knew that the storm would make it easier to disappear.
+
+Your task is to discover who took the necklace and why.`,
+ timeline:["8:00 PM — The family gathering begins.","8:45 PM — A storm causes the lights to flicker.","9:10 PM — The necklace disappears.","9:25 PM — The library is searched."],
+ clues:["A bookshelf in the library was slightly out of position.","Mud was found near the back entrance.","The necklace box was opened without damage.","An old photograph was found on the floor.","Someone had searched the original house plans.","A suitcase was found near the back entrance."],
+ questions:["Where were you during the storm?","Did you know about the hidden passage?","Who had access to the library?","Did you see anyone near the bookshelf?","Why was someone looking at the house plans?","Can anyone confirm where you were?"],
+ motive:"Henry wanted to sell the necklace to finance a new life abroad.",
+ method:"He used a hidden passage behind the library bookshelf.",
+ explanation:"Henry Collins knew Raven House very well. He discovered a hidden passage behind the bookshelf and used it to enter the library without being seen. He took the necklace before the storm ended.",
+ suspicions:[
+ "You searched the library for an old family document.",
+ "You argued about who should inherit the house.",
+ "You were seen near the library bookshelf.",
+ "You recently contacted an antique dealer.",
+ "You left the main hall during the storm.",
+ "You searched the house's electrical control system.",
+ "You had a disagreement about the auction price.",
+ "You found an old family photograph and hid it.",
+ "You knew the mansion's service corridors.",
+ "You were looking for the original house plans.",
+ "You had a suitcase ready before the gathering.",
+ "You had access to several restricted areas of the mansion."
+ ]
+},
+
+{
+ id:"painting",title:"THE VANISHING PAINTING",icon:"🖼️",type:"THEFT",
+ location:"HARRISON ART GALLERY",culprit:"Chloe Adams",
+ description:"A famous painting disappears during an exclusive exhibition.",
+ story:`Good evening, detectives.
+
+Tonight, the prestigious Harrison Art Gallery hosted its most important exhibition of the year. Collectors, artists, journalists and wealthy guests gathered to admire a very special painting: The Lady in Blue, a masterpiece valued at more than ten million dollars.
+
+The painting belonged to Richard Harrison, a mysterious collector who had refused to sell it for more than twenty years.
+
+At 8:00 PM, the gallery opened its doors. Guests were invited to enjoy the exhibition, take photographs and speak with the artists.
+
+At 9:00 PM, the director announced that the painting would be presented to the public. However, when everyone entered the main exhibition room, they discovered something shocking.
+
+The painting was gone.
+
+Its frame was still hanging on the wall, but the canvas had disappeared. The security system had been activated, and the gallery doors were locked.
+
+The security cameras stopped recording for eleven minutes. During that time, several guests entered restricted areas.
+
+The police discovered that the painting was involved in a family dispute, a financial investigation and a secret agreement with a private collector.
+
+One guest had recently threatened to publish information about the gallery. Another had been asking questions about the painting's insurance. Someone else had access to the restoration room.
+
+Every person in this gallery has a reason to hide something.
+
+One of them stole the painting. But who?`,
+ timeline:["8:00 PM — The exhibition opens.","8:40 PM — A private argument takes place.","8:52 PM — The security cameras stop recording.","9:00 PM — The painting is discovered missing."],
+ clues:["The camera system stopped recording for eleven minutes.","A small piece of canvas was found in the restoration room.","A gallery access card was used after closing time.","A private buyer had contacted the gallery that afternoon.","A document about the painting's insurance was altered.","A journalist's recording has an unexplained gap."],
+ questions:["Why were you interested in the painting?","Did you enter the restoration room?","Who knew about the camera problem?","Did you speak to a private collector?","What were you doing during the eleven-minute gap?","Can anyone confirm your story?"],
+ motive:"Chloe wanted to sell the painting to a private collector in exchange for money and exclusive information.",
+ method:"She used her press access to enter the restoration room and removed the canvas during the camera interruption.",
+ explanation:"Chloe Adams was investigating the painting and had secretly arranged a deal with a private buyer. She used her press access to enter the restricted restoration room and removed the painting while the cameras were offline.",
+ suspicions:[
+ "You had a private argument with the gallery director.",
+ "You wanted to take credit for the painting's discovery.",
+ "You photographed the security system without permission.",
+ "You asked a collector for the painting's estimated value.",
+ "You entered the restoration room shortly before the disappearance.",
+ "You accessed the gallery's camera control system.",
+ "You had a financial agreement with a private collector.",
+ "You found a document about the painting's ownership.",
+ "You were responsible for checking the gallery entrance.",
+ "You were investigating the painting's insurance records.",
+ "You searched for the painting's transport schedule.",
+ "You recorded private conversations and removed part of your recording."
+ ]
+},
+
+{
+ id:"train",title:"MURDER ON THE NIGHT TRAIN",icon:"🚆",type:"MURDER",
+ location:"THE MIDNIGHT EXPRESS",culprit:"Daniel Brooks",
+ description:"A passenger is found dead during an overnight journey.",
+ story:`Detectives, welcome aboard the Midnight Express.
+
+Last night, the train departed from London at 8:30 PM. It was carrying twelve passengers on a special overnight journey to Edinburgh.
+
+Among the passengers was Victor Blackwood, a famous businessman known for his enormous fortune and difficult personality.
+
+During dinner, Victor announced that he had important information to reveal the following morning. He said that someone on the train had betrayed him and that he was going to expose the truth.
+
+Several passengers became uncomfortable. Some argued with him, while others suddenly left the dining car.
+
+At 10:30 PM, the train entered a long tunnel. The lights briefly went out.
+
+At 11:40 PM, a member of the train staff discovered Victor inside his private compartment. He was dead.
+
+The train stopped at a small station, but the police discovered that nobody had entered or left during the journey.
+
+A glass was found beside the victim. His briefcase was open, and an important document was missing. His watch had stopped at 10:55 PM.
+
+The twelve people on board have different stories about what happened that night.
+
+Some were friends. Some were business partners. Others had never met Victor before.
+
+But everyone seems to know more than they are willing to admit.
+
+The murderer is still on this train.`,
+ timeline:["8:30 PM — The train leaves London.","9:15 PM — Victor announces a secret revelation.","10:30 PM — The train enters a tunnel and the lights go out.","11:40 PM — Victor is discovered dead."],
+ clues:["A glass was found beside the victim.","Victor received a threatening message earlier that day.","A passenger left the dining car during the journey.","The corridor camera stopped recording during the tunnel.","A financial document was missing from Victor's briefcase.","Victor had scheduled a private meeting at the destination."],
+ questions:["When did you last see Victor?","Were you in the dining car during the tunnel?","Did you know about the missing document?","Who entered Victor's compartment?","What was your relationship with him?","Can anyone confirm your location?"],
+ motive:"Daniel wanted to stop Victor from revealing that he had stolen confidential research and sold it.",
+ method:"He used the darkness in the tunnel to enter Victor's compartment and contaminate his drink.",
+ explanation:"Daniel Brooks had secretly sold confidential research connected to Victor's company. Victor discovered the betrayal and planned to expose him. Daniel used the tunnel blackout to enter the compartment and poison Victor's drink.",
+ suspicions:[
+ "You were seen near Victor's compartment before dinner.",
+ "You argued with the train manager about your seat.",
+ "You secretly photographed a passenger's documents.",
+ "You asked about Victor's business and financial situation.",
+ "You left the dining car shortly before the tunnel.",
+ "You had access to the train's electrical control panel.",
+ "You had a business disagreement with Victor.",
+ "You discovered a private message on Victor's phone.",
+ "You were responsible for checking the passenger corridor.",
+ "You were recording conversations without permission.",
+ "You searched for a missing briefcase document.",
+ "You knew the train's technical systems and had requested access to them."
+ ]
+},
+
+{
+ id:"will",title:"THE SECRET WILL",icon:"📜",type:"THEFT",
+ location:"BLACKWOOD MANSION",culprit:"Olivia Reed",
+ description:"A millionaire's last will disappears before the family meeting.",
+ story:`Welcome to Blackwood Mansion.
+
+For generations, the Blackwood family has been known for its wealth, influence and complicated family history.
+
+Three days ago, the family's patriarch, Edward Blackwood, died unexpectedly. His relatives and closest associates gathered at the mansion for the reading of his last will.
+
+Edward had promised to change his inheritance arrangements. According to his lawyer, the new document contained important surprises. Some family members would receive more money, while others might receive nothing.
+
+The reading was scheduled for 8:00 PM in the mansion library.
+
+However, when the lawyer opened the safe, the original will was missing.
+
+In its place, there was an old photograph and a short handwritten message:
+
+"The truth belongs to the person who finds it."
+
+The doors had been locked since the guests arrived. Nobody was supposed to enter the library without permission.
+
+The family members have already started accusing each other. One person recently lost a fortune. Another had a secret relationship with Edward. Someone else was planning to leave the country.
+
+There are also rumors that the original will was not the only document Edward wanted to hide.
+
+The police believe that the missing will was taken by someone who knew exactly what it contained.
+
+You must discover who stole the document and what that person was trying to protect.`,
+ timeline:["7:00 PM — The family arrives at the mansion.","7:30 PM — The lawyer prepares the documents.","8:00 PM — The safe is opened and the will is missing.","8:20 PM — The library is sealed."],
+ clues:["The safe was opened using the correct security code.","An old photograph was left inside the safe.","A computer file about the inheritance was recently accessed.","Someone searched the lawyer's private office.","A copy of the will was found with missing pages.","A security record was changed shortly before the meeting."],
+ questions:["Who knew the safe's code?","Did you enter the library?","What did Edward promise you?","Did you know about the inheritance changes?","Why were you interested in the lawyer's documents?","Can anyone confirm your alibi?"],
+ motive:"Olivia wanted to prevent the new will from revealing that she had manipulated financial records connected to the inheritance.",
+ method:"She used her technical access to open the electronic safe and replace the will with an old photograph.",
+ explanation:"Olivia Reed had access to the mansion's electronic security system. She knew the safe code and used it to remove the original will. She left a photograph as a misleading clue.",
+ suspicions:[
+ "You searched for an old family document.",
+ "You argued about who should inherit the mansion.",
+ "You secretly photographed the safe's control panel.",
+ "You contacted a private lawyer before the meeting.",
+ "You entered the library without permission.",
+ "You accessed the mansion's security computer.",
+ "You had a financial disagreement with Edward.",
+ "You found an old photograph and hid it.",
+ "You knew the mansion's service corridors.",
+ "You searched the original inheritance records.",
+ "You had a suitcase ready before the family meeting.",
+ "You had technical access to the safe and changed its security records."
+ ]
+},
+
+{
+ id:"island",title:"DEATH ON THE PRIVATE ISLAND",icon:"🏝️",type:"MURDER",
+ location:"STERLING PRIVATE ISLAND",culprit:"Lucas Bennett",
+ description:"A billionaire is found dead during a storm on a private island.",
+ story:`Detectives, imagine a beautiful private island surrounded by the ocean.
+
+This island belongs to billionaire Alexander Sterling, who invited a small group of guests to spend the weekend at his luxury resort.
+
+The invitation seemed simple: a private celebration, an important business announcement and three days away from the outside world.
+
+But the celebration quickly became a nightmare.
+
+On Saturday evening, Alexander organized a private dinner. During the meal, he announced that he was going to make a major change to his company. He also mentioned that he had discovered a serious betrayal among the people he trusted.
+
+Nobody asked questions, but the atmosphere changed immediately.
+
+At 10:20 PM, a violent storm hit the island. The electricity went out, communication systems stopped working and the guests were instructed to remain inside the main building.
+
+At 11:05 PM, Alexander was found dead in his private office.
+
+The island's security team confirmed that nobody had arrived or departed during the storm.
+
+A broken watch, a missing key and a mysterious phone call may be connected to the crime.
+
+Every guest had a personal or professional relationship with Alexander. Some wanted his money. Others feared his secrets.
+
+The murderer is among you. And on this island, there is nowhere to hide.`,
+ timeline:["7:30 PM — The private dinner begins.","9:15 PM — Alexander announces a business change.","10:20 PM — The storm causes a power failure.","11:05 PM — Alexander is found dead."],
+ clues:["A broken watch was found near the office.","A private office key is missing.","A phone call was made shortly before the storm.","The backup generator was switched off manually.","A wet footprint was found inside the office.","A financial contract was missing from Alexander's desk."],
+ questions:["What was your relationship with Alexander?","Where were you during the power failure?","Did you know about the business announcement?","Who had access to the office?","Did you hear the phone call?","Why were you near the generator?"],
+ motive:"Lucas wanted to stop Alexander from cancelling a business contract that would have destroyed his company.",
+ method:"He used the storm and power failure to enter the office and attack Alexander before taking the contract.",
+ explanation:"Lucas Bennett was about to lose a major business contract. Alexander planned to cancel the agreement and reveal Lucas's financial problems. Lucas used the power failure to reach the office and murder him.",
+ suspicions:[
+ "You argued with Alexander about the island's event schedule.",
+ "You were seen near the office before dinner.",
+ "You secretly photographed a business contract.",
+ "You asked how much the island property was worth.",
+ "You left the dinner table during the storm.",
+ "You accessed the backup generator controls.",
+ "You had a business disagreement with Alexander.",
+ "You knew about a private financial document.",
+ "You were responsible for the island's security entrance.",
+ "You recorded a private conversation.",
+ "You searched Alexander's desk for a missing contract.",
+ "You had access to the island's restricted areas and security system."
+ ]
+},
+
+{
+ id:"fossil",title:"THE MISSING FOSSIL",icon:"🦖",type:"THEFT",
+ location:"NATIONAL MUSEUM OF NATURAL HISTORY",culprit:"Alex Morgan",
+ description:"A rare dinosaur fossil disappears before an important exhibition.",
+ story:`Welcome to the National Museum of Natural History.
+
+For the past six months, the museum has been preparing a special exhibition featuring one of the rarest dinosaur fossils ever discovered.
+
+The fossil, known as The Last Giant, was recently found during an archaeological expedition. Scientists believe that it could change what we know about prehistoric life.
+
+The exhibition was scheduled to open to the public the following morning. Journalists, researchers, sponsors and museum employees were invited to a private preview.
+
+At 8:45 PM, the museum director gave a speech about the discovery. Everyone was excited, and several guests took photographs.
+
+But twenty minutes later, the exhibition room was found empty.
+
+The fossil had disappeared.
+
+There was no broken glass, no damaged door and no sign of forced entry. The museum's security system showed that someone had used an authorized access card.
+
+The police discovered that the museum had recently received an anonymous offer to buy the fossil. Several people had also argued about who deserved recognition for the discovery.
+
+One researcher was fired. A sponsor was losing money. A journalist was investigating a scandal.
+
+Everyone had something to gain or lose.
+
+The fossil is missing, and the person responsible may be closer than anyone imagines.`,
+ timeline:["8:00 PM — Guests arrive for the private preview.","8:45 PM — The museum director gives a speech.","8:55 PM — The exhibition room is left unattended.","9:05 PM — The fossil is discovered missing."],
+ clues:["The display case was opened with an authorized access card.","A transport receipt was found in the storage room.","A researcher received an anonymous message.","The museum's inventory was changed before the event.","A small piece of fossil material was found near the exit.","Someone had requested access to the storage room."],
+ questions:["Who had access to the exhibition room?","Did you know the fossil's value?","Were you involved in the expedition?","Why did you enter the storage room?","Did anyone offer to buy the fossil?","Can you explain the missing inventory record?"],
+ motive:"Alex wanted to sell the fossil to a private collector after being excluded from the discovery's official recognition.",
+ method:"He used an authorized museum key to remove the fossil and hid it in a transport container.",
+ explanation:"Alex Morgan had helped prepare the exhibition and knew how the fossil was stored. After being excluded from the discovery's recognition, he arranged a private sale and used his museum access to steal it.",
+ suspicions:[
+ "You handled the fossil during preparation.",
+ "You argued with the museum director about the exhibition.",
+ "You secretly photographed the display case.",
+ "You contacted a private collector.",
+ "You entered the storage room shortly before the disappearance.",
+ "You accessed the museum's inventory computer.",
+ "You were angry about the expedition's financial rewards.",
+ "You found a document about the fossil's ownership.",
+ "You were responsible for checking the storage entrance.",
+ "You were investigating the museum's insurance policy.",
+ "You searched for the fossil's transport records.",
+ "You had access to the museum keys and knew the storage routine."
+ ]
+},
+
+{
+ id:"theater",title:"THE LAST PERFORMANCE",icon:"🎭",type:"DISAPPEARANCE",
+ location:"WESTBRIDGE THEATER",culprit:"Sophie Carter",
+ description:"The lead actor disappears minutes before the opening performance.",
+ story:`Good evening, detectives.
+
+Tonight was supposed to be the opening night of The Last Performance, the most anticipated theater production of the year.
+
+The lead actor, Daniel Hayes, was famous for his talent, but he was also known for his difficult personality. During rehearsals, he argued with the director, insulted other actors and threatened to leave the production.
+
+At 7:30 PM, the theater was full of guests. Everyone was preparing for the final performance.
+
+But when the curtain was supposed to open, Daniel was nowhere to be found.
+
+His costume was still in the dressing room. His personal belongings were untouched, and his phone was found backstage.
+
+The theater doors had been closed, and the building's security guard confirmed that nobody had left through the main entrance.
+
+A handwritten note was discovered inside Daniel's dressing room. It contained only one sentence:
+
+"Tonight, everyone will finally see the truth."
+
+The police began questioning the cast and crew.
+
+The director had a professional disagreement with Daniel. Another actor wanted his leading role. A journalist was investigating his personal life. Someone had recently received a mysterious envelope.
+
+The disappearance may have been planned.
+
+Was Daniel kidnapped? Did he escape? Or is someone trying to make him disappear?
+
+Every person backstage has a story. Your job is to discover which one is false.`,
+ timeline:["6:30 PM — The cast arrives for the performance.","7:00 PM — Daniel has an argument backstage.","7:30 PM — The audience enters the theater.","7:45 PM — Daniel is reported missing."],
+ clues:["Daniel's phone was found backstage.","A handwritten note was discovered in the dressing room.","A backstage door was opened using an employee key.","A costume was found inside a storage room.","A private recording has been deleted.","Someone changed the performance schedule."],
+ questions:["When did you last see Daniel?","Did you enter his dressing room?","Who had access to the backstage doors?","What was the argument about?","Did Daniel plan to leave the theater?","Who changed the performance schedule?"],
+ motive:"Sophie wanted to prevent Daniel from revealing that she had secretly sold the production rights to another company.",
+ method:"She used her backstage access to create a false disappearance and moved Daniel to a hidden storage room before the show.",
+ explanation:"Sophie Carter organized the performance and controlled the backstage schedule. Daniel discovered her secret business agreement and planned to expose it. Sophie arranged his disappearance to delay the performance and silence him.",
+ suspicions:[
+ "You argued with Daniel about his role.",
+ "You had access to the theater schedule.",
+ "You secretly photographed Daniel's private documents.",
+ "You wanted to take over the production.",
+ "You entered the dressing room before the performance.",
+ "You changed a backstage security setting.",
+ "You had a financial agreement with the theater owner.",
+ "You discovered a private message from Daniel.",
+ "You were responsible for checking the backstage entrance.",
+ "You recorded a rehearsal without permission.",
+ "You searched the storage room for a missing costume.",
+ "You controlled the backstage keys and knew the theater's hidden areas."
+ ]
+},
+
+{
+ id:"snowfall",title:"THE MYSTERY AT SNOWFALL LODGE",icon:"❄️",type:"DISAPPEARANCE",
+ location:"SNOWFALL LODGE — CANADA",culprit:"William Scott",
+ description:"A hotel owner disappears during a dangerous snowstorm.",
+ story:`Welcome to Snowfall Lodge, a beautiful hotel hidden in the Canadian mountains.
+
+Twelve guests arrived at the lodge for a winter weekend. Some came to ski, others wanted to relax, and a few were there for a private business meeting.
+
+Everything seemed peaceful until Saturday night.
+
+At 9:00 PM, a powerful snowstorm began. The roads became impossible to use, the telephone connection disappeared and the hotel was completely isolated.
+
+During dinner, the hotel owner, Michael Turner, announced that he had discovered something important about the property. He said that the following morning he would reveal a secret that could change everyone's future.
+
+Several guests looked shocked.
+
+At 10:30 PM, Michael disappeared.
+
+His office was unlocked, his jacket was missing and a window was slightly open. Outside, the snow showed several footprints, but the storm quickly covered them.
+
+The hotel staff searched every room, the kitchen, the storage area and the surrounding buildings. Michael was nowhere to be found.
+
+The guests have different explanations. One says Michael planned to leave. Another claims he heard an argument. Someone else insists that a stranger entered the lodge before the storm.
+
+But the security log shows that no unknown visitor entered the building.
+
+Someone at Snowfall Lodge knows what happened.
+
+And someone is lying.`,
+ timeline:["7:00 PM — Guests gather for dinner.","8:15 PM — Michael announces an important revelation.","9:00 PM — A snowstorm isolates the lodge.","10:30 PM — Michael is reported missing."],
+ clues:["Michael's jacket was missing from his office.","A window was found slightly open.","Several footprints were found outside the lodge.","A room key was used after the storm began.","A private property document was missing.","The security log shows an unusual entry."],
+ questions:["Where were you when the storm began?","Did you see Michael after dinner?","Who had access to his office?","Did you know about the property document?","Did you hear an argument?","Can anyone confirm your location?"],
+ motive:"William wanted to stop Michael from revealing that he had secretly sold information about the lodge's property.",
+ method:"He used the storm to create a false trail and moved Michael to an unused maintenance building.",
+ explanation:"William Scott had discovered information about the lodge's property and planned to profit from it. Michael found out and was going to expose him. William used the storm and his knowledge of the maintenance area to make Michael disappear.",
+ suspicions:[
+ "You argued with Michael about the lodge's future.",
+ "You were seen near the office before dinner.",
+ "You secretly photographed the property documents.",
+ "You asked about the value of the mountain property.",
+ "You left the dining room during the storm.",
+ "You accessed the lodge's communication system.",
+ "You had a financial disagreement with Michael.",
+ "You found an old map of the property.",
+ "You were responsible for the lodge's security entrance.",
+ "You recorded a private conversation.",
+ "You searched the maintenance building for something.",
+ "You knew the lodge's hidden maintenance routes and had access to the keys."
+ ]
+},
+
+{
+ id:"exam",title:"THE EXAMINATION SCANDAL",icon:"🎓",type:"THEFT",
+ location:"WESTBRIDGE UNIVERSITY",culprit:"Grace Miller",
+ description:"Final examination papers disappear before an important exam.",
+ story:`Detectives, welcome to Westbridge University.
+
+Tomorrow morning, hundreds of students will take an important final examination. The results will determine scholarships, internships and opportunities to study abroad.
+
+Tonight, however, the university is facing a serious problem.
+
+At 8:00 PM, the examination director discovered that the original final exam papers had disappeared from a locked office.
+
+The papers contained confidential questions that had taken months to prepare. If someone had access to them, the entire examination would have to be cancelled.
+
+The office showed no signs of forced entry. The door was locked, the windows were closed and the security system had recorded only authorized access.
+
+Twelve people had been inside the university building that evening.
+
+Some were professors. Others were students, administrators and members of the technical team.
+
+A student had recently received a suspicious message. A professor was accused of unfair grading. An administrator had access to confidential documents. Another person was seen near the office shortly before the papers disappeared.
+
+The university wants the truth before morning.
+
+If the papers are not recovered, hundreds of students could lose an important opportunity.
+
+One person stole the examination papers. But the reason may be more complicated than simple cheating.
+
+Examine the evidence carefully. At Westbridge University, not every good student is innocent, and not every suspicious person is guilty.`,
+ timeline:["6:00 PM — The university building begins closing.","7:15 PM — Several people enter the administration corridor.","7:40 PM — The examination office is accessed.","8:00 PM — The missing papers are discovered."],
+ clues:["The office was opened with an authorized key.","A printer was used after normal working hours.","A copy of the examination schedule was missing.","A student received an anonymous message.","A security record was changed.","A document was found in the staff room."],
+ questions:["Who had access to the examination office?","Did you know the exam questions?","Why were you in the administration corridor?","Did anyone ask you for confidential information?","Who used the printer after hours?","Can anyone confirm your alibi?"],
+ motive:"Grace wanted to prevent the university from discovering that she had secretly sold examination questions to a private tutoring business.",
+ method:"She used her staff access to enter the office, copied the papers and removed the originals.",
+ explanation:"Grace Miller had access to the examination office and knew the university's document procedures. She had secretly sold confidential questions. She removed the originals to delay the investigation and hide her involvement.",
+ suspicions:[
+ "You searched the examination office for an old document.",
+ "You argued with the university director about the exam schedule.",
+ "You secretly photographed the exam room.",
+ "You contacted a private tutoring company.",
+ "You entered the administration corridor after hours.",
+ "You accessed the university printer system.",
+ "You had a financial disagreement with the university.",
+ "You discovered a confidential student record.",
+ "You were responsible for checking the examination office.",
+ "You recorded a private conversation with a professor.",
+ "You searched for the original examination papers.",
+ "You had staff access to the office and knew the document procedures."
+ ]
+}
+
+];
+
+
+/* ======================================================
+   GAME VARIABLES
+   ====================================================== */
+
+let selectedCase=0;
+let currentCase=null;
+let players=[];
+let assigned=[];
+let distributionIndex=0;
+let clueIndex=0;
+let votingIndex=0;
+let votes=[];
+let selectedVote=null;
+let votesRevealed=false;
+
+
+/* ======================================================
+   HELPERS
+   ====================================================== */
+
+function shuffle(array){
+ for(let i=array.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [array[i],array[j]]=[array[j],array[i]];
+ }
+ return array;
+}
+
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+ }[c]));
+}
+
+function navigate(screen){
+ document.querySelectorAll(".screen").forEach(el=>el.classList.remove("active"));
+ document.getElementById(screen).classList.add("active");
+ document.querySelectorAll(".nav-btn").forEach(btn=>{
+  btn.classList.toggle("active",btn.dataset.screen===screen);
+ });
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+
+/* ======================================================
+   CASE SELECTION
+   ====================================================== */
+
+function renderCaseOptions(){
+ const container=document.getElementById("caseOptions");
+ container.innerHTML="";
+
+ cases.forEach((c,index)=>{
+  const card=document.createElement("div");
+  card.className="case-option"+(index===selectedCase?" selected":"");
+  card.innerHTML=`
+   <div class="icon">${c.icon}</div>
+   <h3>${c.title}</h3>
+   <span class="tag">${c.type}</span>
+   <p>${c.description}</p>
+  `;
+  card.onclick=()=>{
+   selectedCase=index;
+   renderCaseOptions();
+  };
+  container.appendChild(card);
+ });
+}
+
+
+/* ======================================================
+   START GAME
+   ====================================================== */
+
+function createGame(){
+ currentCase=cases[selectedCase];
+ const count=Number(document.getElementById("playerCount").value);
+
+ players=Array.from({length:count},(_,i)=>`Player ${i+1}`);
+
+ const culprit=characters.find(c=>c.name===currentCase.culprit);
+ if(!culprit){
+  alert("The culprit is missing from the character library.");
+  return;
+ }
+
+ const remaining=characters.filter(c=>c.name!==currentCase.culprit);
+ const chosen=shuffle([culprit,...shuffle(remaining).slice(0,count-1)]);
+
+ assigned=chosen.map((character,index)=>{
+  const originalIndex=characters.findIndex(c=>c.name===character.name);
+  return {
+   ...character,
+   caseSecret:currentCase.suspicions[originalIndex],
+   isCulprit:character.name===currentCase.culprit,
+   player:players[index]
+  };
+ });
+
+ distributionIndex=0;
+ clueIndex=0;
+ votingIndex=0;
+ votes=[];
+ selectedVote=null;
+ votesRevealed=false;
+
+ renderDistribution();
+ renderPublicCase();
+ navigate("characters");
+}
+
+
+/* ======================================================
+   SECRET CHARACTER DISTRIBUTION
+   ====================================================== */
+
+function renderDistribution(){
+ const status=document.getElementById("distributionStatus");
+ const area=document.getElementById("secretArea");
+
+ if(distributionIndex>=players.length){
+  status.innerHTML=`
+   <div class="big-number">✓</div>
+   <h2>ALL CHARACTERS DISTRIBUTED</h2>
+   <p class="description">Every detective has received a secret identity.</p>
+   <button class="btn" onclick="navigate('case')">OPEN THE CASE →</button>
+  `;
+  area.innerHTML="";
+  return;
+ }
+
+ status.innerHTML=`
+  <div class="tag">PRIVATE CHARACTER DISTRIBUTION</div>
+  <div class="big-number">${distributionIndex+1} / ${players.length}</div>
+  <h2>${players[distributionIndex]}</h2>
+  <div class="progress"><div class="progress-bar" style="width:${distributionIndex/players.length*100}%"></div></div>
+  <p class="description">Pass the device to this player.</p>
+ `;
+
+ area.innerHTML=`
+  <div class="panel center">
+   <div class="private-warning">🔒 PRIVATE ACCESS — ONLY THE CURRENT PLAYER SHOULD LOOK</div>
+   <button class="btn" onclick="revealCharacter()">REVEAL MY CHARACTER</button>
+  </div>
+ `;
+}
+
+function revealCharacter(){
+ const character=assigned[distributionIndex];
+
+ document.getElementById("secretArea").innerHTML=`
+  <div class="secret-card">
+   <div class="secret-header">
+    <div class="tag">YOUR SECRET IDENTITY</div>
+    <div class="avatar">${character.emoji}</div>
+    <h2>${escapeHTML(character.name)}</h2>
+    <p>${escapeHTML(character.role)}</p>
+   </div>
+   <div class="secret-content">
+    <div class="secret-item">
+     <strong>YOUR PUBLIC IDENTITY</strong>
+     <p>You are ${escapeHTML(character.name)}, ${escapeHTML(character.role.toLowerCase())}.</p>
+    </div>
+    <div class="secret-item">
+     <strong>YOUR QUESTIONABLE ALIBI</strong>
+     <p>${escapeHTML(character.alibi)}</p>
+    </div>
+    <div class="secret-item">
+     <strong>YOUR PERSONAL SECRET</strong>
+     <p>${escapeHTML(character.secret)}</p>
+    </div>
+    <div class="secret-item">
+     <strong>YOUR CONNECTION TO THIS CASE</strong>
+     <p>${escapeHTML(character.caseSecret)}</p>
+    </div>
+    <div class="secret-item">
+     <strong>YOUR BEHAVIOR</strong>
+     <p>${escapeHTML(character.style)}</p>
+    </div>
+    <div class="secret-item">
+     <strong>YOUR ROLEPLAY MISSION</strong>
+     <p>Stay in character. Answer questions, defend your alibi and decide what information you want to share. You may hide your personal secrets, but do not invent new evidence.</p>
+    </div>
+   </div>
+  </div>
+  <div class="panel center">
+   <div class="private-warning">Do not show your character card to anyone.</div>
+   <button class="btn" onclick="hideCharacter()">HIDE MY FILE AND PASS THE DEVICE</button>
+  </div>
+ `;
+}
+
+function hideCharacter(){
+ document.getElementById("secretArea").innerHTML=`
+  <div class="panel center">
+   <div class="big-number">🔒</div>
+   <h3>CHARACTER FILE CLOSED</h3>
+   <p class="description">Your information is hidden. Pass the device to the next player.</p>
+  </div>
+ `;
+ distributionIndex++;
+ setTimeout(()=>{
+  renderDistribution();
+  window.scrollTo({top:0,behavior:"smooth"});
+ },600);
+}
+
+
+/* ======================================================
+   PUBLIC CASE SCREEN
+   ====================================================== */
+
+function renderPublicCase(){
+ document.getElementById("caseTitle").textContent=currentCase.title;
+ document.getElementById("caseLocation").textContent=currentCase.location;
+
+ document.getElementById("caseStory").textContent=currentCase.story;
+
+ document.getElementById("timeline").innerHTML=currentCase.timeline.map((item,i)=>`
+  <div class="question"><span class="clue-number">EVENT ${i+1}</span><br>${escapeHTML(item)}</div>
+ `).join("");
+
+ document.getElementById("suspectsList").innerHTML=assigned.map(c=>`
+  <div class="suspect">
+   <div class="avatar">${c.emoji}</div>
+   <strong>${escapeHTML(c.name)}</strong>
+   <small>${escapeHTML(c.role)}</small>
+  </div>
+ `).join("");
+
+ document.getElementById("questionsList").innerHTML=currentCase.questions.map((q,i)=>`
+  <div class="question"><span class="clue-number">QUESTION ${i+1}</span><br>${escapeHTML(q)}</div>
+ `).join("");
+
+ renderClues();
+}
+
+
+/* ======================================================
+   CLUES
+   ====================================================== */
+
+function renderClues(){
+ const container=document.getElementById("cluesList");
+
+ container.innerHTML=currentCase.clues.map((clue,index)=>`
+  <div class="clue ${index>=clueIndex?"locked":""}">
+   <div class="clue-number">CLUE ${index+1} — ${index<clueIndex?"REVEALED":"LOCKED"}</div>
+   ${index<clueIndex?escapeHTML(clue):"🔒 This clue has not been revealed yet."}
+  </div>
+ `).join("");
+
+ document.getElementById("clueProgress").textContent=
+  `${clueIndex} of ${currentCase.clues.length} clues revealed.`;
+
+ const button=document.getElementById("revealClueBtn");
+ button.disabled=clueIndex>=currentCase.clues.length;
+ button.textContent=clueIndex>=currentCase.clues.length?"ALL CLUES REVEALED":"REVEAL NEXT CLUE";
+}
+
+function revealClue(){
+ if(clueIndex>=currentCase.clues.length)return;
+ clueIndex++;
+ renderClues();
+}
+
+
+/* ======================================================
+   SECRET VOTING
+   ====================================================== */
+
+function startVoting(){
+ if(distributionIndex<players.length){
+  alert("Distribute all character cards before voting.");
+  navigate("characters");
+  return;
+ }
+
+ votingIndex=0;
+ votes=[];
+ selectedVote=null;
+ votesRevealed=false;
+ renderVoting();
+ navigate("voting");
+}
+
+function renderVoting(){
+ const status=document.getElementById("votingStatus");
+ const area=document.getElementById("votingArea");
+
+ if(votesRevealed){
+  status.innerHTML=`
+   <div class="big-number">✓</div>
+   <h2>VOTING COMPLETED</h2>
+   <p class="description">All votes have been recorded.</p>
+  `;
+  area.innerHTML=`
+   <div class="panel center">
+    <h3>ALL DETECTIVES HAVE VOTED</h3>
+    <p class="description">The teacher can now reveal the results.</p>
+    <button class="btn" onclick="revealVotingResults()">REVEAL VOTING RESULTS →</button>
+   </div>
+  `;
+  return;
+ }
+
+ if(votingIndex>=players.length){
+  votesRevealed=true;
+  renderVoting();
+  return;
+ }
+
+ status.innerHTML=`
+  <div class="tag">SECRET VOTING</div>
+  <div class="big-number">${votingIndex+1} / ${players.length}</div>
+  <h2>${players[votingIndex]}</h2>
+  <div class="progress"><div class="progress-bar" style="width:${votingIndex/players.length*100}%"></div></div>
+  <p class="description">Choose the person you believe is the culprit.</p>
+ `;
+
+ selectedVote=null;
+
+ area.innerHTML=`
+  <div class="panel">
+   <h3 class="center">WHO IS THE CULPRIT?</h3>
+   <p class="description center">Choose one suspect. Your vote will remain secret.</p>
+   <div class="vote-grid" id="voteOptions"></div>
+   <div class="private-warning">🔒 Previous votes are hidden. Only you can see your current selection.</div>
+   <div class="center">
+    <button class="btn" id="confirmVoteBtn" disabled onclick="confirmVote()">CONFIRM MY VOTE</button>
+   </div>
+  </div>
+ `;
+
+ const options=document.getElementById("voteOptions");
+
+ assigned.forEach((character,index)=>{
+  const button=document.createElement("button");
+  button.className="vote-option";
+  button.innerHTML=`
+   <span class="avatar">${character.emoji}</span>
+   <strong>${escapeHTML(character.name)}</strong>
+   <small>${escapeHTML(character.role)}</small>
+  `;
+  button.onclick=()=>{
+   selectedVote=index;
+   document.querySelectorAll(".vote-option").forEach(b=>b.classList.remove("selected"));
+   button.classList.add("selected");
+   document.getElementById("confirmVoteBtn").disabled=false;
+  };
+  options.appendChild(button);
+ });
+}
+
+function confirmVote(){
+ if(selectedVote===null)return;
+
+ votes.push({
+  player:players[votingIndex],
+  suspect:assigned[selectedVote].name
+ });
+
+ selectedVote=null;
+
+ document.getElementById("votingArea").innerHTML=`
+  <div class="panel center">
+   <div class="big-number">🔒</div>
+   <h3>VOTE RECORDED</h3>
+   <p class="description">Your choice has been saved secretly. Pass the device to the next detective.</p>
+  </div>
+ `;
+
+ votingIndex++;
+
+ setTimeout(()=>{
+  renderVoting();
+  window.scrollTo({top:0,behavior:"smooth"});
+ },700);
+}
+
+
+/* ======================================================
+   VOTING RESULTS
+   ====================================================== */
+
+function revealVotingResults(){
+ if(votes.length!==players.length){
+  alert("Not all players have voted yet.");
+  return;
+ }
+
+ const counts={};
+ assigned.forEach(c=>counts[c.name]=0);
+ votes.forEach(v=>counts[v.suspect]++);
+
+ const sorted=assigned.map(c=>({
+  ...c,count:counts[c.name]
+ })).sort((a,b)=>b.count-a.count);
+
+ document.getElementById("resultsArea").innerHTML=`
+  <div class="center">
+   <div class="tag">OFFICIAL VOTING REPORT</div>
+   <div class="big-number">${votes.length}</div>
+   <h2>DETECTIVES VOTED</h2>
+   <p class="description">The class has made its final accusation.</p>
+  </div>
+  <div id="resultBars"></div>
+  <div class="notice center">The suspect with the most votes is the class's main accusation. The true answer is still hidden.</div>
+  <div class="center">
+   <button class="btn" onclick="revealTruth()">REVEAL THE TRUTH →</button>
+  </div>
+ `;
+
+ const bars=document.getElementById("resultBars");
+
+ sorted.forEach(c=>{
+  const percentage=c.count/players.length*100;
+  const row=document.createElement("div");
+  row.className="result-row";
+  row.innerHTML=`
+   <div class="result-name">${c.emoji} ${escapeHTML(c.name)}</div>
+   <div class="result-bar"><div class="result-fill" style="width:${percentage}%"></div></div>
+   <div class="result-count">${c.count}</div>
+  `;
+  bars.appendChild(row);
+ });
+
+ document.getElementById("truthPanel").classList.add("hidden");
+ navigate("results");
+}
+
+
+/* ======================================================
+   FINAL SOLUTION
+   ====================================================== */
+
+function revealTruth(){
+ const culprit=assigned.find(c=>c.isCulprit);
+ const culpritVotes=votes.filter(v=>v.suspect===currentCase.culprit).length;
+
+ document.getElementById("truthAvatar").textContent=culprit.emoji;
+ document.getElementById("truthName").textContent=currentCase.culprit;
+
+ document.getElementById("truthExplanation").innerHTML=`
+  <p><strong>THE CULPRIT</strong><br>${escapeHTML(currentCase.culprit)}</p>
+  <p><strong>THE MOTIVE</strong><br>${escapeHTML(currentCase.motive)}</p>
+  <p><strong>THE METHOD</strong><br>${escapeHTML(currentCase.method)}</p>
+  <p><strong>THE COMPLETE EXPLANATION</strong><br>${escapeHTML(currentCase.explanation)}</p>
+ `;
+
+ let message;
+ if(culpritVotes>players.length/2){
+  message=`Excellent investigation! ${culpritVotes} players voted for the real culprit. The class identified the criminal with a majority vote.`;
+ }else if(culpritVotes>0){
+  message=`${culpritVotes} player(s) voted for the real culprit. The class did not reach a majority agreement.`;
+ }else{
+  message="Nobody voted for the real culprit. The mystery was more difficult than expected!";
+ }
+
+ document.getElementById("truthVoteMessage").textContent=message;
+ document.getElementById("truthPanel").classList.remove("hidden");
+ document.getElementById("truthPanel").scrollIntoView({behavior:"smooth"});
+}
+
+
+/* ======================================================
+   RESET
+   ====================================================== */
+
+function newGame(){
+ players=[];
+ assigned=[];
+ currentCase=null;
+ votes=[];
+ clueIndex=0;
+ distributionIndex=0;
+ votingIndex=0;
+ selectedVote=null;
+ votesRevealed=false;
+
+ document.getElementById("secretArea").innerHTML="";
+ document.getElementById("votingArea").innerHTML="";
+ document.getElementById("resultsArea").innerHTML="";
+ document.getElementById("truthPanel").classList.add("hidden");
+
+ navigate("setup");
+}
+
+
+/* ======================================================
+   NAVIGATION RESTRICTIONS
+   ====================================================== */
+
+document.querySelectorAll(".nav-btn").forEach(button=>{
+ button.addEventListener("click",()=>{
+  const target=button.dataset.screen;
+
+  if(target==="setup"){
+   navigate("setup");
+   return;
+  }
+
+  if(!currentCase){
+   alert("Start a game first.");
+   return;
+  }
+
+  if(target==="characters"){
+   navigate("characters");
+   return;
+  }
+
+  if(target==="case"){
+   if(distributionIndex<players.length){
+    alert("Distribute all character cards first.");
+    navigate("characters");
+    return;
+   }
+   navigate("case");
+   return;
+  }
+
+  if(target==="voting"){
+   if(votingIndex===0 && votes.length===0 && !votesRevealed){
+    alert("Start the voting round from the case screen first.");
+    return;
+   }
+   navigate("voting");
+   return;
+  }
+
+  if(target==="results"){
+   if(!votesRevealed){
+    alert("Voting results are still secret.");
+    return;
+   }
+   navigate("results");
+  }
+ });
+});
+
+
+/* ======================================================
+   INITIALIZATION
+   ====================================================== */
+
+renderCaseOptions();
+
+</script>
+</body>
+</html>
