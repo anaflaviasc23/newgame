@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quem é o Impostor?</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  background:#171525;
+  color:white;
+  font-family:Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+  padding:25px 15px;
+}
+.container{width:100%;max-width:480px}
+h1{text-align:center;font-size:30px;margin:15px 0 8px}
+.subtitle{text-align:center;color:#aaa;margin-bottom:30px}
+.panel{
+  background:#242238;
+  padding:20px;
+  border-radius:18px;
+  margin-bottom:20px;
+}
+label{display:block;margin-bottom:10px;font-weight:bold}
+input{
+  width:100%;padding:15px;border:2px solid #49445f;
+  border-radius:10px;background:#171525;color:white;
+  font-size:17px;outline:none;
+}
+button{
+  width:100%;padding:15px;border:0;border-radius:10px;
+  background:#e83e83;color:white;font-size:16px;
+  font-weight:bold;cursor:pointer;margin-top:12px;
+}
+button:disabled{opacity:.5;cursor:not-allowed}
+.player{
+  background:#242238;border:1px solid #454057;
+  border-radius:14px;padding:17px;margin-bottom:12px;
+}
+.player-header{
+  display:flex;justify-content:space-between;
+  align-items:center;font-weight:bold;
+}
+.player button{background:#454057}
+.result{
+  display:none;text-align:center;margin-top:15px;
+  padding:20px;border-radius:12px;background:#171525;
+}
+.result strong{display:block;font-size:23px;margin-bottom:8px}
+.word{color:#54e0a0}
+.impostor{color:#ff668d}
+.status{color:#aaa;font-size:12px}
+#game{display:none}
+#newGame{background:#55516a}
+.footer{text-align:center;color:#777;font-size:12px;margin-top:25px}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>🕵️ IMPOSTOR</h1>
+  <p class="subtitle">Descubra quem está fingindo!</p>
+
+  <div id="setup" class="panel">
+    <label for="secretWord">Digite a palavra secreta:</label>
+    <input id="secretWord" type="text"
+      placeholder="Ex: Abacaxi" autocomplete="off">
+    <button onclick="startGame()">INICIAR SORTEIO</button>
+  </div>
+
+  <div id="game">
+    <div class="panel">
+      <strong>🎭 Sorteio realizado!</strong>
+      <p style="color:#aaa;font-size:14px">
+        Passe o dispositivo para cada jogador.
+        Cada pessoa deve clicar apenas no próprio nome.
+      </p>
+      <p id="progress" style="color:#54e0a0">
+        0 de 6 jogadores visualizaram.
+      </p>
+    </div>
+
+    <div id="players"></div>
+
+    <button id="newGame" onclick="resetGame()">
+      NOVO SORTEIO
+    </button>
+  </div>
+
+  <p class="footer">Não deixe ninguém ver a palavra do outro! 🤫</p>
+</div>
+
+<script>
+let secret = "";
+let impostor = -1;
+let revealed = [];
+
+function startGame(){
+  const input = document.getElementById("secretWord");
+  secret = input.value.trim();
+
+  if(!secret){
+    alert("Digite uma palavra antes de sortear!");
+    input.focus();
+    return;
+  }
+
+  impostor = Math.floor(Math.random()*6);
+  revealed = [];
+
+  document.getElementById("setup").style.display="none";
+  document.getElementById("game").style.display="block";
+
+  renderPlayers();
+}
+
+function renderPlayers(){
+  const area = document.getElementById("players");
+  area.innerHTML = "";
+
+  for(let i=0;i<6;i++){
+    const card = document.createElement("div");
+    card.className = "player";
+
+    const header = document.createElement("div");
+    header.className = "player-header";
+
+    const name = document.createElement("span");
+    name.textContent = "Jogador " + (i+1);
+
+    const status = document.createElement("span");
+    status.className = "status";
+    status.textContent = revealed.includes(i)
+      ? "Visualizado ✓" : "Aguardando";
+
+    header.append(name,status);
+    card.appendChild(header);
+
+    if(!revealed.includes(i)){
+      const btn = document.createElement("button");
+      btn.textContent = "REVELAR MEU PAPEL";
+
+      btn.onclick = () => reveal(i,card);
+
+      card.appendChild(btn);
+    } else {
+      const result = document.createElement("div");
+      result.className = "result";
+      result.style.display = "block";
+
+      const title = document.createElement("strong");
+      const detail = document.createElement("span");
+
+      if(i===impostor){
+        title.textContent = "🕵️ IMPOSTOR!";
+        title.className = "impostor";
+        detail.textContent = "Descubra a palavra sem ser descoberto!";
+      }else{
+        title.textContent = secret.toUpperCase();
+        title.className = "word";
+        detail.textContent = "Você conhece a palavra secreta!";
+      }
+
+      result.append(title,detail);
+      card.appendChild(result);
+    }
+
+    area.appendChild(card);
+  }
+
+  document.getElementById("progress").textContent =
+    revealed.length + " de 6 jogadores visualizaram.";
+}
+
+function reveal(index){
+  revealed.push(index);
+  renderPlayers();
+}
+
+function resetGame(){
+  document.getElementById("game").style.display="none";
+  document.getElementById("setup").style.display="block";
+  document.getElementById("secretWord").value="";
+  document.getElementById("players").innerHTML="";
+}
+</script>
+</body>
+</html>
