@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Soletrando — English Challenge</title>
+
+<style>
+:root{
+--pink:#ec1763;
+--gold:#ffd45a;
+--green:#38d996;
+--red:#ff5b6e;
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+min-height:100vh;
+background:radial-gradient(circle at top,#421743,#171522 55%,#090910);
+color:#fff;
+font-family:Arial,sans-serif;
+}
+
+button,input,select{font:inherit}
+
+button{
+border:2px solid white;
+background:#303044;
+color:white;
+padding:12px 15px;
+font-weight:900;
+cursor:pointer;
+box-shadow:4px 4px #000;
+transition:.12s;
+}
+
+button:hover{
+filter:brightness(1.2);
+transform:translateY(-1px);
+}
+
+button:disabled{
+opacity:.4;
+cursor:not-allowed;
+}
+
+.wrap{
+max-width:1050px;
+margin:auto;
+padding:16px;
+}
+
+.top{
+text-align:center;
+padding:15px;
+}
+
+.kicker{
+color:var(--gold);
+letter-spacing:5px;
+font-size:12px;
+font-weight:bold;
+}
+
+.logo{
+font-size:clamp(42px,8vw,76px);
+font-weight:1000;
+text-shadow:4px 4px var(--pink),8px 8px #000;
+margin:8px;
+}
+
+.subtitle{letter-spacing:3px}
+
+.card{
+background:linear-gradient(145deg,#29283d,#171724);
+border:2px solid #59516b;
+border-radius:16px;
+padding:20px;
+margin:14px 0;
+box-shadow:0 12px 30px #0008;
+}
+
+h2{color:var(--gold);margin-top:0}
+
+label{
+display:block;
+color:#c9c5d4;
+font-size:13px;
+font-weight:bold;
+margin:10px 0 5px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+border:2px solid #6d657e;
+border-radius:8px;
+background:#10101a;
+color:white;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px;
+}
+
+.actions{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+justify-content:center;
+margin-top:15px;
+}
+
+.pink{background:var(--pink)}
+.gold{background:var(--gold);color:#17121b}
+.green{background:#087e5b}
+.red{background:#a9203d}
+.ghost{background:transparent;border-color:#aaa}
+
+.small{
+font-size:12px;
+color:#bbb;
+line-height:1.5;
+}
+
+.hide{display:none!important}
+
+.stage{text-align:center}
+
+.bar{
+display:flex;
+justify-content:space-between;
+gap:10px;
+flex-wrap:wrap;
+color:#c9c5d4;
+font-weight:bold;
+font-size:13px;
+}
+
+.timer{
+font-size:clamp(42px,8vw,68px);
+font-weight:1000;
+color:var(--gold);
+margin:8px;
+}
+
+.timer.danger{
+color:var(--red);
+animation:pulse .5s infinite alternate;
+}
+
+@keyframes pulse{
+to{transform:scale(1.07)}
+}
+
+.label{
+color:var(--pink);
+letter-spacing:4px;
+font-weight:1000;
+font-size:13px;
+}
+
+.word{
+font-size:clamp(32px,7vw,58px);
+font-weight:1000;
+letter-spacing:4px;
+margin:12px;
+overflow-wrap:anywhere;
+}
+
+.answer{
+min-height:52px;
+background:#090912;
+border:2px dashed #8d849f;
+border-radius:10px;
+padding:12px;
+color:var(--gold);
+font-size:25px;
+letter-spacing:5px;
+font-weight:bold;
+max-width:650px;
+margin:15px auto;
+}
+
+.keyboard{
+display:grid;
+grid-template-columns:repeat(7,minmax(32px,1fr));
+gap:7px;
+max-width:650px;
+margin:12px auto;
+}
+
+.keyboard button{
+padding:12px 3px;
+background:#39374c;
+font-size:18px;
+}
+
+.keyboard .wide{
+grid-column:span 2;
+font-size:13px;
+}
+
+.scoreboard{
+display:grid;
+grid-template-columns:repeat(2,minmax(120px,1fr));
+gap:10px;
+}
+
+.score{
+background:#11111c;
+border:1px solid #514961;
+border-radius:10px;
+padding:12px;
+text-align:center;
+}
+
+.score strong{
+display:block;
+color:var(--gold);
+font-size:26px;
+}
+
+.score.active{
+border:2px solid var(--pink);
+}
+
+.hint{
+background:#10101a;
+border-radius:8px;
+padding:10px;
+margin:10px auto;
+max-width:700px;
+text-align:left;
+}
+
+.status{
+font-weight:900;
+font-size:19px;
+min-height:25px;
+margin:12px;
+}
+
+.good{color:var(--green)}
+.bad{color:var(--red)}
+
+footer{
+text-align:center;
+color:#999;
+font-size:11px;
+padding:20px;
+}
+
+@media(max-width:520px){
+.wrap{padding:9px}
+.card{padding:13px}
+.keyboard{gap:4px}
+.keyboard button{padding:11px 2px}
+.actions button{flex:1}
+}
+</style>
+</head>
+
+<body>
+
+<main class="wrap">
+
+<header class="top">
+<div class="kicker">THE BIG ENGLISH SPELLING SHOW</div>
+<div class="logo">SOLETRANDO</div>
+<div class="subtitle">ENGLISH CHALLENGE • TV EDITION</div>
+</header>
+
+<section id="setup" class="card">
+
+<h2>🎤 Preparar competição</h2>
+
+<div class="grid">
+
+<div>
+<label>Equipe / participante 1</label>
+<input id="p1" value="Equipe 1" maxlength="22">
+</div>
+
+<div>
+<label>Equipe / participante 2</label>
+<input id="p2" value="Equipe 2" maxlength="22">
+</div>
+
+<div>
+<label>Tempo por palavra</label>
+<select id="seconds">
+<option value="15">15 segundos</option>
+<option value="30" selected>30 segundos</option>
+<option value="45">45 segundos</option>
+<option value="60">60 segundos</option>
+</select>
+</div>
+
+<div>
+<label>Palavras por equipe</label>
+<select id="quantity">
+<option>5</option>
+<option selected>10</option>
+<option>15</option>
+<option>20</option>
+<option>30</option>
+</select>
+</div>
+
+<div>
+<label>Volume dos efeitos</label>
+<input id="volume" type="range" min="0" max="100" value="65">
+</div>
+
+<div>
+<label>Pronúncia automática</label>
+<select id="voice">
+<option value="on" selected>Ativada</option>
+<option value="off">Desativada</option>
+</select>
+</div>
+
+</div>
+
+<div class="actions">
+<button class="pink" onclick="startGame()">COMEÇAR O DESAFIO ▶</button>
+<button class="ghost" onclick="testSound()">TESTAR SOM 🔊</button>
+</div>
+
+<p class="small">
+Banco com 600 palavras: 200 fáceis, 200 médias e 200 difíceis.
+Os níveis são misturados e não aparecem para o participante.
+Não há repetição na mesma partida.
+</p>
+
+</section>
+
+<section id="game" class="hide">
+
+<div class="card">
+<div id="scores" class="scoreboard"></div>
+</div>
+
+<div class="card stage">
+
+<div class="bar">
+<span id="turn"></span>
+<span id="progress"></span>
+</div>
+
+<div id="timer" class="timer">30</div>
+
+<div class="label">SUA PALAVRA É...</div>
+
+<div id="word" class="word">READY?</div>
+
+<div class="actions">
+<button class="ghost" onclick="sayWord()">
+🔊 OUVIR PRONÚNCIA
+</button>
+</div>
+
+<div id="answer" class="answer">_ _ _</div>
+
+<div id="keyboard" class="keyboard"></div>
+
+<div class="actions">
+
+<button id="meaningBtn" class="gold"
+onclick="showHint('meaning')">
+SIGNIFICADO
+</button>
+
+<button id="definitionBtn" class="gold"
+onclick="showHint('definition')">
+DEFINIÇÃO
+</button>
+
+<button class="ghost" onclick="skipWord()">
+PULAR PALAVRA ↷
+</button>
+
+</div>
+
+<div id="hint" class="hint hide"></div>
+
+<div id="status" class="status"></div>
+
+<div class="actions">
+
+<button class="green" onclick="submitSpelling()">
+CONFIRMAR SOLETRAÇÃO ✓
+</button>
+
+<button class="ghost" onclick="clearAnswer()">
+APAGAR ⌫
+</button>
+
+</div>
+
+<div class="actions">
+
+<button id="pauseBtn" class="ghost" onclick="pauseTimer()">
+PAUSAR TEMPO Ⅱ
+</button>
+
+<button class="red" onclick="endGame()">
+ENCERRAR JOGO
+</button>
+
+</div>
+
+</div>
+</section>
+
+<section id="result" class="card hide">
+
+<h2>🏆 Resultado</h2>
+
+<div id="finalScores" class="scoreboard"></div>
+
+<div id="winner" class="status"></div>
+
+<div class="actions">
+<button class="pink" onclick="location.reload()">
+NOVA PARTIDA ↻
+</button>
+</div>
+
+</section>
+
+<footer>
+SOLETRANDO • ENGLISH CHALLENGE — jogo educativo independente.
+</footer>
+
+</main>
+
+<script>
+
+// ======================================
+// BANCO DE PALAVRAS - 600 PALAVRAS
+// ======================================
+
+const EASY = [
+"apple","house","school","friend","yellow","purple","orange","window","garden","family",
+"mother","father","sister","brother","teacher","student","pencil","eraser","notebook","table",
+"chair","water","bread","cheese","coffee","banana","grapes","chicken","potato","tomato",
+"carrot","animal","rabbit","monkey","turtle","zebra","giraffe","tiger","elephant","dolphin",
+"summer","winter","spring","autumn","Monday","Tuesday","Friday","Sunday","morning","evening",
+"night","happy","angry","hungry","thirsty","tired","funny","beautiful","pretty","small",
+"large","short","long","quick","slow","strong","weak","clean","dirty","young",
+"early","today","tomorrow","yesterday","always","never","sometimes","usually","listen","speak",
+"write","read","study","learn","teach","answer","question","computer","telephone","internet",
+"music","movie","picture","photo","camera","football","basketball","volleyball","tennis","soccer",
+"swimming","running","dancing","singing","kitchen","bedroom","bathroom","living","hospital","library",
+"market","bakery","restaurant","airport","station","street","bridge","beach","mountain","river",
+"ocean","country","city","village","schoolbag","backpack","shoes","jacket","shirt","trousers",
+"dress","skirt","pocket","button","clock","watch","calendar","birthday","holiday","weekend",
+"people","children","woman","women","man","men","person","doctor","nurse","driver",
+"farmer","police","artist","singer","actor","office","flower","tree","grass","cloud",
+"rainbow","sunshine","weather","sunny","cloudy","windy","rainy","snowy","breakfast","lunch",
+"dinner","sandwich","hamburger","sausage","chocolate","strawberry","lemon","butter","sugar","salt",
+"bottle","plate","spoon","fork","knife","napkin","thirteen","twenty","thirty","forty",
+"fifty","hundred","first","second","third","fourth","fifth","sixth","seventh","eighth"
+];
+
+const MEDIUM = [
+"adventure","advice","afternoon","alphabet","anniversary","apartment","appointment","architect","audience","available",
+"awareness","beautiful","beginning","believe","bicycle","calendar","carefully","celebrate","challenge","character",
+"comfortable","community","competition","confidence","conversation","courageous","creative","curiosity","dangerous","decision",
+"delicious","dentist","department","describe","dictionary","different","direction","discovery","education","electricity",
+"embarrassed","emergency","emotional","encouragement","environment","especially","excellent","experience","experiment","expensive",
+"explanation","familiar","fantastic","February","favourite","financial","firefighter","following","fortunately","friendship",
+"government","graduation","grammar","grateful","guarantee","happiness","headphones","healthy","historical","honestly",
+"hospitality","imagination","immediately","important","impossible","independent","information","ingredient","instruction","intelligent",
+"interesting","international","interview","invisible","knowledge","landscape","language","leadership","leisure","lightning",
+"literature","management","marvellous","measurement","medicine","memory","message","microscope","mischievous","mountainous",
+"mysterious","necessary","neighbour","neighbourhood","nutrition","occasion","occasionally","opportunity","ordinary","organize",
+"original","parachute","paragraph","passenger","patience","peaceful","performance","permission","persuade","photograph",
+"physical","popular","possibility","preparation","presentation","probably","professional","pronunciation","psychology","publicity",
+"punctuation","quantity","questionnaire","reception","recommend","relationship","restaurant","responsible","rhythm","schedule",
+"science","scientific","secretary","separate","serious","similar","sincerely","solution","souvenir","specialist",
+"stomach","straight","strategy","strength","successful","suggestion","surprise","temperature","temporary","throughout",
+"thunderstorm","traditional","transportation","treatment","twelfth","typical","uncomfortable","understand","university","vacation",
+"vegetable","volunteer","Wednesday","wonderful","workshop","yourself","achievement","activity","addition","analysis",
+"announcement","application","argument","athlete","attention","attitude","beautifully","behaviour","business","cafeteria",
+"ceremony","certificate","citizenship","classroom","colleague","communication","comparison","conclusion","condition","connection"
+];
+
+const HARD = [
+"accommodation","acquaintance","adolescence","aesthetic","anonymous","anticipation","appreciation","archaeology","architecture","assassination",
+"astronomy","authenticity","bureaucracy","camouflage","catastrophe","cemetery","choreography","circumstance","coincidence","collaboration",
+"commemorate","conscientious","consciousness","controversial","correspondence","declaration","definitely","demonstration","deteriorate","determination",
+"diagnosis","disciplinary","discrimination","ecstasy","efficiency","entrepreneur","entrepreneurship","exaggeration","exhilarating","existential",
+"extraordinary","fluorescent","genealogy","handkerchief","hierarchy","hypocrisy","idiosyncrasy","illegitimate","indispensable","infrastructure",
+"inoculation","intellectual","interference","interpretation","irresistible","juxtaposition","kaleidoscope","legitimate","liaison","maintenance",
+"manoeuvre","medieval","millennium","miscellaneous","mnemonic","mortgage","nevertheless","occasionally","onomatopoeia","ophthalmologist",
+"parliamentary","particularly","perseverance","personnel","phenomenon","philanthropy","philosophical","pneumonia","possessive","prejudice",
+"privileged","pronunciation","psychiatrist","questionable","questionnaire","quintessential","reconnaissance","refrigerator","renaissance","repertoire",
+"resilience","restaurant","rhetorical","sacrilegious","simultaneously","sovereignty","spontaneous","subconscious","supersede","surveillance",
+"susceptible","synchronization","temperature","threshold","unanimous","unnecessary","vacuum","vocabulary","Wednesday","wholesale",
+"worcestershire","zealous","abbreviation","aberration","abnormality","abolition","absenteeism","abstinence","accelerate","accessibility",
+"accommodate","accumulation","achievement","acknowledgment","acquisition","admissible","adversarial","aerial","aerodynamics","affidavit",
+"aggravation","allegiance","alliteration","amateur","ambiguous","amphibian","anatomical","annihilate","anomaly","antecedent",
+"antibiotic","antique","apocalypse","apparatus","appendix","apprenticeship","approximate","arbitrary","artificial","asparagus",
+"assiduous","asterisk","astrology","asymmetrical","atmosphere","attribute","auspicious","auxiliary","avalanche","baccalaureate",
+"belligerent","beneficiary","bibliography","bilingual","blasphemous","boulevard","bourgeois","brilliant","bronchitis","cacophony",
+"calamity","capillary","carbohydrate","cardiovascular","cartilage","caterpillar","cavalry","celebrity","centennial","chameleon",
+"characteristic","chrysanthemum","chronological","circumference","civilization","coefficient","colloquial","combustible","commensurate","commencement",
+"compassionate","comprehensive","conglomerate","connoisseur","conscientiousness","consensus","constituency","contemporary","contemptible","continuation"
+];
+
+
+// ======================================
+// CONTROLE DO JOGO
+// ======================================
+
+let bank=[];
+let used=new Set();
+let players=[];
+let scores=[0,0];
+let rounds=[0,0];
+let turn=0;
+let total=10;
+let current=null;
+let typed="";
+let timeLeft=30;
+let timerId=null;
+let paused=false;
+let locked=false;
+let gameOver=false;
+
+let hints={
+meaning:false,
+definition:false
+};
+
+function makeBank(){
+
+bank=[
+...new Set(EASY)].map(w=>({w,level:1}))
+.concat(
+[...new Set(MEDIUM)].map(w=>({w,level:2})),
+[...new Set(HARD)].map(w=>({w,level:3}))
+);
+
+bank=bank.sort(()=>Math.random()-.5);
+
+}
+
+function sound(freq=600,dur=.13,type='sine',vol=1){
+
+let v=Number(document.getElementById('volume').value)/100;
+
+if(!v)return;
+
+try{
+
+let c=new(window.AudioContext||window.webkitAudioContext)();
+let o=c.createOscillator();
+let g=c.createGain();
+
+o.type=type;
+o.frequency.value=freq;
+
+g.gain.setValueAtTime(.0001,c.currentTime);
+g.gain.exponentialRampToValueAtTime(.22*v*vol,c.currentTime+.02);
+g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+dur);
+
+o.connect(g);
+g.connect(c.destination);
+
+o.start();
+o.stop(c.currentTime+dur+.03);
+
+o.onended=()=>c.close();
+
+}catch(e){}
+
+}
+
+function fanfare(){
+
+[523,659,784,1046].forEach((f,i)=>
+setTimeout(()=>sound(f,.2,'triangle'),i*120)
+);
+
+}
+
+function testSound(){
+
+sound(660,.2);
+setTimeout(()=>sound(880,.2),220);
+
+}
+
+function esc(s){
+
+return String(s).replace(/[&<>"']/g,c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[c]));
+
+}
+
+function startGame(){
+
+makeBank();
+
+players=[
+document.getElementById('p1').value.trim()||'Equipe 1',
+document.getElementById('p2').value.trim()||'Equipe 2'
+];
+
+total=Number(document.getElementById('quantity').value);
+
+scores=[0,0];
+rounds=[0,0];
+turn=0;
+used.clear();
+gameOver=false;
+
+document.getElementById('setup').classList.add('hide');
+document.getElementById('result').classList.add('hide');
+document.getElementById('game').classList.remove('hide');
+
+drawScores();
+nextWord();
+
+}
+
+function drawScores(){
+
+document.getElementById('scores').innerHTML=
+players.map((p,i)=>`
+<div class="score ${i===turn?'active':''}">
+${esc(p)}
+<strong>${scores[i]}</strong>
+<small>${rounds[i]} / ${total} palavras</small>
+</div>
+`).join('');
+
+}
+
+function nextWord(){
+
+clearInterval(timerId);
+
+if(rounds.every(n=>n>=total)||used.size>=bank.length){
+endGame();
+return;
+}
+
+while(rounds[turn]>=total)turn=1-turn;
+
+let choices=bank.filter(x=>!used.has(x.w));
+
+if(!choices.length){
+endGame();
+return;
+}
+
+current=choices[Math.floor(Math.random()*choices.length)];
+
+used.add(current.w);
+rounds[turn]++;
+
+typed="";
+hints={meaning:false,definition:false};
+locked=false;
+paused=false;
+
+timeLeft=Number(document.getElementById('seconds').value);
+
+document.getElementById('word').textContent=current.w.toUpperCase();
+document.getElementById('answer').textContent='_ _ _';
+
+document.getElementById('hint').classList.add('hide');
+document.getElementById('hint').textContent='';
+
+document.getElementById('status').textContent='';
+document.getElementById('status').className='status';
+
+document.getElementById('meaningBtn').disabled=false;
+document.getElementById('definitionBtn').disabled=false;
+
+document.getElementById('pauseBtn').textContent='PAUSAR TEMPO Ⅱ';
+
+document.getElementById('turn').textContent='VEZ: '+players[turn].toUpperCase();
+
+document.getElementById('progress').textContent=
+`PALAVRA ${rounds[turn]} / ${total}`;
+
+drawScores();
+drawKeyboard();
+updateTimer();
+
+sound(430,.2);
+
+if(document.getElementById('voice').value==='on'){
+setTimeout(sayWord,350);
+}
+
+timerId=setInterval(tick,1000);
+
+}
+
+function drawKeyboard(){
+
+let letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+document.getElementById('keyboard').innerHTML=
+[...letters].map(ch=>
+`<button onclick="addLetter('${ch}')">${ch}</button>`
+).join('')+
+`<button class="wide" onclick="removeLetter()">⌫ APAGAR</button>`;
+
+}
+
+function addLetter(ch){
+
+if(locked)return;
+
+typed+=ch;
+renderAnswer();
+sound(520,.045,'square',.35);
+
+}
+
+function removeLetter(){
+
+if(locked)return;
+
+typed=typed.slice(0,-1);
+renderAnswer();
+
+}
+
+function clearAnswer(){
+
+typed='';
+renderAnswer();
+
+}
+
+function renderAnswer(){
+
+document.getElementById('answer').textContent=
+typed.split('').join(' ')||'_ _ _';
+
+}
+
+function submitSpelling(){
+
+if(locked)return;
+
+if(!typed){
+document.getElementById('status').textContent='Digite as letras no teclado.';
+return;
+}
+
+locked=true;
+clearInterval(timerId);
+
+if(typed.toLowerCase()===current.w.toLowerCase()){
+
+let pts=Math.max(
+20,
+100-(hints.meaning?20:0)-(hints.definition?40:0)
+);
+
+scores[turn]+=pts;
+
+document.getElementById('status').textContent=
+`CORRETO! +${pts} PONTOS`;
+
+document.getElementById('status').className='status good';
+
+fanfare();
+
+}else{
+
+document.getElementById('status').textContent=
+`RESPOSTA INCORRETA! Grafia: ${current.w.toUpperCase()}`;
+
+document.getElementById('status').className='status bad';
+
+sound(180,.45,'sawtooth');
+
+}
+
+drawScores();
+
+setTimeout(finishTurn,2200);
+
+}
+
+function showHint(type){
+
+if(locked||hints[type])return;
+
+hints[type]=true;
+
+let box=document.getElementById('hint');
+
+box.classList.remove('hide');
+
+box.textContent=type==='meaning'
+?'SIGNIFICADO: solicite ao professor a tradução ou explicação da palavra.'
+:'DEFINIÇÃO: pense no significado, na pronúncia e no uso desta palavra em inglês.';
+
+document.getElementById(
+type==='meaning'?'meaningBtn':'definitionBtn'
+).disabled=true;
+
+sound(740,.12,'triangle');
+
+}
+
+function skipWord(){
+
+if(locked)return;
+
+locked=true;
+clearInterval(timerId);
+
+document.getElementById('status').textContent=
+'PALAVRA PULADA — 0 PONTOS';
+
+sound(350,.16);
+
+setTimeout(finishTurn,900);
+
+}
+
+function finishTurn(){
+
+if(gameOver)return;
+
+turn=1-turn;
+nextWord();
+
+}
+
+function tick(){
+
+if(paused||locked)return;
+
+timeLeft--;
+
+updateTimer();
+
+if(timeLeft<=10&&timeLeft>0){
+sound(880,.07,'square',.45);
+}
+
+if(timeLeft<=0){
+
+clearInterval(timerId);
+locked=true;
+
+document.getElementById('status').textContent='TEMPO ESGOTADO!';
+document.getElementById('status').className='status bad';
+
+sound(140,.65,'sawtooth');
+
+setTimeout(finishTurn,1400);
+
+}
+
+}
+
+function updateTimer(){
+
+let el=document.getElementById('timer');
+
+el.textContent=timeLeft;
+el.classList.toggle('danger',timeLeft<=10);
+
+}
+
+function pauseTimer(){
+
+if(locked)return;
+
+paused=!paused;
+
+document.getElementById('pauseBtn').textContent=
+paused?'RETOMAR TEMPO ▶':'PAUSAR TEMPO Ⅱ';
+
+sound(paused?300:600,.1);
+
+}
+
+function sayWord(){
+
+if(!current||!('speechSynthesis'in window))return;
+
+window.speechSynthesis.cancel();
+
+let u=new SpeechSynthesisUtterance(current.w);
+
+u.lang='en-US';
+u.rate=.78;
+
+window.speechSynthesis.speak(u);
+
+}
+
+function endGame(){
+
+if(gameOver&&
+!document.getElementById('result').classList.contains('hide'))return;
+
+gameOver=true;
+
+clearInterval(timerId);
+
+document.getElementById('game').classList.add('hide');
+document.getElementById('result').classList.remove('hide');
+
+document.getElementById('finalScores').innerHTML=
+players.map((p,i)=>`
+<div class="score">
+${esc(p)}
+<strong>${scores[i]}</strong>
+<small>${rounds[i]} palavras</small>
+</div>
+`).join('');
+
+document.getElementById('winner').textContent=
+scores[0]===scores[1]
+?'EMPATE!'
+:`${players[scores[0]>scores[1]?0:1]} VENCEU!`;
+
+fanfare();
+
+}
+
+document.addEventListener('keydown',e=>{
+
+if(!document.getElementById('game').classList.contains('hide')){
+
+if(/^[a-z]$/i.test(e.key)){
+e.preventDefault();
+addLetter(e.key.toUpperCase());
+}
+
+else if(e.key==='Backspace'){
+e.preventDefault();
+removeLetter();
+}
+
+else if(e.key==='Enter'){
+e.preventDefault();
+submitSpelling();
+}
+
+}
+
+});
+
+</script>
+</body>
+</html>
